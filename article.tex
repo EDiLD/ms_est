@@ -86,12 +86,18 @@ Fehlt noch...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-Small waterbodies
+% Small waterbodies
+
+% runoff during rainfall (Liess et al. 1999)
+
+% underestiamtion of grab sampling (Stehle et al. 2013). 
+
 
 The aim of this study was 
 (i) to compile monitoring data on a national scale and to answer the questions: \\
-(ii) Are small agricultural waters more polluted compared to bigger streams? Are there thresholds? \\
-(iii)  How polluted are small streams and which pesticides are responsible?
+(ii) Is the data a representative description of the pollution situation? \\
+(iii) Are small agricultural waters more polluted compared to bigger streams? Are there thresholds? \\
+(iv)  How polluted are small streams and which pesticides are responsible?
 
 
 \section{Methods}
@@ -103,7 +109,10 @@ This yielded to a total of more then 30 datasets of different formats.
 
 We homogenized and unified these datasets into a common database.
 We implemented a robust and transparent data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
-An overview of the data cleaning process is provided in the supplemental materials. 
+An overview of the data cleaning process is provided in the supplemental materials.  
+The compiled dataset comprised only a small fraction of standing waters and most of the samples where sampled via grab sampling.
+Therefore, we report  only results for grab sampling from streams.  \todo{move to results and say that nearly no information on standing waters is available}
+To assess whether  grab samples were taken during potential rainfall events we intersected sampling coordinates and date with daily precipitation data \citep{rauthe_central_2013}.
 
 \subsection{Characterization of chemical pollution}
 We characterized chemical pollution using three indicators:
@@ -141,10 +150,8 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 
 
 \section{Results}
-\subsection{Overview on compiled data}
+\subsection{Overview and representativeness of compiled data}
 
-The compile dataset comprised only a small fraction of stand waters and most of the samples where sampled via grab sampling.
-Therefore, we report  only results from streams and grab sampling.
 We compiled a national scale dataset  comprising 42236 samples from 3049 sampling sites (Figure \ref{fig:fig1} and Supplement). 
 We found big differences in the number of sampling sites between federal states.
 
@@ -158,9 +165,6 @@ The dataset include 484
   \label{fig:fig1}
 \end{figure}
 
-
-\subsection{Are small agricultural waters more polluted compared to bigger streams?}
-
 \begin{figure}
   \includegraphics[width=.8\textwidth]{fig/ezg_lu.pdf}
   \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
@@ -169,6 +173,11 @@ The dataset include 484
   }
   \label{fig:fig_ezg_lu}
 \end{figure}
+
+
+\subsection{Are small agricultural waters more polluted compared to bigger streams?}
+
+
 
 
 \subsection{Pesticide pollution of small streams}
