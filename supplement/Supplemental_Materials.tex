@@ -3,6 +3,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{booktabs}
+
 \usepackage[
 	round,	%(defaultage in the main file and \input ) for round parentheses;
 	authoryear,% (default) for author-year citations;
@@ -42,29 +44,8 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \chapter{Overview on compiled data}
 
-\begin{table}[htbp]
-\caption{Overview on chemical samples. Only data from running waters and grab sampling is shown.}
-\begin{tabular}{lllrrr}
-state\textsuperscript{a} & begin & end & no. sites & no. samples & no. compounds\textsuperscript{b} \\
-BW & 2005-01-03 & 2014-10-02 & 118 & 4569 & 127 \\ 
-BY & 2006-04-19 & 2013-12-18 & 19 & 297 & 157 \\ 
-HE & 2007-01-15 & 2014-12-18 & 68 & 2512 & 144 \\ 
-MV & 2005-03-08 & 2014-12-17 & 135 & 1535 & 227 \\ 
-NI & 2014-03-24 & 2014-10-13 & 3 & 17 & 226 \\ 
-NW & 2005-01-11 & 2015-01-22 & 1320 & 10985 & 204 \\ 
-RP & 2005-01-05 & 2013-12-18 & 44 & 1277 & 278 \\ 
-SH & 2005-04-26 & 2014-11-26 & 273 & 1419 & 180 \\ 
-SL & 2005-01-03 & 2013-12-09 & 6 & 420 & 57 \\ 
-SN & 2005-01-02 & 2013-12-18 & 917 & 17052 & 173 \\ 
-ST & 2005-01-10 & 2015-03-25 & 46 & 712 & 93 \\ 
-TH & 2005-01-31 & 2014-12-10 & 100 & 1441 & 76 \\ \hline
-\textbf{Total} & 2005-01-02 & 2015-03-25 & 3049 & 42236 & 484 \\  \hline
-\end{tabular}
-\\[1em]
-\textsuperscript{a}: Abbreviation according to ISO 3166-2:DE .\\
-\textsuperscript{b}: Including metabolites.
-\label{tab:phch}
-\end{table}
+% table generate in do_overview.R
+\input{phchoverview}
 
 
 \bibliographystyle{apalike}      % basic style, author-year citations
