@@ -1,0 +1,140 @@
+if (!exists("prj")) {
+  stop("You need to create a object 'prj' that points to the top folder, 
+       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est'!")
+} else {
+  source(file.path(prj, "src", "load.R"))
+}
+
+### ----------------------------------------------------------------------------
+### Code to clean data from database
+
+
+### ----------------------------------------------------------------------------
+### Load data
+
+# Load from server
+drv <- dbDriver("PostgreSQL")
+con <- dbConnect(drv, dbname = DBname, user = DBuser, host = DBhost, port = DBport)
+
+
+# samples restricted to: newer than 2005 and pesticide
+psm_samples <- dbGetQuery(con, "SELECT phch_samples.sample_id,
+    phch_samples.site_id,
+    phch_samples.date,
+    phch_samples.variable_id,
+    phch_samples.qualifier,
+    phch_samples.value,
+    phch_samples.unit,
+    phch_samples.value_fin,
+    phch_samples.loq,
+    phch_samples.lod,
+    phch_samples.sample_type,
+    phch_samples.sample_duration,
+    phch_samples.fraction,
+    phch_samples.comment,
+    phch_samples.source
+   FROM phch.phch_samples,
+    phch.phch_variables
+  WHERE phch_variables.variable_id = phch_samples.variable_id 
+                          AND date_part('year'::text, phch_samples.date) >= 2005::double precision 
+                          AND phch_variables.psm = true")
+
+psm_sites <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites')
+psm_sites_info <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites_info')
+psm_variables <- dbGetQuery(con, 'SELECT * FROM phch.phch_variables')
+psm_maxtu <- dbGetQuery(con, 'SELECT * FROM views.paper_maxtu')
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
+
+# make data.table
+psm_sites[ , geom := NULL]
+setDT(psm_sites)
+setDT(psm_samples)
+setDT(psm_sites_info)
+setDT(psm_variables)
+setDT(psm_maxtu)
+
+
+
+# Clean data --------------------------------------------------------------
+
+### filter data
+
+## filter based on sample data
+# sample type
+table(psm_samples$sample_type, useNA = 'always')
+#! 252183 / (252183+1737008 + 1257499) * 100
+#! only ~ 8% of samples are composite samples.
+#! NA assumed to be individual samples
+#! keep only grab samples
+psm_samples <- psm_samples[sample_type == 'individual' | is.na(sample_type)]
+
+# fraction
+table(psm_samples$fraction, useNA = 'always')
+#! assume NA as Gesamtprobe / unfiltr.
+#! pesticides were all measured as whole fraction
+
+# only psm-substances and no sum-paramters
+keep_variables <- psm_variables[sum_parameter == '' & psm == TRUE, variable_id]
+psm_samples <- psm_samples[variable_id %in% keep_variables]
+
+
+# restrict sites to psm_samples
+psm_sites <- psm_sites[site_id %chin% unique(psm_samples$site_id)]
+
+
+
+## filter based on site data
+# lakes
+table(psm_sites$lake, useNA = 'always')
+#! 58 sites form lakes (NA assumed as streams)
+psm_sites <- psm_sites[is.na(lake) | lake == FALSE]
+
+
+## restrict tables to data in samples
+psm_sites <- psm_sites[site_id %chin% unique(psm_samples$site_id)]
+psm_variables <- psm_variables[variable_id %in%  unique(psm_samples$variable_id)]
+psm_sites_info <- psm_sites_info[site_id %chin% unique(psm_samples$site_id)]
+psm_maxtu <- psm_maxtu[site_id %chin% unique(psm_samples$site_id)]
+
+
+
+# Check data --------------------------------------------------------------
+
+# check sites <-> samples
+length(unique(psm_samples[ , site_id])) == length(unique(psm_sites[ , site_id]))
+all(unique(psm_samples[ , site_id]) %in% unique(psm_sites[ , site_id]))
+all(unique(psm_sites[ , site_id]) %in% unique(psm_samples[ , site_id]))
+
+
+# check sites <-> sites_info
+length(unique(psm_sites_info[ , site_id])) == length(unique(psm_sites[ , site_id]))
+#! Info not for all sites available
+length(unique(psm_sites[ , site_id])) - length(unique(psm_sites_info[ , site_id]))
+#! for 316 missing
+psm_sites[!psm_sites[ , site_id] %in% psm_sites_info[ , site_id]]
+table(psm_sites[!psm_sites[ , site_id] %in% psm_sites_info[ , site_id], state])
+#! These are the sites were none of the both algorithms worked & no data was supplied from the states
+
+
+# check sites <-> maxtu
+length(unique(psm_maxtu[ , site_id])) == length(unique(psm_sites[ , site_id]))
+all(unique(psm_maxtu[ , site_id]) %in% unique(psm_sites[ , site_id]))
+all(unique(psm_sites[ , site_id]) %in% unique(psm_maxtu[ , site_id]))
+
+# check samples <-> variables
+all(unique(psm_samples[ , variable_id]) %in% unique(psm_variables[ , variable_id]))
+
+
+
+
+
+# Save to cache -----------------------------------------------------------
+
+write.table(psm_sites, file.path(cachedir, 'psm_sites.csv'), row.names = FALSE)
+write.table(psm_samples, file.path(cachedir, 'psm_samples.csv'), row.names = FALSE)
+write.table(psm_sites_info, file.path(cachedir, 'psm_sites_info.csv'), row.names = FALSE)
+write.table(psm_variables, file.path(cachedir, 'psm_variables.csv'), row.names = FALSE)
+write.table(psm_maxtu, file.path(cachedir, 'psm_maxtu.csv'), row.names = FALSE)

@@ -86,6 +86,13 @@ Fehlt noch...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
+More than 50\% of the total land area in Germany are used by agriculture \citep{statistisches_bundesamt_bodenflache_2014}.
+In the year 2014 more the 45000 tonnes of 766 authorized pesticides were sold for application on these areas \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
+The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage, with run-off being one of the major input routes \citep{schulz_comparison_2001}.
+Once entered the surface waters pesticides are frequently detected in environmental monitoring \citep{malaj_organic_2014} and may have adverse effects on biota and ecosystem functioning \citep{schulz_field_2004, schafer_effects_2007}.
+
+
+
 % Small waterbodies
 
 % runoff during rainfall (Liess et al. 1999)
@@ -112,7 +119,7 @@ We implemented a robust and transparent data cleaning work flow \citep{poisot_be
 An overview of the data cleaning process is provided in the supplemental materials.  
 The compiled dataset comprised only a small fraction of standing waters and most of the samples where sampled via grab sampling.
 Therefore, we report  only results for grab sampling from streams.  \todo{move to results and say that nearly no information on standing waters is available}
-To assess whether  grab samples were taken during potential rainfall events we intersected sampling coordinates and date with daily precipitation data \citep{rauthe_central_2013}.
+To assess whether  grab samples were taken during potential rainfall events we intersected sampling coordinates with daily precipitation data \citep{rauthe_central_2013} from the sampling date and the day before .
 
 \subsection{Characterization of chemical pollution}
 We characterized chemical pollution using three indicators:
@@ -123,17 +130,25 @@ We used only Maximum Annual Concentration EQS (MAC-EQS) for characterization.
 
 \item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
 This is the lowest concentration at which no acceptable biological effects are expected. 
-These are derived during regulatory approval  process of pesticides and contains a uncertainty factor.
-The German Federal Environmental Agency provided RACs for this study.
+These are derived during authorization  process of pesticides and contain an uncertainty factor.
+The German Federal Environmental Agency provided RACs for this study.  
+We expressed  RAC as Risk Quotient (RQ)
+
+\begin{equation}
+RQ = \frac{C}{RAC}
+\end{equation}
+
+Where $C$ is the concentration of a compound in a sample.
 
 \item Maximum Toxic Units ($\mathrm{TU_{max}}$)  \citep{sprague_measurement_1970}: 
 \begin{equation}
 TU_{max} = max(\frac{C_i}{EC_{50, D.magna, i}})
 \end{equation}
 
-Were $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
+Where $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
 We compiled $EC_{50, D.magna}$ values from literature \citep{malaj_organic_2014}, databases \citep{pesticide_action_network_pan_2015,u.s._epa_ecotoxicology_2015} or model predictions \citep{schuurmann_quantitative_2011}, where experimental data had priority.
 We used the maximum TU per sample, as it is independent of the number of measured compounds and makes no assumptions on the mode of action.
+A table of all included compounds can be found in the supplement.
 \end{enumerate}
 
 
@@ -145,6 +160,8 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 
 
 \subsection{Statistical analyses}
+
+We used Multidimensional Scaling (MDS) based on jeccard dissimilarity in conjunction with hierarchical clustering to display differences in the spectra of analysed compounds per federal state.
 
 
 
@@ -161,7 +178,7 @@ The dataset include 484
 
 \begin{figure}
   \includegraphics[width=.8\textwidth]{fig/fig1.pdf}
-  \caption{Map of the 3109 sampling sites. Colour codes different federal states.}
+  \caption{Spatial distribution of the 3109 sampling sites. Colour codes different federal states.}
   \label{fig:fig1}
 \end{figure}
 
@@ -169,7 +186,7 @@ The dataset include 484
   \includegraphics[width=.8\textwidth]{fig/ezg_lu.pdf}
   \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
   Only sampling sites with catchment area < 150 km\textsuperscript{2} are displayed. 
-  Colour codes the 2-dimensional density of points
+  Colour codes the 2-dimensional density of points.
   }
   \label{fig:fig_ezg_lu}
 \end{figure}
