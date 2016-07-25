@@ -1,6 +1,7 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est'!")
+       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
 }
@@ -114,95 +115,102 @@ options(stringsAsFactors = FALSE)
 
 # Intersect samples with precipitation data -------------------------------
 
-# path to regnie data
-regpath <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project/data/regnie/'
-# unique samplings
-samps <- unique(psm_samples[ , list(site_id, sample_id, date)])
-# join samps with coordinates
-setkey(samps, "site_id")
-setkey(psm_sites, "site_id")
-samps <- samps[psm_sites[ , list(site_id, easting, northing)]]
-
-# dates to search
-dates <- unique(samps[, date])
-container_dates <-  vector("list", length(dates)) 
-for (i in seq_along(dates)) {
-  message('Processing date', i, ' out of ', length(dates))
-  take <- dates[i]
+if (run_precip) {
+  # path to regnie data
+  # regpath <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project/data/regnie/'
+  regpath <- '/home/user/Documents/projects_git/ms_est/data/regnie'
+ 
+   # unique samplings
+  samps <- unique(psm_samples[ , list(site_id, sample_id, date)])
+  # join samps with coordinates
+  setkey(samps, "site_id")
+  setkey(psm_sites, "site_id")
+  samps <- samps[psm_sites[ , list(site_id, easting, northing)]]
   
-  # read regnie data
-  r <- try(esmisc::read_regnie(file.path(regpath, file_regnie(take))))
-  if (inherits(r, 'try-error'))
-    next
-  # r <- projectRaster(from = r, crs = CRS('+init=epsg:31467'))
-  # projectRaster() is slow - use gdalwarp instear
-  tf <- tempfile(fileext = '.tif')
-  tf2 <- tempfile(fileext = '.tif')
-  writeRaster(r, tf)
-  system(command = paste("gdalwarp -t_srs \'+init=epsg:31467\' -r near -overwrite", 
-                         tf,
-                         tf2))
-  r <- raster(tf2)
+  # dates to search
+  dates <- unique(samps[, date])
   
-  # get samplings at this date
-  sl <- unique(samps[date == take, list(site_id, easting, northing)])
-  # make spatial
-  coordinates(sl) <- ~easting + northing
-  proj4string(sl) <- CRS('+init=epsg:31467')
-  # extract values from raster
-  vals <- data.table(sl@data, val = extract(r, sl))
-  # merge back and return data.frame
-  out <- samps[date == take, list(sample_id, site_id, date)]
-  setkey(out, site_id)
-  setkey(vals, site_id)
-  out <- out[vals]
-  setkey(out, NULL)
-  container_dates[[i]] <- out
+  
+  container_dates <-  vector("list", length(dates)) 
+  for (i in seq_along(dates)) {
+    message('Processing date', i, ' out of ', length(dates))
+    take <- dates[i]
+    
+    # read regnie data
+    r <- try(esmisc::read_regnie(file.path(regpath, file_regnie(take))))
+    if (inherits(r, 'try-error'))
+      next
+    # r <- projectRaster(from = r, crs = CRS('+init=epsg:31467'))
+    # projectRaster() is slow - use gdalwarp instear
+    tf <- tempfile(fileext = '.tif')
+    tf2 <- tempfile(fileext = '.tif')
+    writeRaster(r, tf)
+    system(command = paste("gdalwarp -t_srs \'+init=epsg:31467\' -r near -overwrite", 
+                           tf,
+                           tf2))
+    r <- raster(tf2)
+    
+    # get samplings at this date
+    sl <- unique(samps[date == take, list(site_id, easting, northing)])
+    # make spatial
+    coordinates(sl) <- ~easting + northing
+    proj4string(sl) <- CRS('+init=epsg:31467')
+    # extract values from raster
+    vals <- data.table(sl@data, val = extract(r, sl))
+    # merge back and return data.frame
+    out <- samps[date == take, list(sample_id, site_id, date)]
+    setkey(out, site_id)
+    setkey(vals, site_id)
+    out <- out[vals]
+    setkey(out, NULL)
+    container_dates[[i]] <- out
+  }
+  
+  # combine data from different dates
+  precip_dates <- do.call(rbind, container_dates)
+  saveRDS(precip_dates, file.path(cachedir, 'precip_dates.rds'))
+  
+  
+  # precipitation at day before sampling
+  dates1 <- (as.Date(dates) - 1) # day before sampling
+  container_dates1 <-  vector("list", length(dates1)) 
+  for (i in seq_along(dates1)) {
+    message('Processing date', i, ' out of ', length(dates))
+    # take = day before sampling
+    take <- dates1[i]
+    
+    # read regnie data for day before
+    r <- try(esmisc::read_regnie(file.path(regpath, file_regnie(take))))
+    if (inherits(r, 'try-error'))
+      next
+    # r <- projectRaster(from = r, crs = CRS('+init=epsg:31467'))
+    # projectRaster() is slow - use gdalwarp instear
+    tf <- tempfile(fileext = '.tif')
+    tf2 <- tempfile(fileext = '.tif')
+    writeRaster(r, tf)
+    system(command = paste("gdalwarp -t_srs \'+init=epsg:31467\' -r near -overwrite", 
+                           tf,
+                           tf2))
+    r <- raster(tf2)
+    
+    # get samplings (=take + one date)
+    sl <- unique(samps[date == take + 1, list(site_id, easting, northing)])
+    # make spatial
+    coordinates(sl) <- ~easting + northing
+    proj4string(sl) <- CRS('+init=epsg:31467')
+    # extract values from raster
+    vals <- data.table(sl@data, val = extract(r, sl))
+    # merge back and return data.frame
+    out <- samps[date == take + 1, list(sample_id, site_id, date)]
+    setkey(out, site_id)
+    setkey(vals, site_id)
+    out <- out[vals]
+    setkey(out, NULL)
+    container_dates1[[i]] <- out
+  }
+  precip_dates1 <- do.call(rbind, container_dates1)
+  saveRDS(precip_dates1, file.path(cachedir, 'precip_dates1.rds'))
+} else {
+  precip_dates <- readRDS(file.path(cachedir, 'precip_dates.rds'))
 }
 
-# combine data from different dates
-precip_dates <- do.call(rbind, container_dates)
-saveRDS(precip_dates, file.path(cachedir, 'precip_dates.rds'))
-
-
-# precipitation at day before sampling
-dates1 <- (as.Date(dates) - 1) # day before sampling
-
-
-container_dates1 <-  vector("list", length(dates1)) 
-for (i in seq_along(dates1)) {
-  message('Processing date', i, ' out of ', length(dates))
-  # take = day before sampling
-  take <- dates1[i]
-  
-  # read regnie data for day before
-  r <- try(esmisc::read_regnie(file.path(regpath, file_regnie(take))))
-  if (inherits(r, 'try-error'))
-    next
-  # r <- projectRaster(from = r, crs = CRS('+init=epsg:31467'))
-  # projectRaster() is slow - use gdalwarp instear
-  tf <- tempfile(fileext = '.tif')
-  tf2 <- tempfile(fileext = '.tif')
-  writeRaster(r, tf)
-  system(command = paste("gdalwarp -t_srs \'+init=epsg:31467\' -r near -overwrite", 
-                         tf,
-                         tf2))
-  r <- raster(tf2)
-  
-  # get samplings (=take + one date)
-  sl <- unique(samps[date == take + 1, list(site_id, easting, northing)])
-  # make spatial
-  coordinates(sl) <- ~easting + northing
-  proj4string(sl) <- CRS('+init=epsg:31467')
-  # extract values from raster
-  vals <- data.table(sl@data, val = extract(r, sl))
-  # merge back and return data.frame
-  out <- samps[date == take, list(sample_id, site_id, date)]
-  setkey(out, site_id)
-  setkey(vals, site_id)
-  out <- out[vals]
-  setkey(out, NULL)
-  container_dates1[[i]] <- out
-}
-precip_dates1 <- do.call(rbind, container_dates1)
-saveRDS(precip_dates, file.path(cachedir, 'precip_dates1.rds'))

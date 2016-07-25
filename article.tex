@@ -87,24 +87,37 @@ Fehlt noch...
 \section{Introduction}
 
 More than 50\% of the total land area in Germany are used by agriculture \citep{statistisches_bundesamt_bodenflache_2014}.
-In the year 2014 more the 45000 tonnes of 766 authorized pesticides were sold for application on these areas \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
-The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage, with run-off being one of the major input routes \citep{schulz_comparison_2001}.
+In the year 2014 more the 45,000 tonnes of 766 authorized pesticides were sold for application on this area \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
+The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage, with run-off being one of the major input routes \citep{schulz_comparison_2001,liess_determination_1999}.
 Once entered the surface waters pesticides are frequently detected in environmental monitoring \citep{malaj_organic_2014} and may have adverse effects on biota and ecosystem functioning \citep{schulz_field_2004, schafer_effects_2007}.
+
+National monitoring programs are setup for determination and surveillance of the chemical and ecological status of surface, ground and drinking water.
+These monitoring programs produce huge amounts of data, which possibly can also be used to answer other questions.
+In Germany monitoring programs are setup by the federal states in compliance with the Water Framework Directive \citep{quevauviller_water_2008} and further state specific needs.
+However, currently there is no curated national-wide compilation of this data.
+
+
+Small water bodies are important refuges of biodiversity \citep{davies_comparison_2008} and enabling downstream colonisation of 
+At the same time they may be exposed to a high risk of pesticide contamination from adjacent agricultural areas and low dilution effects \citep{liess_determination_1999}.
+
+% Although small waterbodies make up most
+
+% running  water  
+% with  at  least  10km2  catchment  area
+
+% However, very little is know about the pollution of such streams. 
+% The 
 
 
 
 % Small waterbodies
-
-% runoff during rainfall (Liess et al. 1999)
-
-% underestiamtion of grab sampling (Stehle et al. 2013). 
+% underestimation of grab sampling (Stehle et al. 2013). 
 
 
-The aim of this study was 
-(i) to compile monitoring data on a national scale and to answer the questions: \\
-(ii) Is the data a representative description of the pollution situation? \\
-(iii) Are small agricultural waters more polluted compared to bigger streams? Are there thresholds? \\
-(iv)  How polluted are small streams and which pesticides are responsible?
+The aim of this study was to compile monitoring data on a national scale and to answer the questions: \\
+(i) Is the currently available monitoring data a representative description of the pollution situation? \\
+(ii) Are small agricultural waters more polluted compared to bigger streams? Are there thresholds? \\
+(iii)  How polluted are small streams and which pesticides are responsible?
 
 
 \section{Methods}
@@ -117,38 +130,35 @@ This yielded to a total of more then 30 datasets of different formats.
 We homogenized and unified these datasets into a common database.
 We implemented a robust and transparent data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
 An overview of the data cleaning process is provided in the supplemental materials.  
-The compiled dataset comprised only a small fraction of standing waters and most of the samples where sampled via grab sampling.
-Therefore, we report  only results for grab sampling from streams.  \todo{move to results and say that nearly no information on standing waters is available}
-To assess whether  grab samples were taken during potential rainfall events we intersected sampling coordinates with daily precipitation data \citep{rauthe_central_2013} from the sampling date and the day before .
+To assess whether samples were taken during potential rainfall events we intersected sampling coordinates with daily precipitation data \citep{rauthe_central_2013} from the sampling date and the day before.
 
 \subsection{Characterization of chemical pollution}
 We characterized chemical pollution using three indicators:
 
 \begin{enumerate}
-\item National and international Environmental Quality Standards (EQS) \citep{ogewv_verordnung_2011,european_union_directive_2013}:
-We used only Maximum Annual Concentration EQS (MAC-EQS) for characterization.
+  \item National and international Environmental Quality Standards (EQS) \citep{ogewv_verordnung_2011,european_union_directive_2013}:
+  We used only Maximum Annual Concentration EQS (MAC-EQS) for characterization.
+  \item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
+  This is the lowest concentration at which no acceptable biological effects are expected. 
+  These are derived during authorization  process of pesticides and contain an uncertainty factor.
+  The German Federal Environmental Agency provided RACs for this study.  
+  We expressed  RAC as Risk Quotient (RQ)
 
-\item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
-This is the lowest concentration at which no acceptable biological effects are expected. 
-These are derived during authorization  process of pesticides and contain an uncertainty factor.
-The German Federal Environmental Agency provided RACs for this study.  
-We expressed  RAC as Risk Quotient (RQ)
+  \begin{equation}
+  RQ = \frac{C}{RAC}
+  \end{equation}
 
-\begin{equation}
-RQ = \frac{C}{RAC}
-\end{equation}
+  Where $C$ is the concentration of a compound in a sample.
 
-Where $C$ is the concentration of a compound in a sample.
+  \item Maximum Toxic Units ($\mathrm{TU_{max}}$)  \citep{sprague_measurement_1970}: 
+  \begin{equation}
+  TU_{max} = max(\frac{C_i}{EC_{50, D.magna, i}})
+  \end{equation}
 
-\item Maximum Toxic Units ($\mathrm{TU_{max}}$)  \citep{sprague_measurement_1970}: 
-\begin{equation}
-TU_{max} = max(\frac{C_i}{EC_{50, D.magna, i}})
-\end{equation}
-
-Where $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
-We compiled $EC_{50, D.magna}$ values from literature \citep{malaj_organic_2014}, databases \citep{pesticide_action_network_pan_2015,u.s._epa_ecotoxicology_2015} or model predictions \citep{schuurmann_quantitative_2011}, where experimental data had priority.
-We used the maximum TU per sample, as it is independent of the number of measured compounds and makes no assumptions on the mode of action.
-A table of all included compounds can be found in the supplement.
+  Where $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
+  We compiled $EC_{50, D.magna}$ values from literature \citep{malaj_organic_2014}, databases \citep{pesticide_action_network_pan_2015,u.s._epa_ecotoxicology_2015} or model predictions \citep{schuurmann_quantitative_2011}, where experimental data had priority.
+  We used the maximum TU per sample, as it is independent of the number of measured compounds and makes no assumptions on the mode of action.
+  A table of all included compounds can be found in the supplement.
 \end{enumerate}
 
 
@@ -169,7 +179,10 @@ We used Multidimensional Scaling (MDS) based on jaccard dissimilarity in conjunc
 \section{Results}
 \subsection{Overview and representativeness of compiled data}
 
-We compiled a national scale dataset  comprising 42236 samples from 3049 sampling sites (Figure \ref{fig:fig1} and Supplement). 
+The compiled dataset comprised only a small fraction of standing waters and most of the samples where sampled via grab sampling. \todo{zahlen}
+Therefore, we report only results for grab sampling from streams. 
+
+The analysed dataset comprised 42236 samples from 3049 sampling sites (Figure \ref{fig:fig1} and Supplement). 
 We found big differences in the number of sampling sites between federal states.
 
 The dataset include 484 
@@ -204,7 +217,18 @@ The dataset include 484
 
 \section{Discussion}
 
-Vergleich mit der Schweiz.....
+% Vergleich mit der Schweiz.....
+
+%%% Risk assessment
+% findings from field studies on pesti-
+% cide exposure and effects must be used for a retrospec-
+% tive validation of the current EU regulatory risk assess-
+% ment, particularly for its future development.
+
+% validation of the risk assessment through
+% targeted chemical and biological post-authorization
+% monitoring programs must be implemented for com-
+% pounds of concern to ensure that their application
 
 \subsection{Subsection}
 
