@@ -16,3 +16,6 @@
 credentials.R
 /data/*
 
+# R
+.Rproj.user/*
+
