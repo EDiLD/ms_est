@@ -88,6 +88,42 @@ print(xtab,
       )
 
 
+var_tab <- psm_variables[ , list(name, cas, pgroup, wrrl_zhkuqn, rak_uba, ger_auth_2015, eu_auth_2015)]
+var_tab[ , ger_auth_2015 := as.character(ger_auth_2015)]
+var_tab[ger_auth_2015 == 'FALSE', ger_auth_2015 := NA]
+var_tab[ger_auth_2015 == 'TRUE', ger_auth_2015 := 'x']
+var_tab[ , eu_auth_2015 := as.character(eu_auth_2015)]
+var_tab[eu_auth_2015 == 'FALSE', eu_auth_2015 := NA]
+var_tab[eu_auth_2015 == 'TRUE', eu_auth_2015 := 'x']
+names(var_tab) <- c('Name', 'CAS', 'Group', 'MAC-EQS\\textsuperscript{a}', 'RAC \\textsuperscript{b}', 
+                    'Auth. GER\\textsuperscript{c}', 'Auth. EU\\textsuperscript{d}')
+var_tab$Group <- gsub('organics, psm, ', '', var_tab$Group)
+# var_tab$Name <- gsub('ä', 'ae', var_tab$Name)
+# fix bug with encoding (extra space or so....)
+var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
+
+var_tab_x <- xtable(var_tab, 
+                    label = 'tab:phch_var',
+                    caption = 'Analysed chemical compounds. 
+                    \\textsuperscript{a} Maximum Anual Concentration Environmental Quality Standard [ug/L].
+                    \\textsuperscript{b} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).
+                    \\textsuperscript{c} Authorized in Germany (Source: BVL, 2015). 
+                    \\textsuperscript{d} Authorized in the EU (Source: EU).',
+                    align = 'lp{4cm}rlp{1cm}p{1.5cm}p{1.5cm}p{1cm}')
+                    
+print(var_tab_x, 
+      file = file.path(prj, 'supplement/phchvar.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0),
+      sanitize.text.function = identity,
+      size="\\fontsize{8pt}{10pt}\\selectfont"
+)   
+
+
 
 
 # Catchment size and landuse distribution ---------------------------------
@@ -212,5 +248,56 @@ if (run_precip) {
   saveRDS(precip_dates1, file.path(cachedir, 'precip_dates1.rds'))
 } else {
   precip_dates <- readRDS(file.path(cachedir, 'precip_dates.rds'))
+  precip_dates1 <- readRDS(file.path(cachedir, 'precip_dates1.rds'))
 }
+
+precip_dates <- precip_dates[!is.na(val)]
+precip_dates1 <- precip_dates1[!is.na(val)]
+precp <- ggplot() +
+  geom_histogram(data = precip_dates[val < 10], aes(x = val), fill = 'grey30', 
+                 col = 'grey50', breaks = seq(0,50,2)) +
+  geom_histogram(data = precip_dates[val >= 10], aes(x = val), fill = 'grey60', 
+                 col = 'grey50', breaks = seq(0,50,2)) +
+  mytheme +
+  labs(x = 'Daily Precipitation [mm]', y = 'No. of samples') +
+  ggtitle('At day of sampling (n = 41428)') +
+  annotate('text', x = 4, y = 10000,
+           label =  paste0(nrow(precip_dates[val < 10]), ' - ', 
+                           round(nrow(precip_dates[val < 10]) / 
+                                   nrow(precip_dates) * 100, 2), '%'
+                           ), 
+           hjust = 0.1, size = 5) +
+  annotate('text', x = 20, y = 1000,
+           label = paste0(nrow(precip_dates[val >= 10]), ' - ', 
+                          round(nrow(precip_dates[val >= 10]) / 
+                                  nrow(precip_dates) * 100, 2), '%'
+                          ),
+           hjust = 0, size = 5, col = 'grey30')
+precp
+
+precp1 <- ggplot() +
+  geom_histogram(data = precip_dates1[val < 10], aes(x = val), fill = 'grey30', 
+                 col = 'grey50', breaks = seq(0,50,2)) +
+  geom_histogram(data = precip_dates1[val >= 10], aes(x = val), fill = 'grey60', 
+                 col = 'grey50', breaks = seq(0,50,2)) +
+  mytheme +
+  labs(x = 'Daily Precipitation [mm]', y = 'No. of samples') +
+  ggtitle('At day before of sampling (n = 42009)') +
+  annotate('text', x = 4, y = 10000,
+           label =  paste0(nrow(precip_dates1[val < 10]), ' - ', 
+                           round(nrow(precip_dates1[val < 10]) / 
+                                   nrow(precip_dates1) * 100, 2), '%'
+           ), 
+           hjust = 0.1, size = 5) +
+  annotate('text', x = 20, y = 1000,
+           label = paste0(nrow(precip_dates1[val >= 10]), ' - ', 
+                          round(nrow(precip_dates1[val >= 10]) / 
+                                  nrow(precip_dates1) * 100, 2), '%'
+           ),
+           hjust = 0, size = 5, col = 'grey30')
+precp1
+pp <- arrangeGrob(precp, precp1, nrow = 2)
+
+ggsave(file.path(prj, 'supplement/precip.pdf'), 
+       plot = pp, height = 12, width = 7)
 

@@ -3,14 +3,15 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{xcolor}
-\usepackage{booktabs}
+\usepackage{booktabs} % table rulers
+\usepackage{longtable} % multipage tables
+
 
 \usepackage[
 	round,	%(defaultage in the main file and \input ) for round parentheses;
 	authoryear,% (default) for author-year citations;
 	sort,		% orders multiple citations into the sequence in which they 
 ]{natbib}	
-\usepackage{csvsimple}  % read csv files into Latex
 
 
 \title{Supplemental Materials for the paper: \\Pesticides pollution of small streams in
@@ -35,6 +36,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\item Validity Checks: Simple rules for validity checks have been implemented (e.g. no negative concentrations).
 \end{enumerate}
 
+
 \begin{figure}
 \centering
 \includegraphics[width = 0.8\textwidth]{data_cleaning}
@@ -42,10 +44,24 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \label{fig:data_cleaning}
 \end{figure}
 
-\chapter{Overview on compiled data}
 
-% table generate in do_overview.R
+\chapter{Overview on compiled data}
+% Overview samples
+% table generated in do_overview.R
 \input{phchoverview}
+
+% Overview variables
+% table generated in do_overview.R
+\input{phchvar}
+
+
+\begin{figure}
+\centering
+\includegraphics[width = 0.75\textwidth]{precip}
+\caption{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
+\label{fig:precip}
+\end{figure}
+
 
 
 \bibliographystyle{apalike}      % basic style, author-year citations

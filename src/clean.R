@@ -63,10 +63,14 @@ setDT(psm_maxtu)
 ### filter data
 
 ## filter based on sample data
+
+
+
 # sample type
-table(psm_samples$sample_type, useNA = 'always')
-#! 252183 / (252183+1737008 + 1257499) * 100
-#! only ~ 8% of samples are composite samples.
+table(unique(psm_samples[, list(sample_id, sample_type)])[ , sample_type], useNA = 'always')
+23277 + 19624
+100 - 4357 / (4357 + 23277 + 19624) * 100
+#! only ~ 90% of samples are grabsamples.
 #! NA assumed to be individual samples
 #! keep only grab samples
 psm_samples <- psm_samples[sample_type == 'individual' | is.na(sample_type)]
