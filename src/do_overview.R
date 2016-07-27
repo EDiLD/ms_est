@@ -75,7 +75,7 @@ require(xtable)
 xtab <- xtable(psm_samples_tab, 
        label = 'tab:phch_overview',
       caption = 'Overview on chemical samples. Only data from running waters and grab
-sampling is shown. \\textsuperscript{a}: Abbreviations according to IS 3166-2:DE. 
+sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
       \\textsuperscript{b}: Including metabolites',
       align = 'llllrrr'
 )
@@ -127,10 +127,11 @@ var_tab_x <- xtable(var_tab,
                     \\textsuperscript{a} Authorized in Germany (Source: BVL, 2015). 
                     \\textsuperscript{b} Authorized in the EU (Source: EU).
                     \\textsuperscript{c} [ug/L].
-                    \\textsuperscript{d} chemprop: Read-Across \citep{schuurmann_quantitative_2011};
-                                         epa: US EPA \citep{u.s._epa_ecotoxicology_2015};
-                                          malaj:\citep{malaj_organic_2014},
-                                          ppdb: Pesticides Properties database
+                    \\textsuperscript{d} chemprop: Read-Across \\citep{schuurmann_quantitative_2011};
+                                         epa: US EPA \\citep{u.s._epa_ecotoxicology_2015};
+                                         malaj:\\citep{malaj_organic_2014};
+                                         ppdb: Pesticides Properties database \\citep{lewis_international_2016};
+                                         none: no LC50 could be found.
                     \\textsuperscript{e} Maximum Anual Concentration Environmental Quality Standard [ug/L].
                     \\textsuperscript{f} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
                     align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}p{1cm}p{1cm}p{1cm}')
@@ -155,8 +156,8 @@ psm_variables[!is.na(rak_uba)]
 # 105 compunds with RAKS
 psm_variables[!is.na(wrrl_zhkuqn)]
 # 29 compounds with MAC-EQS
-
-
+sum(!is.na(var_tab[ , 6, with = FALSE]))
+# 394 compounds with LC50 DM
 
 
 
