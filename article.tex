@@ -120,21 +120,21 @@ An overview of the data cleaning process is provided in the supplemental materia
 To assess whether samples were taken during potential rainfall events we intersected sampling coordinates with daily precipitation data \citep{rauthe_central_2013} from the sampling date and the day before.
 
 \subsection{Characterization of chemical pollution}
-We characterized chemical pollution using three indicators:
+We characterized chemical pollution (excluding sum parameters) using three indicators:
 
 \begin{enumerate}
   \item National and international Environmental Quality Standards (EQS) \citep{ogewv_verordnung_2011,european_union_directive_2013}:
   We used only Maximum Annual Concentration EQS (MAC-EQS) for characterization.
+  These were available for 29 compounds (Supplement, Table xxx\todo{ref}).
+
   \item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
   This is the lowest concentration at which no acceptable biological effects are expected. 
   These are derived during authorization  process of pesticides and contain an uncertainty factor.
-  The German Federal Environmental Agency provided RACs for this study.  
-  We expressed  RAC as Risk Quotient (RQ)
-
+  The German Federal Environmental Agency provided RACs for 105 compounds (Supplement, Table xxx\todo{ref}).  
+  We expressed RAC as Risk Quotient (RQ):
   \begin{equation}
   RQ = \frac{C}{RAC}
   \end{equation}
-
   Where $C$ is the concentration of a compound in a sample.
 
   \item Maximum Toxic Units ($\mathrm{TU_{max}}$)  \citep{sprague_measurement_1970}: 
@@ -158,7 +158,8 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 
 \subsection{Statistical analyses}
 
-We used Multidimensional Scaling (MDS) based on jaccard dissimilarity in conjunction with hierarchical clustering to display differences in the spectra of analysed compounds per federal state.
+All data-processing and analyses have been performed using R, version 3.3.1 \citep{r_core_team_r:_2016}.
+To display differences in the spectra of analysed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
 
 
 
@@ -192,10 +193,11 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure (xxx).}
   \label{fig:figvar}
 \end{figure}
+\todo{prettify figure!}
 
+We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. \todo{Check why there are so many missing in BW, NW, RP, SN and TH = phchsitesinfo}.
 The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
 The proportion of agriculture in the catchments decreased with increasing catchment size.
-
 
 \begin{figure}
   \includegraphics[width=.8\textwidth]{fig/ezglu.pdf}
@@ -205,6 +207,8 @@ The proportion of agriculture in the catchments decreased with increasing catchm
   }
   \label{fig:figezglu}
 \end{figure}
+
+\todo{1-2 worte das es nicht überall möglich war ezg größe zu bestimmen.}
 
 
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
@@ -235,10 +239,11 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 % underestimation of grab sampling (Stehle et al. 2013). 
 
-\subsection{Subsection}
+\subsection{Representativeness of the data}
 
+\subsection{Influence of catchment area and agriculture}
 
-
+\subsection{Pollution of streams}
 
 
 

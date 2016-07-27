@@ -43,6 +43,10 @@ psm_sites <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites')
 psm_sites_info <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites_info')
 psm_variables <- dbGetQuery(con, 'SELECT * FROM phch.phch_variables')
 psm_maxtu <- dbGetQuery(con, 'SELECT * FROM views.paper_maxtu')
+var_props <- dbGetQuery(con, 'SELECT variable_id,
+lc50_dm_fin, 
+lc50_dm_fin_source
+                        FROM phch.phch_variables_prop')
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
@@ -54,6 +58,7 @@ setDT(psm_samples)
 setDT(psm_sites_info)
 setDT(psm_variables)
 setDT(psm_maxtu)
+setDT(var_props)
 
 psm_sites[ , geom := NULL]
 
@@ -135,6 +140,9 @@ all(unique(psm_samples[ , variable_id]) %in% unique(psm_variables[ , variable_id
 head(psm_variables)
 psm_variables[ , rak_uba_comment := NULL]
 
+# var_prop <-> variables
+var_props <- var_props[variable_id %in% psm_variables$variable_id]
+
 
 
 # Save to cache -----------------------------------------------------------
@@ -149,3 +157,6 @@ write.table(psm_variables, file.path(cachedir, 'psm_variables.csv'),
             row.names = FALSE, sep = ';')
 write.table(psm_maxtu, file.path(cachedir, 'psm_maxtu.csv'), 
             row.names = FALSE, sep = ';')
+write.table(var_props, file.path(cachedir, 'var_props.csv'), 
+            row.names = FALSE, sep = ';')
+

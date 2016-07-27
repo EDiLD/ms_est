@@ -16,7 +16,7 @@ psm_samples <- fread(file.path(cachedir, 'psm_samples.csv'))
 psm_sites_info <- fread(file.path(cachedir, 'psm_sites_info.csv'))
 psm_variables <- fread(file.path(cachedir, 'psm_variables.csv'))
 psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
-
+var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
 
 # Spatial distribution ----------------------------------------------------
@@ -92,17 +92,30 @@ print(xtab,
 
 # Tabular overview --------------------------------------------------------
 #  Variables (= Tab. xx in Supplement)
-var_tab <- psm_variables[ , list(name, cas, pgroup, wrrl_zhkuqn, rak_uba, 
+var_tab <- psm_variables[ , list(variable_id, name, cas, pgroup, wrrl_zhkuqn, rak_uba, 
                                  ger_auth_2015, eu_auth_2015)]
+
+# join with tu-data
+setkey(var_tab, variable_id)
+setkey(var_props, variable_id)
+var_tab <- var_props[var_tab] 
+var_tab[ , variable_id := NULL]
+
 var_tab[ , ger_auth_2015 := as.character(ger_auth_2015)]
 var_tab[ger_auth_2015 == 'FALSE', ger_auth_2015 := NA]
 var_tab[ger_auth_2015 == 'TRUE', ger_auth_2015 := 'x']
 var_tab[ , eu_auth_2015 := as.character(eu_auth_2015)]
 var_tab[eu_auth_2015 == 'FALSE', eu_auth_2015 := NA]
 var_tab[eu_auth_2015 == 'TRUE', eu_auth_2015 := 'x']
-names(var_tab) <- c('Name', 'CAS', 'Group', 'MAC-EQS\\textsuperscript{a}', 
-                    'RAC \\textsuperscript{b}', 
-                    'Auth. GER\\textsuperscript{c}', 'Auth. EU\\textsuperscript{d}')
+setcolorder(var_tab, c(names(var_tab)[3:5], names(var_tab)[8:9], names(var_tab)[1:2], names(var_tab)[6:7]))
+names(var_tab) <- c('Name', 'CAS', 'Group', 
+                    'Auth. GER\\textsuperscript{a}', 
+                    'Auth. EU\\textsuperscript{b}',
+                    'LC50\\textsubscript{D.magna}\\textsuperscript{c}',
+                    'Source LC50\\textsuperscript{d}',
+                    'MAC-EQS\\textsuperscript{e}', 
+                    'RAC \\textsuperscript{f}'
+                    )
 var_tab$Group <- gsub('organics, psm, ', '', var_tab$Group)
 
 # fix bug with encoding (extra space or so....)
@@ -110,12 +123,17 @@ var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
 
 var_tab_x <- xtable(var_tab, 
                     label = 'tab:phch_var',
-                    caption = 'Analysed chemical compounds. 
-                    \\textsuperscript{a} Maximum Anual Concentration Environmental Quality Standard [ug/L].
-                    \\textsuperscript{b} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).
-                    \\textsuperscript{c} Authorized in Germany (Source: BVL, 2015). 
-                    \\textsuperscript{d} Authorized in the EU (Source: EU).',
-                    align = 'lp{4cm}rlp{1cm}p{1.5cm}p{1.5cm}p{1cm}')
+                    caption = 'Analysed chemical compounds. \\
+                    \\textsuperscript{a} Authorized in Germany (Source: BVL, 2015). 
+                    \\textsuperscript{b} Authorized in the EU (Source: EU).
+                    \\textsuperscript{c} [ug/L].
+                    \\textsuperscript{d} chemprop: Read-Across \citep{schuurmann_quantitative_2011};
+                                         epa: US EPA \citep{u.s._epa_ecotoxicology_2015};
+                                          malaj:\citep{malaj_organic_2014},
+                                          ppdb: Pesticides Properties database
+                    \\textsuperscript{e} Maximum Anual Concentration Environmental Quality Standard [ug/L].
+                    \\textsuperscript{f} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
+                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}p{1cm}p{1cm}p{1cm}')
                     
 print(var_tab_x, 
       file = file.path(prj, 'supplement/phchvar.tex'),
@@ -132,6 +150,15 @@ print(var_tab_x,
 
 
 # Compound spectra --------------------------------------------------------
+
+psm_variables[!is.na(rak_uba)]
+# 105 compunds with RAKS
+psm_variables[!is.na(wrrl_zhkuqn)]
+# 29 compounds with MAC-EQS
+
+
+
+
 
 ### Measured Spectra
 ## total number of substances
@@ -421,6 +448,41 @@ ggsave(file.path(prj, 'supplement/precip.pdf'),
 
 
 
+# Catchment and Agriculture: Method statistics ----------------------------
+nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
+# 2376 sites with both ezg and agriculture
+nrow(psm_sites) - nrow(psm_sites_info)
+# 265 sites without any correspondence in psm_sites_info
+#! Why???
+
+# spatial distribution of missings
+
+sites <- psm_sites
+setkey(sites, 'site_id')
+setkey(psm_sites_info, 'site_id')
+ss <- psm_sites_info[sites]
+ss[ , all := ifelse(!(is.na(ezg_fin) | is.na(agri_fin)), TRUE, FALSE)]
+
+
+ggplot() +
+  # geom_polygon(data = adm1, aes(x = long, y = lat, group = group), fill = "grey90") +
+  # geom_path(data = adm1, aes(x = long, y = lat, group = group), size = .3) +
+  geom_point(data = ss, aes(x = easting, y = northing, col = all), 
+             size = 1) +
+  theme(legend.key = element_rect(fill = 'white')) +
+  labs(x = 'Lon.', y = 'Lat.') +
+  theme_bw() +
+  coord_equal()
+
+table(ss[all == FALSE, substr(site_id, 1, 2)], useNA = 'always')
+#! Missing a lot in BW, NW, RP, SN and TH
+#! Check!
+
+psm_sites[!site_id %in% psm_sites_info$site_id]
+# 265 sites missing in sites_info... why?
+table(psm_sites[!site_id %in% psm_sites_info$site_id, substr(site_id, 1, 2)], useNA = 'always')
+# BW, NW, RP & SN
+#! Why check!
 
 # Convert SVG to PDF ------------------------------------------------------
 
