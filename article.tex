@@ -112,6 +112,7 @@ The aim of this study was to compile monitoring data on a national scale and to 
 We queried chemical monitoring data of pesticides from sampling sites with catchment size $\mathrm{< 100km^2}$ for the years 2005 to 2015 from all 13 non-city federal states of Germany.
 Additionally, we compiled data available from previous studies and searched online databases.
 This yielded to a total of more then 30 datasets of different formats.
+In the following we will use the ISO 3166-2:DE standard abbreviations for federal states.
 
 We homogenized and unified these datasets into a common database.
 We implemented a robust and transparent data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
@@ -165,14 +166,10 @@ We used Multidimensional Scaling (MDS) based on jaccard dissimilarity in conjunc
 \section{Results}
 \subsection{Overview and representativeness of compiled data}
 
-
 The compiled dataset comprised only few standing waters (58 sites) and the majority (90\%) of samples where taken via grab sampling.  % see clean.R for numbers
 Therefore, we report only results of grab samples from streams. 
-The analysed dataset comprised 42899 samples from 3049 sampling sites (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}). 
-We found big differences in the number of sampling sites between federal states.
-
-484 compounds that could be classified as pesticides and their metobalites (Supplement, Table \todo{Set ref to table}) . 
-
+The analysed dataset comprised 42236 samples from 3049 sampling sites.  %see do_overview.R for numbers.
+We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
 
 
 \begin{figure}
@@ -181,13 +178,32 @@ We found big differences in the number of sampling sites between federal states.
   \label{fig:fig1}
 \end{figure}
 
+
+In total 484 different compounds that could be classified as pesticides and their metobalites were measured at least once (Supplement, Table \todo{Set ref to table}). 
+Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
+We found substantial differences of the spectra of analysed compounds (Figure \ref{fig:figvar}).
+Hierarchical clustering revealed three groups of states:
+i) with less then 100 compounds (SL, ST and TH), ii) with a medium sized spectra and iii) with a big and distinct spectra (RP and NI).
+Only 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day.
+
 \begin{figure}
-  \includegraphics[width=.8\textwidth]{fig/ezg_lu.pdf}
+  \includegraphics[width=\textwidth]{fig/figvar.pdf}
+  \caption{Compound spectra of the different federal states. Left: Barcode plot - Each vertical line is an analysed compound. Right: MDS ordination. 
+  Colors according to three groups determined by hierarchical clustering (see Supplement Figure (xxx).}
+  \label{fig:figvar}
+\end{figure}
+
+The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
+The proportion of agriculture in the catchments decreased with increasing catchment size.
+
+
+\begin{figure}
+  \includegraphics[width=.8\textwidth]{fig/ezglu.pdf}
   \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
   Only sampling sites with catchment area < 150 km\textsuperscript{2} are displayed. 
   Colour codes the 2-dimensional density of points.
   }
-  \label{fig:fig_ezg_lu}
+  \label{fig:figezglu}
 \end{figure}
 
 

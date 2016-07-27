@@ -6,6 +6,8 @@
 *.fls
 *.log
 *.synctex.gz
+*.lot
+*.lof
 /cache/*
 
 # Sublime
@@ -18,4 +20,7 @@ credentials.R
 
 # R
 .Rproj.user/*
+.Rproj.user
 
+# Project specific
+acs-article.bib
