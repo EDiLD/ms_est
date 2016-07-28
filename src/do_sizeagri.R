@@ -9,6 +9,9 @@ if (!exists("prj")) {
 ### ----------------------------------------------------------------------------
 ### Code for Modelling influence of catchment size and agriculture
 
+library(devtools)
+source("https://gist.githubusercontent.com/EDiLD/c4b748eb57b71c027cbfe9714222a918/raw/4cf44afb401e715548e3b2fedb4cb7d30976c8df/Deriv.R")
+
 # Load data ---------------------------------------------------------------
 psm_sites <- fread(file.path(cachedir, 'psm_sites.csv'))
 psm_samples <- fread(file.path(cachedir, 'psm_samples.csv'))
@@ -57,7 +60,7 @@ setkey(psm_sites, site_id)
 rak_exceed <- psm_sites_wi[samples_exceed]
 rak_exceed
 # 2970 sites
-
+rm(samples_raks, samples_exceed)
 rak_exceed <- rak_exceed[!(is.na(agri_fin) | is.na(ezg_fin)), ]
 # 2343 sites with ezg and agri data
 
@@ -82,6 +85,7 @@ rak_exceed$logn <- log(rak_exceed$n)
 
 
 # model using gam 
+rak_exceed$agri_fin <- rak_exceed$agri_fin*100
 library(mgcv)
 mod_p <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed, 
            family = poisson)
@@ -96,19 +100,108 @@ sum(r^2) / (mod_p$df.res)
 
 # try negative binomial model
 # with offset, automatic theta search and REML
-mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed, 
+mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed,
            family = nb())
+# offset out of formula: =ignored in predict?
+#! Check
+# mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin), offset = rak_exceed$logn, data = rak_exceed, 
+#               family = nb())
 plot(mod_nb, pages = 1)
 plot(mod_nb, pages = 1, residuals = TRUE) 
 gam.check(mod_nb)
 # overdispersion
 r <- resid(mod_nb, type = "pearson")
 sum(r^2) / (mod_nb$df.res)
+# OK
 
-#! TODO: Model visualisation
-#! derivation function?
 
-rm(samples_raks, samples_exceed, raks, rak_exceed, nd1)
+# calculate predictions for agri & ezg
+# fix other variable and n at mean values
+pdat_agri <- with(rak_exceed,
+             data.frame(agri_fin = c(seq(min(agri_fin), max(agri_fin), length.out = 100)),
+                        ezg_fin = rep(mean(ezg_fin), 100),
+                        logn = rep(mean(logn), 100)))
+pred_agri <- predict(mod_nb, newdata = pdat_agri, type = 'response', se.fit = TRUE)
+pdat_agri <- transform(pdat_agri, 
+                       fit_agri = pred_agri$fit)
+pdat_agri <- transform(pdat_agri, 
+                       up_agri = fit_agri + (1.96 * pred_agri$se.fit),
+                       low_agri = fit_agri - (1.96 * pred_agri$se.fit))
+pdat_agri$logn <- NULL
+pdat_agri$ezg_fin <- NULL
+
+pdat_ezg <- with(rak_exceed,
+                  data.frame(ezg_fin = c(seq(min(ezg_fin), max(ezg_fin), length.out = 100)),
+                             agri_fin = rep(mean(agri_fin), 100),
+                             logn = rep(mean(logn), 100)))
+pred_ezg <- predict(mod_nb, newdata = pdat_ezg, type = 'response', se.fit = TRUE)
+pdat_ezg <- transform(pdat_ezg, 
+                       fit_ezg = pred_ezg$fit)
+pdat_ezg <- transform(pdat_ezg, 
+                       up_ezg = fit_ezg + (1.96 * pred_ezg$se.fit),
+                       low_ezg = fit_ezg - (1.96 * pred_ezg$se.fit))
+# prepare data.frame for plotting
+pdat_ezg$logn <- NULL
+pdat_ezg$agri_fin <- NULL
+
+pdat_agri <- melt(pdat_agri, measure.vars = 'agri_fin')
+names(pdat_agri) <- c('fit', 'up', 'low', 'variable', 'value')
+pdat_agri$variable <- as.character(pdat_agri$variable)
+
+pdat_ezg <- melt(pdat_ezg, measure.vars = 'ezg_fin')
+names(pdat_ezg) <- c('fit', 'up', 'low', 'variable', 'value')
+pdat_ezg$variable <- as.character(pdat_ezg$variable)
+pdat <- rbind(pdat_agri, pdat_ezg)
+
+
+
+# calculate derivatives
+# see http://www.fromthebottomoftheheap.net/2014/05/15/identifying-periods-of-change-with-gams/
+# use the same pdat
+mod_nb.d <- Deriv(mod_nb, newdata = data.frame(agri_fin = pdat$value[pdat$variable == 'agri_fin'],
+                                               ezg_fin = pdat$value[pdat$variable == 'ezg_fin'],
+                                               logn = mean(rak_exceed$logn)))
+
+mod_nb.dci_agri <- confint(mod_nb.d, term = 'agri_fin')
+mod_nb.dsig_agri <- signifD(pdat$value[pdat$variable == 'agri_fin'], 
+                            d = mod_nb.d[['agri_fin']]$deriv,
+                            mod_nb.dci_agri[['agri_fin']]$upper, 
+                            mod_nb.dci_agri[['agri_fin']]$lower)
+
+mod_nb.dci_ezg <- confint(mod_nb.d, term = 'ezg_fin')
+mod_nb.dsig_ezg <- signifD(pdat$value[pdat$variable == 'ezg_fin'], d = mod_nb.d[['ezg_fin']]$deriv,
+                            mod_nb.dci_ezg[['ezg_fin']]$upper, mod_nb.dci_ezg[['ezg_fin']]$lower)
+
+# check if significant
+pdat$sig[pdat$variable == 'agri_fin'] <- ifelse(!is.na(mod_nb.dsig_agri$incr) | !is.na(mod_nb.dsig_agri$decr), TRUE, FALSE)
+pdat$sig[pdat$variable == 'ezg_fin'] <- ifelse(!is.na(mod_nb.dsig_ezg$incr) | !is.na(mod_nb.dsig_ezg$decr), TRUE, FALSE)
+pdat <- transform(pdat,
+                  sig_value = ifelse(sig, fit, NA))
+
+mylabeller <- as_labeller(c(
+  'agri_fin'="Agriculture [%]",
+  'ezg_fin'="Catchment Size [km2]"
+))
+
+
+# plot
+p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
+  geom_line() +
+  geom_line(aes(y = up), lty ='dashed') +
+  geom_line(aes(y = low), lty ='dashed') +
+  geom_line(aes(y = sig_value), colour = 'red', lwd = 1.5) +
+  facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
+  mytheme +
+  xlab('Value') +
+  ylab('No. RAC exceedances') +
+  ylim(c(0, 1.3))
+  
+ggsave(file.path(prj, "/fig/figrac.svg"),
+       p, width = 8, height = 5)
+
+
+
+
 
 
 
@@ -154,7 +247,11 @@ ggplot(logtumax_s, aes(x = agri_fin, y = logtumax)) +
 
 # to avoid problems with independency I aggregate using the max per site
 # otherwise need a gamm with site as random effect?!
+# take maximum
 maxlogtumax <- logtumax[ , list(maxlogtumax = max(logtumax)), by = site_id]
+# taker 95% quantile of all samples per sites
+maxlogtumax <- logtumax[ , list(maxlogtumax = quantile(logtumax, 0.95)), by = site_id]
+
 setkey(maxlogtumax, site_id)
 setkey(psm_sites, site_id)
 maxlogtumax_s <- psm_sites_wi[maxlogtumax]
@@ -169,7 +266,12 @@ ggplot(maxlogtumax_s, aes(x = agri_fin, y = maxlogtumax)) +
   geom_smooth()
 
 
+#! use 95% percentile instead of max?
+
 #! same pattern, how should this be modelled?
-#! zinf gaussian? tobin?
-#! definitively use a two stage model!
-#! where should be censored?
+#! use censored gaussion
+
+library(gamlss)
+library(gamlss.add)
+library(survival)
+library(gamlss.cens)

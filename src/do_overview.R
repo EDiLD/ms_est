@@ -41,7 +41,7 @@ p <- ggplot() +
   guides(colour = FALSE) +
   labs(x = 'Lon.', y = 'Lat.') +
   scale_color_hue(l = 50) +
-  theme_bw() +
+  mytheme +
   coord_equal()
 p
 ggsave(file.path(prj, "/fig/fig1.svg"),
@@ -227,7 +227,7 @@ ylab <- paste0('Dim2 (', evar[2], '%)')
 
 p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   coord_equal() +
-  theme_bw() +
+  mytheme +
   scale_colour_discrete(guide = FALSE) +
   xlab(xlab)+
   ylab(ylab) +
@@ -251,11 +251,12 @@ vwm$site_id <- factor(vwm$site_id, levels = c('SL', 'TH', 'ST', 'BY', 'SN', 'BW'
 # plot
 p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
   geom_tile() +
+  mytheme
   scale_fill_manual(values = cols, name = 'gemessen') +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank()) +
   labs(x = 'Compound', y = 'State') +
-  guides(fill = FALSE)
+  guides(fill = FALSE) 
 p_bar
 
 h <- c(7, 9)
