@@ -100,8 +100,10 @@ sum(r^2) / (mod_p$df.res)
 
 # try negative binomial model
 # with offset, automatic theta search and REML
-mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed,
-           family = nb())
+mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'tp') + s(ezg_fin, bs = 'tp') + offset(logn), 
+              data = rak_exceed,
+              family = nb(),
+              method = 'REML')
 # offset out of formula: =ignored in predict?
 #! Check
 # mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin), offset = rak_exceed$logn, data = rak_exceed, 
@@ -195,7 +197,7 @@ p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
   xlab('Value') +
   ylab('No. RAC exceedances') +
   ylim(c(0, 1.3))
-  
+p
 ggsave(file.path(prj, "/fig/figrac.svg"),
        p, width = 8, height = 5)
 
@@ -224,6 +226,18 @@ samples_lc50[ , logtu := ifelse(value_fin > 0, log10(value_fin / lc50_dm_fin), -
 
 # calculate per sample max(logtu)
 logtumax <- samples_lc50[ , list(logtumax = max(logtu)), by = sample_id]
+
+
+# join with data from database
+setkey(logtumax, sample_id)
+setkey(psm_maxtu, sample_id)
+jj <- psm_maxtu[logtumax]
+jj[ , diff := log_maxtu - logtumax]
+range(jj$diff)
+jj[diff > 0.1]
+#! Why the differences???
+
+
 # join back site & date
 setkey(logtumax, sample_id)
 setkey(samples_lc50, sample_id)
