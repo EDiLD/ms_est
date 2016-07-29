@@ -239,8 +239,11 @@ samples_lc50 <- samples_lc50[!is.na(lc50_dm_fin)]
 # calculate log(tu)
 # min value is -8.72
 range(samples_lc50[value_fin > 0 , log10(value_fin / lc50_dm_fin)])
-# set zero to -8.75
+
+# logtu: set zero to -8.75
 samples_lc50[ , logtu := ifelse(value_fin > 0, log10(value_fin / lc50_dm_fin), -8.75)]
+# tu (use with log-normal dist)
+samples_lc50[ , tu := value_fin / lc50_dm_fin]
 
 # calculate per sample max(logtu)
 logtumax <- samples_lc50[ , list(logtumax = max(logtu)), by = sample_id]
@@ -277,12 +280,16 @@ ggplot(logtumax_s, aes(x = agri_fin, y = logtumax)) +
   geom_smooth()
 
 
+
+
 # to avoid problems with independency I aggregate using the max per site
 # otherwise need a gamm with site as random effect?!
-# take maximum
-maxlogtumax <- logtumax[ , list(maxlogtumax = max(logtumax)), by = site_id]
+# # take maximum
+# maxlogtumax <- logtumax[ , list(maxlogtumax = max(logtumax)), by = site_id]
 # taker 95% quantile of all samples per sites
 maxlogtumax <- logtumax[ , list(maxlogtumax = quantile(logtumax, 0.95)), by = site_id]
+
+#! Use TU (no log, but with log-normal distribution.)
 
 setkey(maxlogtumax, site_id)
 setkey(psm_sites, site_id)
