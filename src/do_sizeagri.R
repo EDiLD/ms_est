@@ -9,7 +9,6 @@ if (!exists("prj")) {
 ### ----------------------------------------------------------------------------
 ### Code for Modelling influence of catchment size and agriculture
 
-library(devtools)
 source("https://gist.githubusercontent.com/EDiLD/c4b748eb57b71c027cbfe9714222a918/raw/4cf44afb401e715548e3b2fedb4cb7d30976c8df/Deriv.R")
 
 # Load data ---------------------------------------------------------------
@@ -83,6 +82,16 @@ ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed)) +
 
 rak_exceed$logn <- log(rak_exceed$n)
 
+p_raw <- ggplot(rak_exceed, aes(y = agri_fin, x = ezg_fin, col = log(n_exceed))) +
+  geom_point(alpha = 0.5) +
+  mytheme +
+  scale_color_gradient(low = 'blue', high = 'red') +
+  ylab("Agriculture [%]") +
+  xlab("Catchment Size [km2]") +
+  ggtitle('RAC Exceedances')
+p_raw
+ggsave(file.path(prj, "supplement/ezgagrirac.pdf"),
+       p_raw)
 
 # model using gam 
 rak_exceed$agri_fin <- rak_exceed$agri_fin*100
@@ -103,6 +112,18 @@ mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'tp') + s(ezg_fin, bs = 'tp') + offset
               data = rak_exceed,
               family = nb(),
               method = 'REML')
+
+mod_nb_te <- gam(n_exceed ~ te(agri_fin, ezg_fin) + offset(logn), 
+              data = rak_exceed,
+              family = nb(),
+              method = 'REML')
+plot(mod_nb_te)
+vis.gam(mod_nb_te, view = c('agri_fin', 'ezg_fin'))
+anova(mod_nb, mod_nb_te, test = 'Chisq') 
+# smoothing interaction not significant and can be omited
+
+
+
 # offset out of formula: =ignored in predict?
 #! Check
 # mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin), offset = rak_exceed$logn, data = rak_exceed, 
@@ -225,14 +246,13 @@ samples_lc50[ , logtu := ifelse(value_fin > 0, log10(value_fin / lc50_dm_fin), -
 logtumax <- samples_lc50[ , list(logtumax = max(logtu)), by = sample_id]
 
 
-# join with data from database
+# join with data from database, to check.
 setkey(logtumax, sample_id)
 setkey(psm_maxtu, sample_id)
 jj <- psm_maxtu[logtumax]
 jj[ , diff := log_maxtu - logtumax]
 range(jj$diff)
-jj[diff > 0.1]
-# Difference is due to HCH_gesamt as sum parameter....
+# Nice, perfect. Same output as with postgresql view
 
 
 
