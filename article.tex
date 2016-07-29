@@ -175,12 +175,12 @@ We modeled the number of RAC exceedances (No) as:
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
-We used the number of samplings ($n$) as an offset to account different sampling efforts. 
+We used the number of samplings ($n_i$) as an offset to account different sampling efforts. 
 We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
-$f_1$ and $f_2$ are smoothing functions using thin plate regression splines.
-The degree of smoothness was estimated using restricted maximum likelihood \todo{cite and check wood 2011}.
+$f_1$ and $f_2$ are smoothing functions using thin plate regression splines \citep{wood_thin_2003}.
+The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
 Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $log(TU_{max})$ (see Supplement for details).
-GAM were fitted using the mgcv package \todo{citation mgcv}.
+GAM were fitted using the mgcv package \citep{wood_fast_2011}.
 
 
 \section{Results}
@@ -209,7 +209,7 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
 \begin{figure}
   \includegraphics[width=\textwidth]{fig/figvar.pdf}
   \caption{Compound spectra of the different federal states. Left: Barcode plot - Each vertical line is an analysed compound. Right: MDS ordination. 
-  Colors according to three groups determined by hierarchical clustering (see Supplement Figure (xxx).}
+  Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
   \label{fig:figvar}
 \end{figure}
 \todo{prettify figure!}
@@ -233,7 +233,7 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{fig/figrac.pdf}
+  \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
   \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases.
   }
   \label{fig:figrac}

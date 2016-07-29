@@ -86,7 +86,6 @@ rak_exceed$logn <- log(rak_exceed$n)
 
 # model using gam 
 rak_exceed$agri_fin <- rak_exceed$agri_fin*100
-library(mgcv)
 mod_p <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed, 
            family = poisson)
 plot(mod_p, pages = 1)
@@ -96,7 +95,7 @@ gam.check(mod_p)
 # overdispersion
 r <- resid(mod_p, type = "pearson")
 sum(r^2) / (mod_p$df.res)
-#! present
+#! slightly present
 
 # try negative binomial model
 # with offset, automatic theta search and REML
@@ -154,8 +153,6 @@ pdat_ezg <- melt(pdat_ezg, measure.vars = 'ezg_fin')
 names(pdat_ezg) <- c('fit', 'up', 'low', 'variable', 'value')
 pdat_ezg$variable <- as.character(pdat_ezg$variable)
 pdat <- rbind(pdat_agri, pdat_ezg)
-
-
 
 # calculate derivatives
 # see http://www.fromthebottomoftheheap.net/2014/05/15/identifying-periods-of-change-with-gams/
@@ -235,7 +232,8 @@ jj <- psm_maxtu[logtumax]
 jj[ , diff := log_maxtu - logtumax]
 range(jj$diff)
 jj[diff > 0.1]
-#! Why the differences???
+# Difference is due to HCH_gesamt as sum parameter....
+
 
 
 # join back site & date

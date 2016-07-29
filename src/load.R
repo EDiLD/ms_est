@@ -61,6 +61,7 @@ require(webchem)
 
 # modelling
 require(vegan)
+library(mgcv)
 require(gamlss)
 require(gamlss.cens)
 require(gamlss.dist)
