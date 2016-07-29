@@ -9,6 +9,7 @@
 \usepackage[T1]{fontenc}       % Use modern font encodings
 \usepackage[utf8]{inputenc}
 \usepackage{todonotes}
+\usepackage{amsmath}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% If issues arise when submitting your manuscript, you may want to
@@ -161,8 +162,25 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 
 All data-processing and analyses have been performed using R, version 3.3.1 \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analysed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
+We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \todo{citation fewster}.
 
+We modeled the number of RAC exceedances (No) as:
 
+\begin{align}
+\begin{split}
+  No_i \sim NB(\mu_i, k) \\
+  E(No_i) = \mu_i~and~Var(No_i) = \mu_i + \frac{\mu_i^2}{k} \\
+  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i) + log(n_i)
+\end{split}
+\end{align}
+
+where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
+We used the number of samplings ($n$) as an offset to account different sampling efforts. 
+We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
+$f_1$ and $f_2$ are smoothing functions using thin plate regression splines.
+The degree of smoothness was estimated using restricted maximum likelihood \todo{cite and check wood 2011}.
+Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $log(TU_{max})$ (see Supplement for details).
+GAM were fitted using the mgcv package \todo{citation mgcv}.
 
 
 \section{Results}
@@ -175,7 +193,7 @@ We found big differences in the number of sampling sites between federal states 
 
 
 \begin{figure}
-  \includegraphics[width=.8\textwidth]{fig/fig1.pdf}
+  \includegraphics[width=.7\textwidth]{fig/fig1.pdf}
   \caption{Spatial distribution of the 3109 sampling sites. Colour codes different federal states.}
   \label{fig:fig1}
 \end{figure}
@@ -214,6 +232,12 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
+\begin{figure}
+  \includegraphics[width=\textwidth]{fig/figrac.pdf}
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases.
+  }
+  \label{fig:figrac}
+\end{figure}
 
 
 
