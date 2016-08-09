@@ -27,6 +27,7 @@ psm_sites <- spTransform(psm_sites, CRS('+init=epsg:4326'))
 psm_sites_bb <- psm_sites@bbox
 psm_sites <- cbind(coordinates(psm_sites), psm_sites@data)
 psm_sites$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites$site_id)
+setDT(psm_sites)
 
 
 library(raster)
@@ -226,7 +227,6 @@ xlab <- paste0('Dim1 (', evar[1], '%)')
 ylab <- paste0('Dim2 (', evar[2], '%)')
 
 p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
-  coord_equal() +
   mytheme +
   scale_colour_discrete(guide = FALSE) +
   xlab(xlab)+
@@ -234,6 +234,7 @@ p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   geom_vline(xintercept = 0, linetype = 'dotted') +
   geom_hline(yintercept = 0, linetype = 'dotted') +
   geom_text(aes(label = state, col = as.factor(group))) 
+p_mds
 
 
 # tile plot / barcode
@@ -251,7 +252,7 @@ vwm$site_id <- factor(vwm$site_id, levels = c('SL', 'TH', 'ST', 'BY', 'SN', 'BW'
 # plot
 p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
   geom_tile() +
-  mytheme
+  mytheme +
   scale_fill_manual(values = cols, name = 'gemessen') +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank()) +

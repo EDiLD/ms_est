@@ -9,7 +9,6 @@ if (!exists("prj")) {
 ### ----------------------------------------------------------------------------
 ### Code for Modelling influence of catchment size and agriculture
 
-library(devtools)
 source("https://gist.githubusercontent.com/EDiLD/c4b748eb57b71c027cbfe9714222a918/raw/4cf44afb401e715548e3b2fedb4cb7d30976c8df/Deriv.R")
 
 # Load data ---------------------------------------------------------------
@@ -83,10 +82,19 @@ ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed)) +
 
 rak_exceed$logn <- log(rak_exceed$n)
 
+p_raw <- ggplot(rak_exceed, aes(y = agri_fin, x = ezg_fin, col = log(n_exceed))) +
+  geom_point(alpha = 0.5) +
+  mytheme +
+  scale_color_gradient(low = 'blue', high = 'red') +
+  ylab("Agriculture [%]") +
+  xlab("Catchment Size [km2]") +
+  ggtitle('RAC Exceedances')
+p_raw
+ggsave(file.path(prj, "supplement/ezgagrirac.pdf"),
+       p_raw)
 
 # model using gam 
 rak_exceed$agri_fin <- rak_exceed$agri_fin*100
-library(mgcv)
 mod_p <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin) + offset(logn), data = rak_exceed, 
            family = poisson)
 plot(mod_p, pages = 1)
@@ -96,7 +104,7 @@ gam.check(mod_p)
 # overdispersion
 r <- resid(mod_p, type = "pearson")
 sum(r^2) / (mod_p$df.res)
-#! present
+#! slightly present
 
 # try negative binomial model
 # with offset, automatic theta search and REML
@@ -104,6 +112,18 @@ mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'tp') + s(ezg_fin, bs = 'tp') + offset
               data = rak_exceed,
               family = nb(),
               method = 'REML')
+
+mod_nb_te <- gam(n_exceed ~ te(agri_fin, ezg_fin) + offset(logn), 
+              data = rak_exceed,
+              family = nb(),
+              method = 'REML')
+plot(mod_nb_te)
+vis.gam(mod_nb_te, view = c('agri_fin', 'ezg_fin'))
+anova(mod_nb, mod_nb_te, test = 'Chisq') 
+# smoothing interaction not significant and can be omited
+
+
+
 # offset out of formula: =ignored in predict?
 #! Check
 # mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin), offset = rak_exceed$logn, data = rak_exceed, 
@@ -154,8 +174,6 @@ pdat_ezg <- melt(pdat_ezg, measure.vars = 'ezg_fin')
 names(pdat_ezg) <- c('fit', 'up', 'low', 'variable', 'value')
 pdat_ezg$variable <- as.character(pdat_ezg$variable)
 pdat <- rbind(pdat_agri, pdat_ezg)
-
-
 
 # calculate derivatives
 # see http://www.fromthebottomoftheheap.net/2014/05/15/identifying-periods-of-change-with-gams/
@@ -221,21 +239,24 @@ samples_lc50 <- samples_lc50[!is.na(lc50_dm_fin)]
 # calculate log(tu)
 # min value is -8.72
 range(samples_lc50[value_fin > 0 , log10(value_fin / lc50_dm_fin)])
-# set zero to -8.75
+
+# logtu: set zero to -8.75
 samples_lc50[ , logtu := ifelse(value_fin > 0, log10(value_fin / lc50_dm_fin), -8.75)]
+# tu (use with log-normal dist)
+samples_lc50[ , tu := value_fin / lc50_dm_fin]
 
 # calculate per sample max(logtu)
 logtumax <- samples_lc50[ , list(logtumax = max(logtu)), by = sample_id]
 
 
-# join with data from database
+# join with data from database, to check.
 setkey(logtumax, sample_id)
 setkey(psm_maxtu, sample_id)
 jj <- psm_maxtu[logtumax]
 jj[ , diff := log_maxtu - logtumax]
 range(jj$diff)
-jj[diff > 0.1]
-#! Why the differences???
+# Nice, perfect. Same output as with postgresql view
+
 
 
 # join back site & date
@@ -259,12 +280,16 @@ ggplot(logtumax_s, aes(x = agri_fin, y = logtumax)) +
   geom_smooth()
 
 
+
+
 # to avoid problems with independency I aggregate using the max per site
 # otherwise need a gamm with site as random effect?!
-# take maximum
-maxlogtumax <- logtumax[ , list(maxlogtumax = max(logtumax)), by = site_id]
+# # take maximum
+# maxlogtumax <- logtumax[ , list(maxlogtumax = max(logtumax)), by = site_id]
 # taker 95% quantile of all samples per sites
 maxlogtumax <- logtumax[ , list(maxlogtumax = quantile(logtumax, 0.95)), by = site_id]
+
+#! Use TU (no log, but with log-normal distribution.)
 
 setkey(maxlogtumax, site_id)
 setkey(psm_sites, site_id)

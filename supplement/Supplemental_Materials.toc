@@ -1,0 +1,3 @@
+\contentsline {chapter}{\numberline {1}Data Cleaning}{5}
+\contentsline {chapter}{\numberline {2}Overview on compiled data}{7}
+\contentsline {chapter}{\numberline {3}Are small agricultural waters more polluted compared to bigger streams?}{19}

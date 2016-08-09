@@ -93,7 +93,7 @@ The applied pesticides may enter surface waters via spray-drift, edge-off-field 
 Once entered the surface waters pesticides are frequently detected in environmental monitoring \citep{malaj_organic_2014} and may have adverse effects on biota and ecosystem functioning \citep{schulz_field_2004, schafer_effects_2007}.
 
 National monitoring programs are setup for determination and surveillance of the chemical and ecological status of surface, ground and drinking water.
-These monitoring programs produce huge amounts of data, which possibly can also be used to answer other questions.
+These monitoring programs produce large amounts of data, which possibly can also be used to answer other questions.
 In Germany monitoring programs are setup by the federal states in compliance with the Water Framework Directive \citep{quevauviller_water_2008} and further state specific needs.
 However, currently there is no curated national-wide compilation of this data.
 
@@ -162,7 +162,7 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 
 All data-processing and analyses have been performed using R, version 3.3.1 \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analysed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
-We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \todo{citation fewster}.
+We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \citep{fewster_analysis_2000}.
 
 We modeled the number of RAC exceedances (No) as:
 
@@ -175,12 +175,12 @@ We modeled the number of RAC exceedances (No) as:
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
-We used the number of samplings ($n$) as an offset to account different sampling efforts. 
+We used the number of samplings ($n_i$) as an offset to account different sampling efforts. 
 We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
-$f_1$ and $f_2$ are smoothing functions using thin plate regression splines.
-The degree of smoothness was estimated using restricted maximum likelihood \todo{cite and check wood 2011}.
-Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $log(TU_{max})$ (see Supplement for details).
-GAM were fitted using the mgcv package \todo{citation mgcv}.
+$f_1$ and $f_2$ are smoothing functions using thin plate regression splines \citep{wood_thin_2003}.
+The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
+Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $log(TU_{max})$ (see Supplement for details). \todo{TRUE?}
+GAM were fitted using the mgcv package \citep{wood_fast_2011}.
 
 
 \section{Results}
@@ -191,13 +191,11 @@ Therefore, we report only results of grab samples from streams.
 The analysed dataset comprised 42236 samples from 3049 sampling sites.  %see do_overview.R for numbers.
 We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
 
-
 \begin{figure}
   \includegraphics[width=.7\textwidth]{fig/fig1.pdf}
   \caption{Spatial distribution of the 3109 sampling sites. Colour codes different federal states.}
   \label{fig:fig1}
 \end{figure}
-
 
 In total 484 different compounds that could be classified as pesticides and their metobalites were measured at least once (Supplement, Table \todo{Set ref to table}). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
@@ -209,7 +207,7 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
 \begin{figure}
   \includegraphics[width=\textwidth]{fig/figvar.pdf}
   \caption{Compound spectra of the different federal states. Left: Barcode plot - Each vertical line is an analysed compound. Right: MDS ordination. 
-  Colors according to three groups determined by hierarchical clustering (see Supplement Figure (xxx).}
+  Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
   \label{fig:figvar}
 \end{figure}
 \todo{prettify figure!}
@@ -233,7 +231,7 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{fig/figrac.pdf}
+  \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
   \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases.
   }
   \label{fig:figrac}

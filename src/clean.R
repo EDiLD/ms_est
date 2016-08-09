@@ -42,7 +42,7 @@ psm_samples <- dbGetQuery(con, "SELECT phch_samples.sample_id,
 psm_sites <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites')
 psm_sites_info <- dbGetQuery(con, 'SELECT * FROM phch.phch_sites_info')
 psm_variables <- dbGetQuery(con, 'SELECT * FROM phch.phch_variables')
-psm_maxtu <- dbGetQuery(con, 'SELECT * FROM views.paper_maxtu')
+psm_maxtu <- dbGetQuery(con, 'SELECT * FROM views.maxtu')
 var_props <- dbGetQuery(con, 'SELECT variable_id,
 lc50_dm_fin, 
 lc50_dm_fin_source
