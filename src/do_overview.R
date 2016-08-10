@@ -223,8 +223,8 @@ pco1 <- wcmdscale(dp, k = 2, eig = TRUE)
 rownames(pco1$points) <- unlist(vw[ , 1, with = FALSE])
 pco_dat <- data.frame(scores(pco1), state = rownames(scores(pco1)), group = bl_groups)
 evar <- round(pco1$eig / sum(pco1$eig), 2) * 100
-xlab <- paste0('Dim1 (', evar[1], '%)')
-ylab <- paste0('Dim2 (', evar[2], '%)')
+xlab <- paste0('Axis 1 (', evar[1], '%)')
+ylab <- paste0('Axis 2 (', evar[2], '%)')
 
 p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   mytheme +
@@ -233,8 +233,9 @@ p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   ylab(ylab) +
   geom_vline(xintercept = 0, linetype = 'dotted') +
   geom_hline(yintercept = 0, linetype = 'dotted') +
-  geom_text(aes(label = state, col = as.factor(group))) 
-p_mds
+  geom_text(aes(label = state, col = as.factor(group)), size = 6) #+
+  # coord_equal()
+# p_mds
 
 
 # tile plot / barcode
@@ -260,12 +261,17 @@ p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
   guides(fill = FALSE) 
 p_bar
 
-h <- c(7, 9)
-h <- h/sum(h)
-p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
+# install.packages('cowplot')
+library(cowplot)
+p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
 plot(p)
+
+# h <- c(7, 9)
+# h <- h/sum(h)
+# p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
+
 ggsave(file.path(prj, "/fig/figvar.svg"),
-       p, width = 12, height = 8)
+       p, width = 11, height = 7)
 #  Need to be manually cropped in inkscape
 
 

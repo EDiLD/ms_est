@@ -110,7 +110,7 @@ The aim of this study was to compile monitoring data on a national scale and to 
 \section{Methods}
 \subsection{Data compilation}
 
-We queried chemical monitoring data of pesticides from sampling sites with catchment size $\mathrm{< 100km^2}$ for the years 2005 to 2015 from all 13 non-city federal states of Germany.
+We queried chemical monitoring data of pesticides from sampling sites with catchment sizes $\mathrm{< 100km^2}$ for the years 2005 to 2015 from all 13 non-city federal states of Germany.
 Additionally, we compiled data available from previous studies and searched online databases.
 This yielded to a total of more then 30 datasets of different formats.
 In the following we will use the ISO 3166-2:DE standard abbreviations for federal states.
@@ -170,9 +170,8 @@ We modeled the number of RAC exceedances (No) as:
 \begin{split}
   No_i \sim NB(\mu_i, k) \\
   E(No_i) = \mu_i~and~Var(No_i) = \mu_i + \frac{\mu_i^2}{k} \\
-  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i) + log(n_i)
+  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i) + log(n_i) \\
 \end{split}
-
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
@@ -211,9 +210,9 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
   \label{fig:figvar}
 \end{figure}
-\todo{prettify figure! check cowplot package.}
 
-We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. \todo{Check why there are so many missing in BW, NW, RP, SN and TH = phchsitesinfo}.
+
+We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. 
 The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
 The proportion of agriculture in the catchments decreased with increasing catchment size.
 
@@ -226,22 +225,33 @@ The proportion of agriculture in the catchments decreased with increasing catchm
   \label{fig:figezglu}
 \end{figure}
 
-\todo{1-2 worte das es nicht überall möglich war ezg größe zu bestimmen.}
 
 
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
-\begin{figure}
+Modelling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
+Above it levels off with a slight increase towards completely agricultural catchments (Figure \ref{fig:figrac}, left).
+This indicates thresholds at 25\%, above chemical pollution from agriculture can be detected, and 75\% above pollution increases. \todo{discussion?}
+We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:figrac}, right). 
+
+\begin{figure} [h]
   \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
   \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
   }
   \label{fig:figrac}
 \end{figure}
 
+The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed the same patterns (see Supplement Figure Sxxx - Sxxx). \todo{references}.
 
 
 \subsection{Pesticide pollution of small streams}
+Based on the results previous results and give the low amount of sample sites with catchment sizes \textless 10 km\textsuperscript{2} we divided the dataset into four groups to further explore the pollution of german streams.
 
+The four groups were:
+i) small, agricultural streams (catchment size \textless 30 km\textsuperscript{2} and \textgreater 40\% agriculture);
+ii) small, non-agricultural streams (catchment size \textless 30 km\textsuperscript{2} and \textless 10\% agriculture);
+iii) medium sized, agricultural streams (30 km\textsuperscript{2} $\ge$catchment size \textless 150 km\textsuperscript{2} and \textgreater 40\% agriculture)
+iv) medium sized, non-agricultural streams (30 km\textsuperscript{2} $\ge$catchment size \textless 150 km\textsuperscript{2} and \textless 10\% agriculture)
 
 
 

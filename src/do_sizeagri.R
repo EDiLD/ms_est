@@ -63,6 +63,9 @@ rm(samples_raks, samples_exceed)
 rak_exceed <- rak_exceed[!(is.na(agri_fin) | is.na(ezg_fin)), ]
 # 2343 sites with ezg and agri data
 
+# logn used as offset
+rak_exceed$logn <- log(rak_exceed$n)
+
 
 ggplot(rak_exceed, aes(x = ezg_fin, y = p_exceed)) +
   geom_point() +
@@ -80,7 +83,7 @@ ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed)) +
   geom_point() +
   geom_smooth()
 
-rak_exceed$logn <- log(rak_exceed$n)
+
 
 p_raw <- ggplot(rak_exceed, aes(y = agri_fin, x = ezg_fin, col = log(n_exceed))) +
   geom_point(alpha = 0.5) +
@@ -218,7 +221,7 @@ p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
   geom_line(aes(y = sig_value), colour = 'red', lwd = 1.5) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
   mytheme +
-  xlab('Value') +
+  xlab('') +
   ylab('No. RAC exceedances') +
   ylim(c(0, 1.3))
 # p
@@ -553,7 +556,7 @@ p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
   geom_line(aes(y = sig_value), colour = 'red', lwd = 1.5) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
   mytheme +
-  xlab('Value') +
+  xlab('') +
   ylab('No. EQS exceedances') 
 # p
 ggsave(file.path(prj, "/supplement/ezgagrieqsmodel.pdf"),
