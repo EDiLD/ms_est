@@ -8,12 +8,21 @@
 \usepackage{todonotes}
 \usepackage{amsmath}
 
+% Continuous figure counting (instead of per cahpter)
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+% Add 'S' before figure/table numbering
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
 
 \usepackage[
 	round,	%(defaultage in the main file and \input ) for round parentheses;
 	authoryear,% (default) for author-year citations;
 	sort,		% orders multiple citations into the sequence in which they 
 ]{natbib}	
+
+
 
 
 \title{Supplemental Materials for the paper: \\Pesticides pollution of small streams in
@@ -69,7 +78,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width = 0.75\textwidth]{precip}
+	\includegraphics[width = 0.6\textwidth]{precip}
 	\caption{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
 	\label{fig:precip}
 \end{figure}
@@ -121,15 +130,13 @@ Instead of assuming a fixed value for the data \textless LOQ, we use a model tak
 \end{split}
 \end{align}
 
-With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors. Further, we assumed constant variance. This model was fitted using the gamlss packages \citep{stasinopoulos_generalized_2007}.
-
-
+With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors. Further, we assumed constant variance. This model was fitted using the gamlss package \citep{stasinopoulos_generalized_2007}.
 
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{ezgagritu}
-	\caption{Raw data of effect of agriculture and catchment size on the 95th percentile of log(TUmax).}
+	\caption{Raw data of effect of agriculture and catchment size on the 95th percentile of $log(TU_max)$.}
 	\label{fig:ezgagritu}
 \end{figure}
 
@@ -137,7 +144,27 @@ With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i
 	\centering
 	\includegraphics[width = 0.9\textwidth]{ezgagritumodel}
 	\caption{Effect of agriculture within the catchment (left) and catchment size (rigth) on the 95th percentile of log(TUmax). The model took censored data into account (see description above). Dashed lines denote 95\% Confidence Intervals.}
-	\label{fig:ezgagritu_model}
+	\label{fig:ezgagritumodel}
+\end{figure}
+
+
+\pagebreak
+\section{EQS Exceedances}
+We modeled the number of EQS exceedances (No) the same way as RAC exceedances (see main article).
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{ezgagrieqs}
+	\caption{Raw data used for modelling EQS exceedances. Color codes the number of EQS exceedances (on a log-scale). Grey points are sites without any exceedance.}
+	\label{fig:ezgagrieqs}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{ezgagrieqsmodel}
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of EQS exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
+  }
+  \label{fig:ezgeqsagrimodel}
 \end{figure}
 
 

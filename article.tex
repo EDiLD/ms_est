@@ -172,13 +172,14 @@ We modeled the number of RAC exceedances (No) as:
   E(No_i) = \mu_i~and~Var(No_i) = \mu_i + \frac{\mu_i^2}{k} \\
   log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i) + log(n_i)
 \end{split}
+
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
 We modeled $No_i$ as resulting from a negative binomial distribution ($NB$) and used the number of sampling events per site ($n_i$) as an offset to account different sampling efforts. 
 $f_1$ and $f_2$ are smoothing functions using thin plate regression splines \citep{wood_thin_2003}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
-Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $TU_{max}$ (see Supplement). 
+Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $TU_{max}$ (see Supplement for details). 
 We used pointwise 95\% Confidence Intervals of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
@@ -232,7 +233,7 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 \begin{figure}
   \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases. Dashed lines denote 95\% Confidence Intervals.
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
   }
   \label{fig:figrac}
 \end{figure}
