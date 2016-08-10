@@ -6,6 +6,7 @@
 \usepackage{booktabs} % table rulers
 \usepackage{longtable} % multipage tables
 \usepackage{todonotes}
+\usepackage{amsmath}
 
 
 \usepackage[
@@ -42,7 +43,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \end{enumerate}
 
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
 	\caption{Overview on data cleaning steps. After cleaning data has been stored in a relational spatial PostgreSQL database.}
@@ -55,7 +56,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 % table generated in do_overview.R
 \input{phchoverview}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{varclus}
 	\caption{Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states. Abbreviations of state names according to ISO 3166-2:DE.}
@@ -66,7 +67,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 % table generated in do_overview.R
 \input{phchvar}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.75\textwidth]{precip}
 	\caption{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
@@ -76,14 +77,68 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \chapter{Are small agricultural waters more polluted compared to bigger streams?}
 
-\begin{figure}
+\section{RAC Exceedances}
+\begin{figure}[h]
 	\centering
-	\includegraphics[width = 0.8\textwidth]{ezgagrirac}
+	\includegraphics[width = 0.6\textwidth]{ezgagrirac}
 	\caption{Raw data used for the model in equation xxx and Figure xxx of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points are sites without any exceedance.}
 	\label{fig:ezgagrirac}
 \end{figure}
 \todo{update refs}
 
+
+\pagebreak
+\section{Toxic Units}
+
+We modeled the 95th percentile of $TU_{max}$ on a logarithmic scale assuming a Normal distribution:
+
+\begin{align}
+\begin{split}
+  log(TU_{max}) \sim Normal(\mu_i, \sigma) \\
+  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i)
+\end{split}
+\end{align}
+
+where $TU_{max i}$ is 95th percentile of $TU_{max}$ at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site.  
+$f_1$ and $f_2$ are smoothing functions.
+
+Because of samples at low polluted sites contained only values below the limit of quantification (LOQ) the derived $TU_{max}$ were also left censored (at a value of $10^{-8.75}$), thus we have
+
+\begin{align}
+  log(TU_{max~i})=\begin{cases}
+    \beta_0 + f_1(Agri_i) + f_2(Size_i) + \epsilon_i, & \text{if $log(TU_{max}) > -8.75 $}\\
+    -8.75, & \text{if $log(TU_{max}) \le -8.75 $}.
+  \end{cases}
+\end{align}
+
+
+Instead of assuming a fixed value for the data \textless LOQ, we use a model taking this censoring into account \citep{helsel_fabricating_2006} with the expected value being a mixture of censored and uncensored data.
+
+\begin{align}
+\begin{split}
+	E(y_i | x_i) = P(uncensored|x_i) \times E(y_i | y_i > -8.75)) + P(censored|x_i) \times -8.75\\
+	Var(y_i) = \sigma
+\end{split}
+\end{align}
+
+With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors. Further, we assumed constant variance. This model was fitted using the gamlss packages \citep{stasinopoulos_generalized_2007}.
+
+
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{ezgagritu}
+	\caption{Raw data of effect of agriculture and catchment size on the 95th percentile of log(TUmax).}
+	\label{fig:ezgagritu}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{ezgagritumodel}
+	\caption{Effect of agriculture within the catchment (left) and catchment size (rigth) on the 95th percentile of log(TUmax). The model took censored data into account (see description above). Dashed lines denote 95\% Confidence Intervals.}
+	\label{fig:ezgagritu_model}
+\end{figure}
 
 
 

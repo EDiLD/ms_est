@@ -24,3 +24,5 @@ credentials.R
 
 # Project specific
 acs-article.bib
+
+*.directory

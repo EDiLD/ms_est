@@ -175,12 +175,12 @@ We modeled the number of RAC exceedances (No) as:
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site. 
-We used the number of samplings ($n_i$) as an offset to account different sampling efforts. 
-We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
+We modeled $No_i$ as resulting from a negative binomial distribution ($NB$) and used the number of sampling events per site ($n_i$) as an offset to account different sampling efforts. 
 $f_1$ and $f_2$ are smoothing functions using thin plate regression splines \citep{wood_thin_2003}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
-Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $log(TU_{max})$ (see Supplement for details). \todo{TRUE?}
-GAM were fitted using the mgcv package \citep{wood_fast_2011}.
+Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $TU_{max}$ (see Supplement). 
+We used pointwise 95\% Confidence Intervals of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
+GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 
 \section{Results}
@@ -210,7 +210,7 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
   \label{fig:figvar}
 \end{figure}
-\todo{prettify figure!}
+\todo{prettify figure! check cowplot package.}
 
 We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. \todo{Check why there are so many missing in BW, NW, RP, SN and TH = phchsitesinfo}.
 The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
@@ -232,7 +232,7 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 \begin{figure}
   \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases.
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant increases. Dashed lines denote 95\% Confidence Intervals.
   }
   \label{fig:figrac}
 \end{figure}
