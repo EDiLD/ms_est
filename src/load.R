@@ -59,6 +59,7 @@ library(cowplot)
 require(pbapply)
 require(esmisc) # https://github.com/EDiLD/esmisc
 require(webchem)
+require(xtable)
 
 # modelling
 require(vegan)

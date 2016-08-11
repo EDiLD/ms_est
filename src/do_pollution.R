@@ -28,6 +28,8 @@ take_samples <- psm_samples[site_id %chin% take_sites]
 (tot <- nrow(take_samples))
 # no. sites
 length(unique(take_samples$site_id))
+# no. samples
+length(unique(take_samples$sample_id))
 # no. compounds
 length(unique(take_samples$variable_id))
 # values > loq
@@ -103,6 +105,8 @@ dd <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 # calculate media per variable and take only first 15 hits
 take_var <- dd[ , list(media = max(rq)) , by = variable_id][order(media, decreasing = TRUE)][1:15, variable_id]
 dd <- dd[variable_id %in% take_var]
+dd[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)][1:15]
+
 
 prac <- ggplot(dd) +
   geom_violin(aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
@@ -136,6 +140,18 @@ take_lc50[ , tu := value_fin / lc50_dm_fin]
 # calculate TUmax per sample
 tumax <- take_lc50[ , list(tumax = max(tu)), by = sample_id]
 
+# number of non-detects
+nrow(tumax[tumax == 0])
+nrow(tumax)
+nrow(tumax[tumax == 0]) / nrow(tumax) * 100
+
+# number of logTU > -2
+nrow(tumax[tumax > 0.01]) / nrow(tumax) * 100
+nrow(tumax[tumax > 0.01]) / nrow(tumax[tumax != 0]) * 100
+
+# mean logTU
+mean(log10(tumax[tumax != 0, tumax]))
+
 
 ptu <- ggplot(data = tumax, aes(x = log10(tumax))) +
   geom_histogram(fill = 'grey75') +
@@ -145,11 +161,26 @@ ptu <- ggplot(data = tumax, aes(x = log10(tumax))) +
 
 
 
+
 # Mixtures ----------------------------------------------------------------
 
 # calculate the number of compounds per sample
 mix <- take_samples[ , list(no_subs = sum(value_fin > 0)), by = list(sample_id, site_id, date)]
 
+(tot <- nrow(mix))
+# no detects
+mix[no_subs == 0] # 3147 
+nrow(mix[no_subs == 0]) / tot*100
+# one compound
+mix[no_subs == 1] # 1782
+nrow(mix[no_subs == 1]) / tot * 100
+
+# 2+ compound
+mix[no_subs  >= 2] 
+nrow(mix[no_subs >= 2]) / tot * 100
+
+# max mixtures
+max(mix$no_subs)
 
 pmix <- ggplot(mix, aes(x = no_subs)) +
   geom_histogram(fill = 'grey75') +
@@ -158,5 +189,6 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
 
 
 pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'C', 'B', 'D'), 
-                  scale = c(1, 1, 1, 1))
+                  label_size = 20)
 ggsave(file.path(prj, "/fig/pall.svg"), pall, width = 11, height = 11)
+# ggsave(file.path(prj, "/fig/pall.pdf"), pall, width = 11, height = 11)

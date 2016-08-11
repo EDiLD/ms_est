@@ -85,7 +85,7 @@ psm_samples_tab <- psm_samples_tab[order(psm_samples_tab$state), ]
 names(psm_samples_tab)[1] <- 'state \\textsuperscript{a}'
 names(psm_samples_tab)[6] <- 'no.compounds \\textsuperscript{b}'
 
-require(xtable)
+
 xtab <- xtable(psm_samples_tab, 
        label = 'tab:phch_overview',
       caption = 'Overview on chemical samples. Only data from running waters and grab
@@ -491,7 +491,7 @@ ggplot() +
              size = 1) +
   theme(legend.key = element_rect(fill = 'white')) +
   labs(x = 'Lon.', y = 'Lat.') +
-  theme_bw() +
+  mytheme +
   coord_equal()
 
 table(ss[all == FALSE, substr(site_id, 1, 2)], useNA = 'always')
