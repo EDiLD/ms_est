@@ -117,7 +117,7 @@ prac <- ggplot(dd) +
   labs(x = 'Compound', y = 'Risk Quotient') +
   scale_fill_manual(name = 'Group',
                       values = c('#377eb8', '#4daf4a', '#B31010'),
-                      labels = c('Fungizid', 'Herbizid', 'Insektizid')) +
+                      labels = c('Fungicide', 'Herbicide', 'Insecticide')) +
   mytheme +
   theme(legend.position = 'bottom')
 
