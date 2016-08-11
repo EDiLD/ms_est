@@ -118,7 +118,7 @@ In the following we will use the ISO 3166-2:DE standard abbreviations for federa
 We homogenized and unified these datasets into a common database.
 We implemented a robust and transparent data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
 An overview of the data cleaning process is provided in the supplemental materials.  
-To assess whether samples were taken during potential rainfall events we intersected sampling coordinates with daily precipitation data \citep{rauthe_central_2013} from the sampling date and the day before.
+To assess whether samples were taken during potential rainfall events we performed spatio-temporal intersection of sampling events with daily precipitation data from the sampling date and the day before. \citep{rauthe_central_2013}.
 
 \subsection{Characterization of chemical pollution}
 We characterized chemical pollution (excluding sum parameters) using three indicators:
@@ -188,7 +188,7 @@ GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 The compiled dataset comprised only few standing waters (58 sites) and the majority (90\%) of samples where taken via grab sampling.  % see clean.R for numbers
 Therefore, we report only results of grab samples from streams. 
-The analysed dataset comprised 42236 samples from 3049 sampling sites.  %see do_overview.R for numbers.
+The analysed dataset comprised 2,918,604 measurements from 42,236 samples from 3,049 sampling sites.  %see do_overview.R for numbers.
 We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
 
 \begin{figure}
@@ -197,12 +197,16 @@ We found big differences in the number of sampling sites between federal states 
   \label{fig:fig1}
 \end{figure}
 
-In total 484 different compounds that could be classified as pesticides and their metobalites were measured at least once (Supplement, Table \todo{Set ref to table}). 
+In total 484 different compounds used as pesticides and their metobalites were measured at least once (Supplement, Table \todo{Set ref to table}). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
-We found substantial differences of the spectra of analysed compounds (Figure \ref{fig:figvar}).
-Hierarchical clustering revealed three groups of states:
-i) with less then 100 compounds (SL, ST and TH), ii) with a medium sized spectra and iii) with a big and distinct spectra (RP and NI).
-Only 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day.
+We found substantial differences of the spectra of analysed compounds between federal states (Figure \ref{fig:figvar}).
+Hierarchical clustering revealed three groups:
+i) with less then 100 compounds (SL, ST and TH), \\
+ii) with a medium sized spectra and \\
+iii) with a big and distinct spectra (RP and NI).
+
+Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
+The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day. \todo{ref supplement}.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{fig/figvar.pdf}
@@ -210,7 +214,6 @@ Only 5\% of the samples were taken at or after days with rainfall events greater
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
   \label{fig:figvar}
 \end{figure}
-
 
 We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. 
 The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
@@ -229,10 +232,10 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
-Modelling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
-Above it levels off with a slight increase towards completely agricultural catchments (Figure \ref{fig:figrac}, left).
-This indicates thresholds at 25\%, above chemical pollution from agriculture can be detected, and 75\% above pollution increases. \todo{discussion?}
-We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:figrac}, right). 
+Modeling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
+Above this threshold the exceedances level off followed by a increase above 75\% (Figure \ref{fig:figrac}, left).
+
+We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:figrac}, right) and no interaction between these two predictors.
 
 \begin{figure} [h]
   \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
@@ -241,17 +244,19 @@ We could no detect any effect of catchment size on the number of RAC exceedances
   \label{fig:figrac}
 \end{figure}
 
-The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed the same patterns (see Supplement Figure Sxxx - Sxxx). \todo{references}.
+The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed similar patterns and thresholds (see Supplement Figure Sxxx - Sxxx). \todo{references}.
 
 
-\subsection{Pesticide pollution of small streams}
-Based on the results previous results and give the low amount of sample sites with catchment sizes \textless 10 km\textsuperscript{2} we divided the dataset into four groups to further explore the pollution of german streams.
+\subsection{Pesticide pollution of small agricultural streams in germany}
+Based on the results previous results and given the low amount of sample sites with catchment sizes below 10 km\textsuperscript{2} we explored the pollution of small agricultural streams, defined as streams with catchment size less than 30 km\textsuperscript{2} and more than 25\% agriculture within the catchment (n = 1030 sites).
 
-The four groups were:
-i) small, agricultural streams (catchment size \textless 30 km\textsuperscript{2} and agriculture \textgreater 40\%, n = 842 sites);
-ii) small, non-agricultural streams (catchment size \textless 30 km\textsuperscript{2} and agriculture \textless 10\%, n = 254 sites);
-iii) medium sized, agricultural streams (30 km\textsuperscript{2} $\le$ catchment size \textless 150 km\textsuperscript{2} and agriculture \textgreater 40\%, n = 489 sites);
-iv) medium sized, non-agricultural streams (30 km\textsuperscript{2} $\le$ catchment size \textless 150 km\textsuperscript{2} and agriculture \textless 10\%, n = 160 sites).
+
+
+
+% EQS
+% RAC
+% TU
+% Mixture
 
 
 

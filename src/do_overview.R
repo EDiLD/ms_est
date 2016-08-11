@@ -18,6 +18,19 @@ psm_variables <- fread(file.path(cachedir, 'psm_variables.csv'))
 psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
 var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
+# some numbers
+# no. observations
+(tot <- nrow(psm_samples))
+# no. sites
+length(unique(psm_samples$site_id))
+# no. compounds
+length(unique(psm_samples$variable_id))
+# values > loq
+length(psm_samples[value_fin > 0, value_fin])
+length(psm_samples[value_fin > 0, value_fin]) / tot * 100 
+
+
+
 
 # Spatial distribution ----------------------------------------------------
 # (=Figure 1)
@@ -261,8 +274,6 @@ p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
   guides(fill = FALSE) 
 p_bar
 
-# install.packages('cowplot')
-library(cowplot)
 p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
 plot(p)
 
@@ -271,7 +282,7 @@ plot(p)
 # p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
 
 ggsave(file.path(prj, "/fig/figvar.svg"),
-       p, width = 11, height = 7)
+       p, width = 11, height = 6)
 #  Need to be manually cropped in inkscape
 
 

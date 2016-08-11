@@ -361,7 +361,6 @@ mytheme <- theme_bw(base_size = 12, base_family = "Helvetica") +
         axis.text = element_text(size = 12),
         axis.title.x = element_text(size = 14, face = "bold", vjust = 0),
         axis.title.y = element_text(size = 14, face = "bold", vjust = 1),
-        legend.position = "bottom",
         legend.key = element_blank(),
         strip.background = element_blank(),
         strip.text = element_text(size = 14, face = 'bold'))

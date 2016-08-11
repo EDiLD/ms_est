@@ -86,11 +86,30 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \chapter{Are small agricultural waters more polluted compared to bigger streams?}
 
+\section{EQS Exceedances}
+We modeled the number of EQS exceedances (No) the same way as RAC exceedances (see main article).
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{ezgagrieqs}
+	\caption{Raw data used for modelling EQS exceedances. Color codes the number of EQS exceedances (on a log-scale). Grey points denote sites without any exceedance.}
+	\label{fig:ezgagrieqs}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{ezgagrieqsmodel}
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of EQS exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
+  }
+  \label{fig:ezgeqsagrimodel}
+\end{figure}
+
+
 \section{RAC Exceedances}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{ezgagrirac}
-	\caption{Raw data used for the model in equation xxx and Figure xxx of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points are sites without any exceedance.}
+	\caption{Raw data used for the model in equation xxx and Figure xxx of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
 	\label{fig:ezgagrirac}
 \end{figure}
 \todo{update refs}
@@ -130,7 +149,7 @@ Instead of assuming a fixed value for the data \textless LOQ, we use a model tak
 \end{split}
 \end{align}
 
-With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors. Further, we assumed constant variance. This model was fitted using the gamlss package \citep{stasinopoulos_generalized_2007}.
+With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors and $E(y_i | y_i > -8.75))$ the expectet value given non-censoring. Further, we assumed constant variance. This model was fitted using the gamlss package \citep{stasinopoulos_generalized_2007}.
 
 
 \begin{figure}[h]
@@ -148,24 +167,8 @@ With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i
 \end{figure}
 
 
-\pagebreak
-\section{EQS Exceedances}
-We modeled the number of EQS exceedances (No) the same way as RAC exceedances (see main article).
 
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width = 0.6\textwidth]{ezgagrieqs}
-	\caption{Raw data used for modelling EQS exceedances. Color codes the number of EQS exceedances (on a log-scale). Grey points are sites without any exceedance.}
-	\label{fig:ezgagrieqs}
-\end{figure}
-
-\begin{figure}
-  \includegraphics[width=0.8\textwidth]{ezgagrieqsmodel}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of EQS exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
-  }
-  \label{fig:ezgeqsagrimodel}
-\end{figure}
 
 
 

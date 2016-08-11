@@ -116,14 +116,15 @@ mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset
               family = nb(),
               method = 'REML')
 
-mod_nb_te <- gam(n_exceed ~ te(agri_fin, ezg_fin, bs = 'cr') + offset(logn), 
+# model with interaction
+mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') +  ti(agri_fin, ezg_fin, bs = 'cr') + offset(logn), 
               data = rak_exceed,
               family = nb(),
               method = 'REML')
 plot(mod_nb_te)
 vis.gam(mod_nb_te, view = c('agri_fin', 'ezg_fin'))
-anova(mod_nb, mod_nb_te, test = 'Chisq') 
-# smoothing interaction not significant and can be omited
+anova(mod_nb, mod_nb_ti, test = 'Chisq') 
+# smoothing interaction not of interest
 
 
 
@@ -465,13 +466,13 @@ r <- resid(mod_nb, type = "pearson")
 sum(r^2) / (mod_nb$df.res)
 #! better
 
-mod_nb_te <- gam(n_exceed ~ te(agri_fin, ezg_fin) + offset(logn),
+mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + ti(agri_fin, ezg_fin) + offset(logn),
                  data = eqs_exceed,
                  family = nb(),
                  method = 'REML')
-plot(mod_nb_te)
-vis.gam(mod_nb_te, view = c('agri_fin', 'ezg_fin'))
-anova(mod_nb, mod_nb_te, test = 'Chisq')
+plot(mod_nb_ti)
+vis.gam(mod_nb_ti, view = c('agri_fin', 'ezg_fin'))
+anova(mod_nb, mod_nb_ti, test = 'Chisq')
 # smoothing interaction not significant and can be omited
 
 
