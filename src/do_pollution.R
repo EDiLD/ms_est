@@ -190,5 +190,5 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
 
 pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'C', 'B', 'D'), 
                   label_size = 20)
-ggsave(file.path(prj, "/fig/pall.svg"), pall, width = 11, height = 11)
-# ggsave(file.path(prj, "/fig/pall.pdf"), pall, width = 11, height = 11)
+ggsave(file.path(prj, "figure5.pdf"), pall, width = 7, height = 7, 
+       units = 'in', dpi = 300, scale = 1.5)

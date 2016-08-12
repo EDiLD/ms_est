@@ -54,6 +54,7 @@ require(ggplot2)
 require(gridExtra)
 require(ggExtra)
 library(cowplot)
+library(viridis)
 
 # misc
 require(pbapply)

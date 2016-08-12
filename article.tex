@@ -43,10 +43,10 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title[Pesticides small streams]{Pesticides pollution of small streams in Germany}
+\title[Pesticides small streams]{Pesticides in small agricultural streams in Germany}
 \abbreviations{mo, pest, ger, tu}
 \keywords{Monitoring, Neonicotinoid, Germany, Toxic Units, Freshwater}
-
+% RAC, 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -58,21 +58,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tocentry}
 
-Some journals require a graphical entry for the Table of Contents.
-This should be laid out ``print ready'' so that the sizing of the
-text is correct.
-
-Inside the \texttt{tocentry} environment, the font used is Helvetica
-8\,pt, as required by \emph{Journal of the American Chemical
-Society}.
-
-The surrounding frame is 9\,cm by 3.5\,cm, which is the maximum
-permitted for  \emph{Journal of the American Chemical Society}
-graphical table of content entries. The box will not resize if the
-content is too big: instead it will overflow the edge of the box.
-
-This box and the associated title will always be printed on a
-separate page at the end of the document.
+\includegraphics[width=0.7\textwidth]{abstract.pdf}
 
 \end{tocentry}
 
@@ -191,15 +177,15 @@ Therefore, we report only results of grab samples from streams.
 The analysed dataset comprised 2,918,604 measurements from 42,236 samples from 3,049 sampling sites.  %see do_overview.R for numbers.
 We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
 
-\begin{figure}
-  \includegraphics[width=.7\textwidth]{fig/fig1.pdf}
+\begin{figure}[ht]
+  \includegraphics[width=0.6\textwidth]{figure1.pdf}
   \caption{Spatial distribution of the 3109 sampling sites. Colour codes different federal states.}
   \label{fig:fig1}
 \end{figure}
 
 In total 484 different compounds used as pesticides and their metobalites were measured at least once (Supplement, Table \todo{Set ref to table}). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
-We found substantial differences of the spectra of analysed compounds between federal states (Figure \ref{fig:figvar}).
+We found substantial differences of the spectra of analysed compounds between federal states (Figure \ref{fig:fig2}).
 Hierarchical clustering revealed three groups:
 i) with less then 100 compounds (SL, ST and TH), \\
 ii) with a medium sized spectra and \\
@@ -208,24 +194,24 @@ iii) with a big and distinct spectra (RP and NI).
 Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
 The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day. \todo{ref supplement}.
 
-\begin{figure}
-  \includegraphics[width=\textwidth]{fig/figvar.pdf}
+\begin{figure}[ht]
+  \includegraphics[width=\textwidth]{figure2.pdf}
   \caption{Compound spectra of the different federal states. Left: Barcode plot - Each vertical line is an analysed compound. Right: MDS ordination. 
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure xxx).}
-  \label{fig:figvar}
+  \label{fig:fig2}
 \end{figure}
 
 We were able to derive for 2376 sites catchment sizes and the proportion of agriculture within catchments. 
-The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:figezglu}).
+The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:fig3}).
 The proportion of agriculture in the catchments decreased with increasing catchment size.
 
-\begin{figure}
-  \includegraphics[width=.8\textwidth]{fig/ezglu.pdf}
+\begin{figure}[ht]
+  \includegraphics[width=.8\textwidth]{figure3.pdf}
   \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
   Only sampling sites with catchment area < 150 km\textsuperscript{2} are displayed. 
   Colour codes the 2-dimensional density of points.
   }
-  \label{fig:figezglu}
+  \label{fig:fig3}
 \end{figure}
 
 
@@ -233,15 +219,15 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 \subsection{Are small agricultural waters more polluted compared to bigger streams?}
 
 Modeling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
-Above this threshold the exceedances level off followed by a increase above 75\% (Figure \ref{fig:figrac}, left).
+Above this threshold the exceedances level off followed by a increase above 75\% (Figure \ref{fig:fig4}, left).
 
-We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:figrac}, right) and no interaction between these two predictors.
+We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:fig4}, right) and no interaction between these two predictors.
 
-\begin{figure}[h]
-  \includegraphics[width=0.8\textwidth]{fig/figrac.pdf}
+\begin{figure}[ht]
+  \includegraphics[width=0.95\textwidth]{figure4.pdf}
   \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
   }
-  \label{fig:figrac}
+  \label{fig:fig4}
 \end{figure}
 
 The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed similar patterns and thresholds (see Supplement Figure Sxxx - Sxxx). \todo{references}.
@@ -251,29 +237,29 @@ The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed simil
 Based on the results previous results and given the low amount of sample sites with catchment sizes below 10 km\textsuperscript{2} we explored the pollution of small agricultural streams, defined as streams with catchment size less than 30 km\textsuperscript{2} and more than 25\% agriculture within the catchment (n = 1030 sites with 10591 samples and 36550 measurements).
 %EQS
 Out of the 29 compounds with EQS, the most frequent EQS exceedances were recorded for the herbicides Nicosulfuron (2.1\%, n = 1769), Flufenacet (1.1\%, n = 6301) and Isoproturon (0.7\%, n = 8380). 
-Other compounds show exceedances only at less then 0.5\% of all samples (Figure \ref{fig:figpol}A).
+Other compounds show exceedances only at less then 0.5\% of all samples (Figure \ref{fig:fig5}A).
 % RAC
 Insecticides showed most exceedances of RAC. 
-For Thiacloprid, Imidacloprid and Chlorpyrifos the RAC was less than LOQ, therefore, all detections have a RQ \textgreater 1 (Figure \ref{fig:figpol}B). 
+For Thiacloprid, Imidacloprid and Chlorpyrifos the RAC was less than LOQ, therefore, all detections have a RQ \textgreater 1 (Figure \ref{fig:fig5}B). 
 Highest RQ was observed for Chlorpyrifos (244), Dimoxystrobin(117) and Isoproturon (80). 
 % TU
 In 33\% of the samples no compounds no compounds were detected. 
 The mean $log(TU_{max})$ for detects was -4.6.
-2.6\% of the samples showed $log(TU_{max})$ values greater then -2 (Figure \ref{fig:figpol}C).
+2.6\% of the samples showed $log(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
 %Mixtures
-In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:figpol}D). 
+In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:fig5}D). 
 
 
 
-\begin{figure}[h]
-  \includegraphics[width=0.95\textwidth]{fig/pall.pdf}
+\begin{figure}[ht]
+  \includegraphics[width=0.95\textwidth]{figure5.pdf}
   \caption{Overview on pesticide pollution of small agricultural streams. 
-  A: 10 compounds with most frequent EQS exceedances. See B for color legend.
-  B: 15 compounds with highest risk quotients.
-  C: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples).
-  D: Distribution of the number of detected compounds in a sample.
+  \textbf{A}: 10 compounds with most frequent EQS exceedances. See B for color legend.
+  \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples).
+  \textbf{C}: 15 compounds with highest risk quotients.
+  \textbf{D}: Distribution of the number of detected compounds in a sample.
   }
-  \label{fig:figpol}
+  \label{fig:fig5}
 \end{figure}
 
 

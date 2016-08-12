@@ -42,8 +42,7 @@ psm_sites <- cbind(coordinates(psm_sites), psm_sites@data)
 psm_sites$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites$site_id)
 setDT(psm_sites)
 
-
-library(raster)
+# get administrative borders
 adm1 <- raster::getData('GADM', country = 'DE', level = 1)
 adm1 <- fortify(adm1)
 p <- ggplot() +
@@ -58,8 +57,8 @@ p <- ggplot() +
   mytheme +
   coord_equal()
 p
-ggsave(file.path(prj, "/fig/fig1.svg"),
-       p, width = 7, height = 7)
+ggsave(file.path(prj, "figure1.pdf"),
+       p, width = 3.3, height = 3, units = 'in', dpi = 300, scale = 2)
 
 
 
@@ -272,17 +271,16 @@ p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
         axis.ticks.x = element_blank()) +
   labs(x = 'Compound', y = 'State') +
   guides(fill = FALSE) 
-p_bar
 
 p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
-plot(p)
+# plot(p)
 
 # h <- c(7, 9)
 # h <- h/sum(h)
 # p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
 
-ggsave(file.path(prj, "/fig/figvar.svg"),
-       p, width = 11, height = 6)
+ggsave(file.path(prj, "figure2.pdf"),
+       p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
 #  Need to be manually cropped in inkscape
 
 
@@ -291,7 +289,6 @@ ggsave(file.path(prj, "/fig/figvar.svg"),
 
 # Catchment size and landuse distribution ---------------------------------
 options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
-library(viridis)
 ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
                  aes(x = ezg_fin, y = agri_fin * 100)) +
   stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
@@ -302,13 +299,13 @@ ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fi
   # scale_fill_gradient(low = "yellow", high = "red") +
   scale_fill_viridis()+
   scale_x_continuous(breaks = c(0, 10, 25, 50, 100, 150))
-ezg_lu
+# ezg_lu
 ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
-ezg_lu
-ggsave(file.path(prj, 'fig/ezglu.svg'), 
-       width = 9, height = 7,
-       device = grDevices::svg,
-       ezg_lu)
+# ezg_lu
+ggsave(file.path(prj, 'figure3.pdf'), 
+       ezg_lu,
+       width = 3.3, height = 3.3/1.2,
+       units = 'in', dpi = 300, scale = 2.5)
 options(stringsAsFactors = FALSE)
 
 

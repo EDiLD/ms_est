@@ -28,7 +28,9 @@ nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
 # join sites with info
 setkey(psm_sites, site_id)
 setkey(psm_sites_info, site_id)
-psm_sites_wi <- psm_sites[ , list(site_id, state, easting, northing)][psm_sites_info[ , list(site_id, use, ezg_fin, agri_fin)]]
+psm_sites_wi <- psm_sites[ , list(site_id, state, easting, 
+                                  northing)][psm_sites_info[ , list(site_id, 
+                                                                    use, ezg_fin, agri_fin)]]
 
 
 
@@ -98,8 +100,9 @@ ggsave(file.path(prj, "supplement/ezgagrirac.pdf"),
 
 # model using gam 
 rak_exceed$agri_fin <- rak_exceed$agri_fin*100
-mod_p <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset(logn), data = rak_exceed, 
-           family = poisson, method = 'REML')
+mod_p <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset(logn), 
+             data = rak_exceed, 
+             family = poisson, method = 'REML')
 plot(mod_p, pages = 1)
 plot(mod_p, pages = 1, residuals = TRUE) 
 gam.check(mod_p)
@@ -117,7 +120,8 @@ mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset
               method = 'REML')
 
 # model with interaction
-mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') +  ti(agri_fin, ezg_fin, bs = 'cr') + offset(logn), 
+mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') +  
+                   ti(agri_fin, ezg_fin, bs = 'cr') + offset(logn), 
               data = rak_exceed,
               family = nb(),
               method = 'REML')
@@ -127,11 +131,6 @@ anova(mod_nb, mod_nb_ti, test = 'Chisq')
 # smoothing interaction not of interest
 
 
-
-# offset out of formula: =ignored in predict?
-#! Check
-# mod_nb <- gam(n_exceed ~ s(agri_fin) + s(ezg_fin), offset = rak_exceed$logn, data = rak_exceed, 
-#               family = nb())
 plot(mod_nb, pages = 1)
 plot(mod_nb, pages = 1, residuals = TRUE) 
 gam.check(mod_nb)
@@ -226,8 +225,9 @@ p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
   ylab('No. RAC exceedances') +
   ylim(c(0, 1.3))
 # p
-ggsave(file.path(prj, "/fig/figrac.svg"),
-       p, width = 8, height = 5)
+ggsave(file.path(prj, "figure4.pdf"),
+       p, width = 7, height = 7/1.6,
+       units = 'in', dpi = 300, scale = 1)
 
 
 
