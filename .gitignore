@@ -26,3 +26,6 @@ credentials.R
 acs-article.bib
 
 *.directory
+abstract_art/*
+!abstract_art/abstract.svg
+!abstract_art/abstract.pdf
