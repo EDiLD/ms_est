@@ -22,52 +22,53 @@ cachedir <- file.path(prj, "cache")	# intermediate data
 #! use developmental version of data.table
 #! CRAN version should also work...
 # install.packages('devtools')
-require(devtools)
+library(devtools)
 # install_github("Rdatatable/data.table")
-require(data.table)
-require(xlsx)    # to read .xls files
+library(data.table)
+library(xlsx)    # to read .xls files
 # Note this needs Java JDK (http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-require(reshape2)
-require(plyr)
-require(bit64)
-require(Hmisc)
-require(stringr)
+library(reshape2)
+library(plyr)
+library(bit64)
+library(Hmisc)
+library(stringr)
 # install.packages("devtools")
 # devtools::install_github("hadley/readxl")
-require(readxl)
-require(stringi)
-require(stringdist)
+library(readxl)
+library(stringi)
+library(stringdist)
 
 # DB
-require(RPostgreSQL)
+library(RPostgreSQL)
 
 # spatial
-require(sp)
-require(rgdal)
-require(maptools)
-require(rgeos)
-require(raster)
-require(ggmap)
+library(sp)
+library(rgdal)
+library(maptools)
+library(rgeos)
+library(raster)
+library(ggmap)
 
 # plotting
-require(ggplot2)
-require(gridExtra)
-require(ggExtra)
+library(ggplot2)
+library(gridExtra)
+library(ggExtra)
 library(cowplot)
 library(viridis)
 
 # misc
-require(pbapply)
-require(esmisc) # https://github.com/EDiLD/esmisc
-require(webchem)
-require(xtable)
+library(pbapply)
+library(esmisc) # https://github.com/EDiLD/esmisc
+library(webchem)
+library(xtable)
 
 # modelling
-require(vegan)
+library(vegan)
 library(mgcv)
-require(gamlss)
-require(gamlss.cens)
-require(gamlss.dist)
+library(gamlss)
+library(gamlss.cens)
+library(gamlss.dist)
+library(gamlss.add)
 
 
 ### ----------------------------------------------------------------------------

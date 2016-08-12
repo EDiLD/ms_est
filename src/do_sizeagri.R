@@ -214,12 +214,15 @@ mylabeller <- as_labeller(c(
 
 
 # plot
-p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
-  geom_line() +
-  geom_line(aes(y = up), lty ='dashed') +
-  geom_line(aes(y = low), lty ='dashed') +
-  geom_line(aes(y = sig_value), colour = 'red', lwd = 1.5) +
+odat <- melt(rak_exceed[ , list(ezg_fin, agri_fin)])
+p <- ggplot() +
+  geom_line(data = pdat, aes(x = value, y = fit, group = variable)) +
+  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty ='dashed') +
+  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty ='dashed') +
+  geom_line(data = pdat, aes(x = value, y = sig_value, group = variable), 
+            colour = 'red', lwd = 1.5) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
+  geom_rug(data = odat, aes(x = value), alpha = 0.05) +
   mytheme +
   xlab('') +
   ylab('No. RAC exceedances') +
@@ -550,11 +553,14 @@ mylabeller <- as_labeller(c(
 
 
 # plot
-p <- ggplot(pdat, aes(x = value, y = fit, group = variable)) +
-  geom_line() +
-  geom_line(aes(y = up), lty ='dashed') +
-  geom_line(aes(y = low), lty ='dashed') +
-  geom_line(aes(y = sig_value), colour = 'red', lwd = 1.5) +
+odat <- melt(eqs_exceed[ , list(ezg_fin, agri_fin)])
+p <- ggplot() +
+  geom_line(data = pdat, aes(x = value, y = fit, group = variable)) +
+  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty ='dashed') +
+  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty ='dashed') +
+  geom_line(data = pdat, aes(x = value, y = sig_value, group = variable), 
+            colour = 'red', lwd = 1.5) +
+  geom_rug(data = odat, aes(x = value), alpha = 0.1) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
   mytheme +
   xlab('') +
