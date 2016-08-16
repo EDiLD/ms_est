@@ -1,0 +1,140 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Professional Formal Letter
+% LaTeX Template
+% Version 1.0 (28/12/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brian Moses (http://www.ms.uky.edu/~math/Resources/Templates/LaTeX/)
+% with extensive modifications by Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%------------------------------------------------------------------------------
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%------------------------------------------------------------------------------
+
+\documentclass[11pt,a4paper]{letter} % Specify the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
+
+\usepackage{graphicx} % Required for including pictures
+\usepackage{microtype} % Improves typography
+\usepackage[T1]{fontenc} % Required for accented characters
+\usepackage[utf8]{inputenc}
+
+% Create a new command for the horizontal rule in the document which allows thickness specification
+\makeatletter
+\def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+%----------------------------------------------------------------------------------------
+%   DOCUMENT MARGINS
+%----------------------------------------------------------------------------------------
+
+\textwidth 6.75in
+\textheight 9.25in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\topmargin -1in
+\parindent 0.4in
+
+%------------------------------------------------------------------------------
+%   SENDER INFORMATION
+%------------------------------------------------------------------------------
+
+\def\Who{Eduard Szöcs} % Your name
+\def\Where{University of Koblenz-Landau\\ Institute for Environmental Sciences} % Your department/institution
+\def\Address{Fortstr. 7} % Your address
+\def\CityZip{76829 Landau - GERMANY} % Your city, zip code, country, etc
+\def\Email{E-mail: szoecs@uni-landau.de} % Your email address
+\def\TEL{Phone: +49 6321 280 31552} % Your phone number
+
+
+%------------------------------------------------------------------------------
+%   HEADER AND FROM ADDRESS STRUCTURE
+%------------------------------------------------------------------------------
+
+\address{
+    \hspace{\fill}\includegraphics[width=3in]{Uni-Logo-2c.jpg} % Include the logo 
+    ~\\[-0.11in] % Reduce the whitespace above the horizontal rule
+    \vhrulefill{1pt} \\ 
+    \hspace{\fill}\parbox[t]{4in}{ % Create a box for your details underneath the horizontal rule on the right
+        \vspace{0.6in}
+        \textbf{\Who} \em \\ % Your name, all text after this will be italicized
+        \Where\\ % Your department
+        \Address\\ % Your address
+        \CityZip\\ % Your city and zip code
+        \TEL\\ % Your phone number
+        \Email\\ % Your email address
+    }
+    \hspace{-1.4in} % Horizontal position of this block, increase to move left, decrease to move right
+    \vspace{-1in} % Move the letter content up for a more compact look
+}
+
+%------------------------------------------------------------------------------
+%   TO ADDRESS STRUCTURE
+%------------------------------------------------------------------------------
+
+\def\opening#1{
+\thispagestyle{empty}
+{\centering\fromaddress \vspace{1in} \\} 
+{\raggedright \toname \\ \toaddress \par} % Print the to name and address
+\vspace{2em}
+% Subject line
+\noindent
+\textbf{Subject line} \hspace*{\fill}\today \\[2em]
+\vspace{0.6in} % White space after the to address
+\noindent #1 % Print the opening line
+}
+
+%----------------------------------------------------------------------------------------
+%   SIGNATURE STRUCTURE
+%----------------------------------------------------------------------------------------
+
+\signature{\Who} % The signature is a combination of your name and title
+
+\long\def\closing#1{
+    \vspace{0.1in} % Some whitespace after the letter content and before the signature
+    \noindent % Stop paragraph indentation
+    \hspace*{\fill} % Move the signature right
+    \parbox{\indentedwidth}{\raggedright
+    #1 % Print the signature text
+    \vskip 0.65in % Whitespace between the signature text and your name
+    \fromsig}
+} % Print your name and title
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TO ADDRESS
+%----------------------------------------------------------------------------------------
+
+\begin{letter}
+{
+\textbf{Environmental Science \& Technology} \\
+\vspace{1em}
+To the editor
+}
+
+%------------------------------------------------------------------------------
+%   LETTER CONTENT
+%------------------------------------------------------------------------------
+
+
+
+\opening{Dear editor of Environmental Science \& Technology,}
+
+xxxxx
+
+\closing{Sincerely, }
+
+%----------------------------------------------------------------------------------------
+
+\end{letter}
+\end{document}

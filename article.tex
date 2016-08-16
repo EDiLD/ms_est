@@ -120,13 +120,13 @@ We characterized chemical pollution (excluding sum parameters) using three indic
 
   \item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
   This is the lowest concentration at which no acceptable biological effects are expected. 
-  These are derived during authorization  process of pesticides and contain an uncertainty factor.
+  These are derived during authorization process of pesticides and incorporate also an uncertainty factor.
   The German Federal Environmental Agency provided RACs for 105 compounds (Supplement, Table xxx\todo{ref}).  
   We expressed RAC as Risk Quotient (RQ):
   \begin{equation}
-  RQ = \frac{C}{RAC}
+  RQ_i = \frac{C_i}{RAC_i}
   \end{equation}
-  Where $C$ is the concentration of a compound in a sample.
+  Where $C_i$ is the concentration of a compound $i$ bin a sample.
 
   \item Maximum Toxic Units ($\mathrm{TU_{max}}$)  \citep{sprague_measurement_1970}: 
   \begin{equation}
@@ -135,8 +135,9 @@ We characterized chemical pollution (excluding sum parameters) using three indic
 
   Where $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
   We compiled $EC_{50, D.magna}$ values from literature \citep{malaj_organic_2014}, databases \citep{lewis_international_2016,u.s._epa_ecotoxicology_2015} or model predictions \citep{schuurmann_quantitative_2011}, where experimental data had priority.
-  We could compile $EC_{50, D.magna}$ values for 394 compounds (Supplement, Table xxx\todo{ref}))
+  We could compile $EC_{50, D.magna}$ values for 394 compounds (Supplement, Table xxx\todo{ref})).
   We used the maximum TU per sample, as it is independent of the number of measured compounds and makes no assumptions on the mode of action.
+  Additionally, we also calculated the sum of toxic units ($TU_{sum}$).
   A table of all included compounds can be found in the supplement.
 \end{enumerate}
 
@@ -144,17 +145,17 @@ We characterized chemical pollution (excluding sum parameters) using three indic
 \subsection{Characterization of catchments}
 We delineated catchments upstream of the sampling sites using a digital elevation model \citep{eea_digital_2013} and a multiple flow direction algorithm \citep{holmgren_multiple_1994} as implemented in GRASS GIS 7 \citep{neteler_grass_2012}.
 Catchment delineation has been manually checked for accuracy. 
-In areas with low relief energy the delineation algorithm did not produce accurate results and we used river catchments provide by federal state authorities in these cases.
+In areas with low relief energy the delineation algorithm did not produce accurate results and we used river catchments provided by federal state authorities in these cases.
 For each catchment we calculated the relative coverage (\%) with agricultural areas based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities.
 
 
 \subsection{Statistical analyses}
 
-All data-processing and analyses have been performed using R, version 3.3.1 \citep{r_core_team_r:_2016}.
+All data-processing and analyses have been performed using R \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analysed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
 We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \citep{fewster_analysis_2000}.
 
-We modeled the number of RAC exceedances (No) as:
+We modeled the number of RAC exceedances as:
 
 \begin{align}
 \begin{split}
@@ -251,18 +252,20 @@ Highest RQ were observed for Chlorpyrifos (244), Dimoxystrobin(117) and Isoprotu
 In 33\% of the samples no pesticides were detected. 
 The mean $log(TU_{max})$ for detects was -4.6.
 2.6\% of the samples showed $log(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
+We found a high correlation of $log(TU_{max})$ and $TU_{sum}$ \todo{ausrechnen und r angeben}, with a maximum higher value of $TU_{sum}$ xx units.
+
 %Mixtures
 In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:fig5}D). 
 
 %% Add more numbers / percentages here => compare with knauer/stehle/Vijver
 
-\begin{figure}[ht]
-  \includegraphics[width=0.95\textwidth]{figure5.pdf}
+\begin{figure}[h]
+  \includegraphics[width=0.9\textwidth]{figure5.pdf}
   \caption{Overview on pesticide pollution of small agricultural streams. 
-  \textbf{A}: 10 compounds with most frequent EQS exceedances. See B for color legend.
-  \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples).
-  \textbf{C}: 15 compounds with highest risk quotients.
-  \textbf{D}: Distribution of the number of detected compounds in a sample.
+      \textbf{A}: 10 compounds with most frequent EQS exceedances. See B for color legend.
+      \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples).
+      \textbf{C}: 15 compounds with highest risk quotients.
+      \textbf{D}: Distribution of the number of detected compounds in a sample.
   }
   \label{fig:fig5}
 \end{figure}
@@ -271,27 +274,45 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
 
 \section{Discussion}
 
-The compiled dataset of governmental monitoring data respresents the 
+\subsection{Representativeness of the dataset}
+The compiled dataset of governmental monitoring data represents currently the most comprehensive one available for Germany.
+Similar nationwide datasets have been compiled for the Netherlands \citep{vijver_spatial_2008}, Switzerland \todo{cite munz} and the United States (Water Quality Portal (WQP) \url{www.waterqualitydata.us}).
 
-% Vergleich mit der Schweiz..... knauer / munz
-% niederland Pestizide atlas
-% USA WaterQuality Portal
+\todo{compare numbers of different atlases, number of sites / compounds}.
 
-%%% Risk assessment
-% findings from field studies on pesti-
-% cide exposure and effects must be used for a retrospec-
-% tive validation of the current EU regulatory risk assess-
-% ment, particularly for its future development.
+Nevertheless such nationwide compilations, may not only be useful for governmental surveillance, but also to answer other questions, like validation of exposure modeling \todo{cite knäbel?}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}, investigation of pesticide mixtures \todo{cite schreiner} or scientific research.
 
-% validation of the risk assessment through
-% targeted chemical and biological post-authorization
-% monitoring programs must be implemented for com-
-% pounds of concern to ensure that their application
+% current problems in monitoring and possible sollutions
+A nationwide assessment is hampered \todo{check verb} by the inhomogeneity of monitoring data between federal states:
+There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analysed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
+Future monitoring programs should aim at resolving these differences in order to enable a nationwide assessment. 
+
+
+
+\subsection{Influence of catchment area and agriculture}
+% agriculture
+We found a strong influence of agriculture on the pollution of streams.
+If there is more the 25\% agriculture within a catchment pesticides can be detected in streams and may have biological effects \todo{citation needed}.
+
+% size
+We did not find support for our hypothesis that small streams are more polluted then big streams, though previous studies have show such a relationship \citep{schulz_field_2004,stehle_pesticide_2015}.
+This could be explained by the relatively small gradient of catchment sizes in our dataset, with most of the streams being \textless $100~km^2$ (Figure \ref{fig:fig3}, top).
+For example the gradient of \citet{schulz_field_2004} covered 6 orders of magnitude.
+Another reason might be the the unequal distribution of catchment sizes, with less sites \textless $10~km^2$ and \textgreater $100~km^2$(Figure \ref{fig:fig3}, top).
+
+
+
+
+
+
+
+% Cite Schreiner in review
+% combination with biological data.
 
 % underestimation of grab sampling (Stehle et al. 2013). 
 
 % Stehle nur insectizide
-% malaj nur WFD
+% malaj nur WFD?
 
 % maxtu vs sumTU vs most sensitive => check publication.
 
@@ -300,17 +321,48 @@ The compiled dataset of governmental monitoring data respresents the
 
 % kleinere prozent werte wegen saisonalität / Proben im winter
 
-% knauer auch RAC
 
-\subsection{Representativeness of the data}
 
-\subsection{Influence of catchment area and agriculture}
+
+
 
 \subsection{Pollution of streams}
 
+% EQS
+
+% RAC
+\citet{stehle_pesticide_2015} found the highest percentage of RAC exceedances organophosphate insecticides. 
+Our results revealed that neonicotinoid insecticides show high exceedances, followed by the organophosphate chlorpyrifos. 
+This can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here \todo{zahlen neonics} and shows that this class may pose a high risk to freshwaters \todo{anderes Wort}.
+Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality. 
+This is also reflected in the different sample sizes (1,566 vs. 2,918,604 measurements \todo{use number for substances with RAC}) and the high number of non-detects in the monitoring data.
+
+Contrary, \citet{knauer_pesticides_2016} found exceedances from monitoring data mainly for herbicides and fungicides and only one insecticide Chlorpyrifos.
+This might reflect differences in use between countries and RACs.
+
+
+% TU
+xxxx\todo{add number} samples showed $TU_{max}$ values greater than -3, a threshhold above biological effects have been shown \todo{add citation schaefer}. 
+The high correlation of TU and the relatively low exceedance of $TU_sum$ reveals that in compound mixtures occurring in the field there most only one compound dominating the toxicity.
+
+% Mixtures
+Nevertheless, most pesticides did not occur individually but in mixtures.
+
+
+% TUsum vs TUmax => calculate
+
+% Mixtures
+
+
+% EQS & RAC
+
+
+% Conclusions
+Exceedances of RACs are undesirable 
+
 
 %%% Word count
-%% Figures 
+%% Figures  = 2400
 % 3 big = 3*600 = 1800
 % 2 small = 2*300 = 600
 
