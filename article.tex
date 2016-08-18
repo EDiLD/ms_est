@@ -79,17 +79,17 @@ The applied pesticides may enter surface waters via spray-drift, edge-off-field 
 Once entered the surface waters pesticides are frequently detected in environmental monitoring \citep{malaj_organic_2014} and may have adverse effects on biota and ecosystem functioning \citep{schulz_field_2004, schafer_effects_2007}.
 
 \citet{malaj_organic_2014} analysed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that pesticides jeopardize the health of freshwater ecosystems.
-However, this reflects only a small part of data from national scale monitoring programs.
-National monitoring programs are setup for determination and surveillance of the chemical and ecological status of surface, ground and drinking water.
-These monitoring programs produce large amounts of data, which possibly can also be used to answer other questions.
-In Germany monitoring programs are setup independently by the federal states in compliance with the Water Framework Directive \citep{quevauviller_water_2008} and additional state specific needs.
+However, this study reflected only a small part of data that is available from national monitoring programs.
+These programs are setup for determination and surveillance of the chemical and ecological status of surface, ground and drinking water.
+Large amounts of data are generated, which possibly can also be used to answer other questions.
+In Germany monitoring programs are setup independently by the federal states in compliance with the WFD \citep{quevauviller_water_2008} and additional state specific needs.
 However, currently there is no curated national-wide compilation of this data available.
+
 \citet{stehle_pesticide_2015} compiled 1566 measured concentrations of 23 insecticides in the EU from scientific publications. 
 They found that insecticides that many of these measurements exceed regulatory acceptable concentrations (RAC), especially in very small catchments \textless $1~km^2$.
-
 Small water bodies are important refuges of biodiversity \citep{davies_comparison_2008} and enable downstream colonisation of polluted streams \citep{liess_analyzing_2005}.
 At the same time they may be exposed to a high risk of pesticide contamination from adjacent agricultural areas and low dilution effects \citep{liess_determination_1999}.
-Although small streams comprise a major fraction of streams \citep{nadeau_hydrological_2007} relatively little is know about their chemical and ecological status.
+Although small streams comprise a major fraction of streams \citep{nadeau_hydrological_2007}, relatively little is know about their chemical and ecological status.
 
 The aim of this study was to compile all available chemical monitoring data in Germany and to answer the questions: \\
 (i) Can the currently available monitoring data used for a representative description of the pollution situation? \\
@@ -106,7 +106,7 @@ This yielded to a total of more then 30 datasets of different formats.
 In the following we will use the ISO 3166-2:DE standard abbreviations for federal states.
 
 We homogenized and unified these datasets into a common database.
-We implemented a robust and transparent data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
+We implemented a robust and reproducible data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
 An overview of the data cleaning process is provided in the supplemental materials.  
 To assess whether samples were taken during potential rainfall events we performed spatio-temporal intersection of sampling events with daily precipitation data from the sampling date and the day before. \citep{rauthe_central_2013}.
 
@@ -253,7 +253,6 @@ In 33\% of the samples no pesticides were detected.
 The mean $log(TU_{max})$ for detects was -4.6.
 2.6\% of the samples showed $log(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
 We found a high correlation of $log(TU_{max})$ and $TU_{sum}$ \todo{ausrechnen und r angeben}, with a maximum higher value of $TU_{sum}$ xx units.
-
 %Mixtures
 In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:fig5}D). 
 
@@ -282,7 +281,7 @@ Similar nationwide datasets have been compiled for the Netherlands \citep{vijver
 
 Nevertheless such nationwide compilations, may not only be useful for governmental surveillance, but also to answer other questions, like validation of exposure modeling \todo{cite knäbel?}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}, investigation of pesticide mixtures \todo{cite schreiner} or scientific research.
 
-% current problems in monitoring and possible sollutions
+% current problems in monitoring and possible solutions
 A nationwide assessment is hampered \todo{check verb} by the inhomogeneity of monitoring data between federal states:
 There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analysed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
 Future monitoring programs should aim at resolving these differences in order to enable a nationwide assessment. 
@@ -333,7 +332,7 @@ Another reason might be the the unequal distribution of catchment sizes, with le
 % RAC
 \citet{stehle_pesticide_2015} found the highest percentage of RAC exceedances organophosphate insecticides. 
 Our results revealed that neonicotinoid insecticides show high exceedances, followed by the organophosphate chlorpyrifos. 
-This can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here \todo{zahlen neonics} and shows that this class may pose a high risk to freshwaters \todo{anderes Wort}.
+This difference can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here \todo{zahlen neonics} and shows that this class may pose a high risk to freshwaters \todo{anderes Wort}.
 Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality. 
 This is also reflected in the different sample sizes (1,566 vs. 2,918,604 measurements \todo{use number for substances with RAC}) and the high number of non-detects in the monitoring data.
 
@@ -343,10 +342,10 @@ This might reflect differences in use between countries and RACs.
 
 % TU
 xxxx\todo{add number} samples showed $TU_{max}$ values greater than -3, a threshhold above biological effects have been shown \todo{add citation schaefer}. 
-The high correlation of TU and the relatively low exceedance of $TU_sum$ reveals that in compound mixtures occurring in the field there most only one compound dominating the toxicity.
-
+The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with one dominant compound.
 % Mixtures
 Nevertheless, most pesticides did not occur individually but in mixtures.
+This highlights that 
 
 
 % TUsum vs TUmax => calculate
