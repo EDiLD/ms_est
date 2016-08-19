@@ -23,7 +23,8 @@ credentials.R
 .Rproj.user/*
 .Rproj.user
 *.rds
-ms_est.Rproj  
+ms_est.Rproj 
+*.Rproj  
 
 # Project specific
 acs-article.bib
