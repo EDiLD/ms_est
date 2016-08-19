@@ -104,11 +104,23 @@ dd <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 
 # calculate media per variable and take only first 15 hits
 take_var <- dd[ , list(media = max(rq)) , by = variable_id][order(media, decreasing = TRUE)][1:15, variable_id]
-dd <- dd[variable_id %in% take_var]
-dd[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)][1:15]
+take_dd <- dd[variable_id %in% take_var]
+
+# highest RQs
+take_dd[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)][1:15]
+
+# percentage of RQ > 1
+nrow(dd[rq > 1]) / nrow(dd) * 100
+
+# take max per sample
+rak_samples <- length(unique(dd$sample_id))
+# percentake of samples with RQ > 1In 
+nrow(dd[ ,list(rq_max = max(rq)) , by = sample_id][rq_max > 1]) / rak_samples * 100
 
 
-prac <- ggplot(dd) +
+
+
+prac <- ggplot(take_dd) +
   geom_violin(aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
   geom_hline(yintercept = 1, linetype = 'dotted') +
   coord_flip() +
@@ -155,7 +167,7 @@ mean(log10(tumax[tumax != 0, tumax]))
 
 ptu <- ggplot(data = tumax, aes(x = log10(tumax))) +
   geom_histogram(fill = 'grey75') +
-  geom_rug() +
+  geom_rug(alpha = 0.05) +
   mytheme +
   labs(x = expression(log[10]*'('~TU[max]~')'), y = 'No. samples')
 
@@ -188,7 +200,7 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
   labs(y = 'No. samples', x = 'No. compounds')
 
 
-pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'C', 'B', 'D'), 
+pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'B', 'C', 'D'), 
                   label_size = 20)
-ggsave(file.path(prj, "figure5.pdf"), pall, width = 7, height = 7, 
+ggsave(file.path(prj, "figure5.pdf"), pall, width = 7, height = 6.5, 
        units = 'in', dpi = 300, scale = 1.5)
