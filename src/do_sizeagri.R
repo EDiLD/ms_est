@@ -228,7 +228,7 @@ p <- ggplot() +
   ylab('No. RAC exceedances') +
   ylim(c(0, 1.3))
 # p
-ggsave(file.path(prj, "figure4.pdf"),
+ggsave(file.path(prj, "manuscript/figure4.pdf"),
        p, width = 7, height = 7/1.6,
        units = 'in', dpi = 300, scale = 1)
 

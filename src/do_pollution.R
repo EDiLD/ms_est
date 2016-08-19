@@ -202,5 +202,5 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
 
 pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'B', 'C', 'D'), 
                   label_size = 20)
-ggsave(file.path(prj, "figure5.pdf"), pall, width = 7, height = 6.5, 
+ggsave(file.path(prj, "manuscript/figure5.pdf"), pall, width = 7, height = 6.5, 
        units = 'in', dpi = 300, scale = 1.5)

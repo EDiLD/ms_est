@@ -57,7 +57,7 @@ p <- ggplot() +
   mytheme +
   coord_equal()
 p
-ggsave(file.path(prj, "figure1.pdf"),
+ggsave(file.path(prj, "manuscript/figure1.pdf"),
        p, width = 3.3, height = 3, units = 'in', dpi = 300, scale = 2)
 
 
@@ -279,7 +279,7 @@ p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
 # h <- h/sum(h)
 # p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
 
-ggsave(file.path(prj, "figure2.pdf"),
+ggsave(file.path(prj, "manuscript/figure2.pdf"),
        p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
 #  Need to be manually cropped in inkscape
 
@@ -302,7 +302,7 @@ ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fi
 # ezg_lu
 ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
 # ezg_lu
-ggsave(file.path(prj, 'figure3.pdf'), 
+ggsave(file.path(prj, 'manuscript/figure3.pdf'), 
        ezg_lu,
        width = 3.3, height = 3.3/1.2,
        units = 'in', dpi = 300, scale = 2.5)
