@@ -172,6 +172,26 @@ ptu <- ggplot(data = tumax, aes(x = log10(tumax))) +
   labs(x = expression(log[10]*'('~TU[max]~')'), y = 'No. samples')
 
 
+# calculate TUmax und TUsum per sample
+tumaxsum <- take_lc50[ , list(tumax = max(tu), tusum = sum(tu)), by = sample_id]
+cor(tumaxsum$tumax, tumaxsum$tusum)
+# r = 0.985
+with(tumaxsum, max(log10(tusum) - log10(tumax), na.rm = TRUE))
+# maximum deviation is 0.75 log TU units
+
+p_tusummax <- ggplot(tumaxsum, aes(x = log10(tumax), y = log10(tusum))) +
+  geom_point(alpha = 0.05, size = 1) +
+  guides(alpha = FALSE, fill = FALSE) +
+  mytheme +
+  labs(x = expression(log[10]*'('~TU[max]~')'), 
+       y = expression(log[10]*'('~TU[sum]~')')) 
+p_tusummax
+ggsave(file.path(prj, "supplement/tusummax.pdf"),
+       p_tusummax)
+
+
+sum(tumaxsum[tumax != 0, log10(tumax) > -3]) #865
+865/10568*100
 
 
 # Mixtures ----------------------------------------------------------------

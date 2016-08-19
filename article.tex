@@ -250,9 +250,10 @@ In 15\% of all samples (n = 6377) risk quotients higher then 1 were observed.
 Highest RQ were observed for Chlorpyrifos (244), Dimoxystrobin(117) and Isoproturon (80). 
 % TU
 In 33\% of the samples no pesticides were detected. 
-The mean $log(TU_{max})$ for detects was -4.6.
-2.6\% of the samples showed $log(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
-We found a high correlation of $log(TU_{max})$ and $TU_{sum}$ \todo{ausrechnen und r angeben}, with a maximum higher value of $TU_{sum}$ xx units.
+The mean $log_{10}(TU_{max})$ for detects was -4.6.
+2.6\% of the samples showed $log_{10}(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
+We found a high correlation of $log_{10}(TU_{max})$ and $log_{10}(TU_{sum})$ (r = 0.985, with a maximum higher value of $log_{10}(TU_{sum})$ of 0.75 units (Supplement) \todo{ref}.
+% see do_polluion.R for numbers
 %Mixtures
 In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:fig5}D). 
 
@@ -262,8 +263,8 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
   \includegraphics[width=0.9\textwidth]{figure5.pdf}
   \caption{Overview on pesticide pollution of small agricultural streams. 
       \textbf{A}: 10 compounds with most frequent EQS exceedances. See B for color legend.
-      \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples).
-      \textbf{C}: 15 compounds with highest risk quotients.
+      \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples). Non-detects are not shown due to the logarithmic axis.
+      \textbf{C}: 15 compounds with highest risk quotients. Non-detects are not shown due to the logarithmic axis.
       \textbf{D}: Distribution of the number of detected compounds in a sample.
   }
   \label{fig:fig5}
@@ -272,22 +273,20 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
 
 
 \section{Discussion}
-
 \subsection{Representativeness of the dataset}
 The compiled dataset of governmental monitoring data represents currently the most comprehensive one available for Germany.
 Similar nationwide datasets have been compiled for the Netherlands \citep{vijver_spatial_2008}, Switzerland \citep{munz_pestizidmessungen_2011} and the United States (Water Quality Portal (WQP) \url{www.waterqualitydata.us}).
-
-\todo{compare numbers of different atlases, number of sites / compounds}.
-
-Nevertheless, such nationwide compilations, may not only be useful for governmental surveillance, but also to answer other questions, like validation of exposure modeling \cite{knabel_fungicide_2014}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}or investigation of pesticide mixtures \cite{schreiner_pesticide_2016}.
-
-% underestimation grab sampling
+The data compiled in Germany is of similar quantity.
 
 % current problems in monitoring and possible solutions
-A nationwide assessment of pesticide pollution is hampered by the inhomogeneity of monitoring data between federal states:
+Nevertheless, a nationwide assessment of pesticide pollution is hampered by the inhomogeneity of monitoring data between federal states:
 There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analyzed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
 Future monitoring programs should aim at resolving these differences in order to enable a nationwide assessment. 
 
+Given the fixed term monitoring design \todo{cite stehle 2012} and the low amount of samples taken at precipitation events that could lead to run-off, the data resents a strong underestimation of the real pollution and peak concentrations.
+Automatic water samplers triggered at precipitation or passive samplers \todo{cite moschet and fernandez}.
+
+Nevertheless, such nationwide compilations, may not only be used for governmental surveillance, but also to answer other questions, like validation of exposure modeling \cite{knabel_fungicide_2014}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}or occurrences of pesticide mixtures \cite{schreiner_pesticide_2016}.
 
 
 \subsection{Influence of catchment area and agriculture}
@@ -303,30 +302,6 @@ Another reason might be the the unequal distribution of catchment sizes, with le
 
 
 
-
-
-
-
-% Cite Schreiner in review
-% combination with biological data.
-
-% underestimation of grab sampling (Stehle et al. 2013). 
-
-% Stehle nur insectizide
-% malaj nur WFD?
-
-% maxtu vs sumTU vs most sensitive => check publication.
-
-% Stehle + Munz + Schulz kleine gewässer mehr belastet?
-% Munz auch landwirtschaft
-
-% kleinere prozent werte wegen saisonalität / Proben im winter
-
-
-
-
-
-
 \subsection{Pollution of streams}
 
 % EQS
@@ -339,19 +314,22 @@ Our results show lower proportions of exceedances compared to \citet{stehle_pest
 This is also reflected in the different sample sizes (1,566 vs. 2,918,604 measurements \todo{use number for substances with RAC}) and the high number of non-detects in the monitoring data.
 
 Contrary, \citet{knauer_pesticides_2016} found exceedances from monitoring data mainly for herbicides and fungicides and only one insecticide Chlorpyrifos.
-This might reflect differences in use between countries and RACs.
+This might reflect differences in pesticide use between countries and also RACs.
 
-% all detects for neonics > RAC => need to lower LOQs!+-
+For three insecticides all detected values where above the RAC.
+This highlights that national monitoring programs need to improve chemical analytics and lower the LOQ for these highly toxic compounds.
+
 
 % TU
-xxxx\todo{add number} samples showed $TU_{max}$ values greater than -3, a threshold above biological effects have been shown \todo{add citation schaefer}. 
-The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with one dominant compound.
+8.2\% of samples showed $TU_{max}$ values greater than -3 (Figure \ref{fig:fig5}C), a threshold above biological effects have been shown \citep{schafer_thresholds_2012}.
+
+The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with mainly one compound dominating the toxicity.
 % Mixtures
 Nevertheless, most pesticides did not occur individually but in mixtures.
-This highlights that 
+This highlights that future risk assessment needs to take mixtures into account.
 
 
-% TUsum vs TUmax => calculate
+
 
 % Mixtures
 
@@ -359,6 +337,17 @@ This highlights that
 % EQS & RAC
 
 % WFD 10km² 0> brauchen auch kleinere.
+
+% combination with biological data.
+
+
+% maxtu vs sumTU vs most sensitive => check publication.
+
+% Stehle + Munz + Schulz kleine gewässer mehr belastet?
+% Munz auch landwirtschaft
+
+% kleinere prozent werte wegen saisonalität / Proben im winter
+
 
 
 % Conclusions
