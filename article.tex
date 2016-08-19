@@ -78,7 +78,7 @@ In the year 2014 more the 45,000 tonnes of 766 authorized pesticides were sold f
 The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage, with run-off being one of the major input routes \citep{schulz_comparison_2001,liess_determination_1999}.
 Once entered the surface waters pesticides are frequently detected in environmental monitoring \citep{malaj_organic_2014} and may have adverse effects on biota and ecosystem functioning \citep{schulz_field_2004, schafer_effects_2007}.
 
-\citet{malaj_organic_2014} analysed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that pesticides jeopardize the health of freshwater ecosystems.
+\citet{malaj_organic_2014} analyzed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that pesticides jeopardize the health of freshwater ecosystems.
 However, this study reflected only a small part of data that is available from national monitoring programs.
 These programs are setup for determination and surveillance of the chemical and ecological status of surface, ground and drinking water.
 Large amounts of data are generated, which possibly can also be used to answer other questions.
@@ -152,7 +152,7 @@ For each catchment we calculated the relative coverage (\%) with agricultural ar
 \subsection{Statistical analyses}
 
 All data-processing and analyses have been performed using R \citep{r_core_team_r:_2016}.
-To display differences in the spectra of analysed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
+To display differences in the spectra of analyzed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
 We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \citep{fewster_analysis_2000}.
 
 We modeled the number of RAC exceedances as:
@@ -170,7 +170,7 @@ We modeled $No_i$ as resulting from a negative binomial distribution ($NB$) and 
 $f_1$ and $f_2$ are smoothing functions using thin plate regression splines \citep{wood_thin_2003}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
 Similar models were fitted to the number of EQS-exceedances and the 95th percentile of $TU_{max}$ (see Supplement for details). 
-We used pointwise 95\% Confidence Intervals of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
+We used point-wise 95\% Confidence Intervals of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 
@@ -179,7 +179,7 @@ GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 The compiled dataset comprised only few standing waters (58 sites) and the majority (90\%) of samples where taken via grab sampling.  % see clean.R for numbers
 Therefore, we report only results of grab samples from streams. 
-The analysed dataset comprised 2,918,604 measurements from 42,236 samples from 3,049 sampling sites.  %see do_overview.R for numbers.
+The analyzed dataset comprised 2,918,604 measurements from 42,236 samples from 3,049 sampling sites.  %see do_overview.R for numbers.
 We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
 
 \begin{figure}[ht]
@@ -190,7 +190,7 @@ We found big differences in the number of sampling sites between federal states 
 
 In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplement, Table \todo{Set ref to table}). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
-We found substantial differences of the spectra of analysed compounds between federal states (Figure \ref{fig:fig2}).
+We found substantial differences of the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2}).
 Hierarchical clustering revealed three groups:
 i) with less then 100 compounds (SL, ST and TH), \\
 ii) with a medium sized spectra and \\
@@ -246,7 +246,7 @@ Other compounds show exceedances only at less then 0.5\% of all samples (Figure 
 % RAC
 Neonicotinoid Insecticides and Chlropyrifos showed highest risk quotients.
 For Thiacloprid, Imidacloprid and Chlorpyrifos RAC was less than LOQ, therefore, all detections have a RQ \textgreater 1 (Figure \ref{fig:fig5}B). 
-In 15\% of all samples (n = 6377) risc quotients higher then 1 were observed.
+In 15\% of all samples (n = 6377) risk quotients higher then 1 were observed.
 Highest RQ were observed for Chlorpyrifos (244), Dimoxystrobin(117) and Isoproturon (80). 
 % TU
 In 33\% of the samples no pesticides were detected. 
@@ -283,7 +283,7 @@ Nevertheless such nationwide compilations, may not only be useful for government
 
 % current problems in monitoring and possible solutions
 A nationwide assessment is hampered \todo{check verb} by the inhomogeneity of monitoring data between federal states:
-There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analysed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
+There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analyzed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
 Future monitoring programs should aim at resolving these differences in order to enable a nationwide assessment. 
 
 
@@ -341,7 +341,7 @@ This might reflect differences in use between countries and RACs.
 
 
 % TU
-xxxx\todo{add number} samples showed $TU_{max}$ values greater than -3, a threshhold above biological effects have been shown \todo{add citation schaefer}. 
+xxxx\todo{add number} samples showed $TU_{max}$ values greater than -3, a threshold above biological effects have been shown \todo{add citation schaefer}. 
 The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with one dominant compound.
 % Mixtures
 Nevertheless, most pesticides did not occur individually but in mixtures.
