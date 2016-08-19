@@ -22,7 +22,6 @@
 \documentclass[11pt,a4paper]{letter} % Specify the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
 
 \usepackage{graphicx} % Required for including pictures
-\usepackage{microtype} % Improves typography
 \usepackage[T1]{fontenc} % Required for accented characters
 \usepackage[utf8]{inputenc}
 
@@ -30,6 +29,8 @@
 \makeatletter
 \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
 \makeatother
+
+
 
 %----------------------------------------------------------------------------------------
 %   DOCUMENT MARGINS
@@ -39,8 +40,8 @@
 \textheight 9.25in
 \oddsidemargin -.25in
 \evensidemargin -.25in
-\topmargin -1in
-\parindent 0.4in
+\topmargin -1.5in
+\parindent 0in
 
 %------------------------------------------------------------------------------
 %   SENDER INFORMATION
@@ -59,11 +60,12 @@
 %------------------------------------------------------------------------------
 
 \address{
-    \hspace{\fill}\includegraphics[width=3in]{Uni-Logo-2c.jpg} % Include the logo 
+    % Include the logos
+    \includegraphics[width=3in]{Uni-Logo-2c.jpg}\hspace{\fill}\includegraphics[width=2in]{logo_institut.jpg}
     ~\\[-0.11in] % Reduce the whitespace above the horizontal rule
     \vhrulefill{1pt} \\ 
     \hspace{\fill}\parbox[t]{4in}{ % Create a box for your details underneath the horizontal rule on the right
-        \vspace{0.6in}
+        \vspace{0.2in}
         \textbf{\Who} \em \\ % Your name, all text after this will be italicized
         \Where\\ % Your department
         \Address\\ % Your address
@@ -81,12 +83,12 @@
 
 \def\opening#1{
 \thispagestyle{empty}
-{\centering\fromaddress \vspace{1in} \\} 
+{\centering\fromaddress \vspace{0.5in} \\} 
 {\raggedright \toname \\ \toaddress \par} % Print the to name and address
 \vspace{2em}
 % Subject line
 \noindent
-\textbf{Subject line} \hspace*{\fill}\today \\[2em]
+\textbf{Submission of article} \hspace*{\fill}\today \\[2em]
 \vspace{0.6in} % White space after the to address
 \noindent #1 % Print the opening line
 }
@@ -122,17 +124,36 @@
 To the editor
 }
 
+% noindent
+\setlength\parindent{0pt}
+
 %------------------------------------------------------------------------------
 %   LETTER CONTENT
 %------------------------------------------------------------------------------
 
 
 
-\opening{Dear editor of Environmental Science \& Technology,}
+\opening{Dear Editor,}
+\vspace{-1em}\\
+enclosed is a manuscript to be considered for publication in Environmental Science \& Technology titled \\
 
-xxxxx
+\emph{Pesticides in small agricultural streams in Germany}\\
 
-\closing{Sincerely, }
+Pesticides enter freshwater ecosystems from agricultural areas and may have effects on biota.
+However, relatively little is know about their large-scale distribution.
+Especially, small streams may be at high risk because of adjacency to fields and small water columns. 
+
+We compiled and homogenized monitoring data from all German Federal States with a focus on small to mid-size streams. 
+Our results show that there is lack of knowledge for small streams. 
+However, the data revealed the pesticides are commonly occurring.
+Especially, neonicotinoid pesticides may pose a risk to small agricultural freshwaters.
+
+Our study should be of general interest and add valuable information on chemical monitoring, pesticide occurrences and ecological risk arising from them.
+
+
+If you have any further questions do not hesitate to contact me.
+
+\closing{Yours sincerely, }
 
 %----------------------------------------------------------------------------------------
 
