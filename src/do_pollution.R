@@ -18,6 +18,15 @@ psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
 var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
 
+## n neonics
+psm_variables[name %chin% c('Thiacloprid', 'Imidacloprid', 'Clothianidin')]
+neo_id <- psm_variables[name %chin% c('Thiacloprid', 'Imidacloprid', 'Clothianidin'), variable_id]
+psm_samples[variable_id %in% neo_id, length(unique(sample_id)), by = variable_id]
+
+# n measurements with RCA
+psm_samples[variable_id %in% psm_variables[!is.na(rak_uba), variable_id]]
+
+
 # Classify stream types ---------------------------------------------------
 
 # Analyze only small agricultural streams (catchment < 30km2 and >25% agriculture)

@@ -7,6 +7,7 @@
 \usepackage{longtable} % multipage tables
 \usepackage{todonotes}
 \usepackage{amsmath}
+\usepackage{float} % for [H]
 
 % Continuous figure counting (instead of per cahpter)
 \usepackage{chngcntr}
@@ -116,15 +117,9 @@ We modeled the number of EQS exceedances (No) the same way as RAC exceedances (s
 
 
 \pagebreak
+
 \section{Toxic Units}
 
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width = 0.7\textwidth]{tusummax}
-	\caption{Correlation between $log(TU_{max})$ and $log(TU_{sum})$. n = 7067 observations with TU \textgreater 0.}
-	\label{fig:tusummax}
-\end{figure}
 
 We modeled the 95th percentile of $TU_{max}$ on a logarithmic scale assuming a Normal distribution:
 
@@ -160,14 +155,15 @@ Instead of assuming a fixed value for the data \textless LOQ, we use a model tak
 With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors and $E(y_i | y_i > -8.75))$ the expectet value given non-censoring. Further, we assumed constant variance. This model was fitted using the gamlss package \citep{stasinopoulos_generalized_2007}.
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\textwidth]{ezgagritu}
 	\caption{Raw data of effect of agriculture and catchment size on the 95th percentile of $log(TU_{max})$.}
 	\label{fig:ezgagritu}
 \end{figure}
 
-\begin{figure}[h]
+
+\begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.9\textwidth]{ezgagritumodel}
 	\caption{Effect of agriculture within the catchment (left) and catchment size (rigth) on the 95th percentile of log(TUmax). The model took censored data into account (see description above). Dashed lines denote 95\% Confidence Intervals.}
@@ -176,7 +172,12 @@ With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i
 
 
 
-
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\textwidth]{tusummax}
+	\caption{Correlation between $log(TU_{max})$ and $log(TU_{sum})$. n = 7067 observations with TU \textgreater 0.}
+	\label{fig:tusummax}
+\end{figure}
 
 
 
