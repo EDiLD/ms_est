@@ -87,7 +87,7 @@ However, currently there is no curated national-wide compilation of this data av
 
 \citet{stehle_pesticide_2015} compiled 1566 measured concentrations of 23 insecticides in the EU from scientific publications. 
 They found that insecticides that many of these measurements exceed regulatory acceptable concentrations (RAC), especially in very small catchments \textless $1~km^2$.
-Small water bodies are important refuges of biodiversity \citep{davies_comparison_2008} and enable downstream colonisation of polluted streams \citep{liess_analyzing_2005}.
+Small water bodies are important refuges of biodiversity \citep{davies_comparison_2008} and enable downstream colonization of polluted streams \citep{liess_analyzing_2005}.
 At the same time they may be exposed to a high risk of pesticide contamination from adjacent agricultural areas and low dilution effects \citep{liess_determination_1999}.
 Although small streams comprise a major fraction of streams \citep{nadeau_hydrological_2007}, relatively little is know about their chemical and ecological status.
 
@@ -175,7 +175,7 @@ GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 
 \section{Results}
-\subsection{Overview and representativeness of compiled data}
+\subsection{Overview of the compiled data}
 
 The compiled dataset comprised only few standing waters (58 sites) and the majority (90\%) of samples where taken via grab sampling.  % see clean.R for numbers
 Therefore, we report only results of grab samples from streams. 
@@ -273,19 +273,24 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
 
 
 \section{Discussion}
-\subsection{Representativeness of the dataset}
+\subsection{Overview of the compiled dataset}
 The compiled dataset of governmental monitoring data represents currently the most comprehensive one available for Germany.
 Similar nationwide datasets have been compiled for the Netherlands \citep{vijver_spatial_2008}, Switzerland \citep{munz_pestizidmessungen_2011} and the United States (Water Quality Portal (WQP) \url{www.waterqualitydata.us}).
-The data compiled in Germany is of similar quantity.
+The data compiled in Germany is of similar quantity and quality.
 
 % current problems in monitoring and possible solutions
 Nevertheless, a nationwide assessment of pesticide pollution is hampered by the inhomogeneity of monitoring data between federal states:
 There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analyzed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
-Future monitoring programs should aim at resolving these differences in order to enable a nationwide assessment. 
+Our dataset comprised several thousand of stream sampling sites, the was nearly no data available for standing waters. 
+Although, standing waters are abundant in the agricultural landscape and may have a high contribution to biodiversity \citep{davies_comparison_2008}, nearly nothing is known on their pollution.
+Although, small streams comprise most of the total stream length \citep{nadeau_hydrological_2007} sampling sites with catchment sizes below $10km^2$ are underrepresented by the current monitoring scheme (Figure \ref{fig:fig3}).
+This arises because catchments under $10km^2$ are not specified by the WFD.
+Nevertheless, they should not be neglected.
+Future monitoring programs should aim at resolving these issues in order to enable a nationwide and representative assessment of freshwaters. 
 
-Given the fixed term monitoring design \todo{cite stehle 2012} and the low amount of samples taken at precipitation events that could lead to run-off, the data resents a strong underestimation of the real pollution and peak concentrations.
-Automatic water samplers triggered at precipitation or passive samplers \todo{cite moschet and fernandez}.
-
+% underestimation
+Given the fixed term monitoring design \citep{stehle_probabilistic_2013} and the low amount of samples taken at precipitation events that could lead to run-off, the data resents a underestimation of the real pollution and peak concentrations.
+Automatic event-drive samplers and passive samplers may help overcome these shortcomings and provide a better representation \citep{fernandez_calibration_2014,moschet_evaluation_2015}.
 Nevertheless, such nationwide compilations, may not only be used for governmental surveillance, but also to answer other questions, like validation of exposure modeling \cite{knabel_fungicide_2014}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}or occurrences of pesticide mixtures \cite{schreiner_pesticide_2016}.
 
 
@@ -310,7 +315,7 @@ Another reason might be the the unequal distribution of catchment sizes, with le
 \citet{stehle_pesticide_2015} found the highest percentage of RAC exceedances organophosphate insecticides. 
 Our results revealed that neonicotinoid insecticides show high exceedances, followed by the organophosphate chlorpyrifos. 
 This difference can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here \todo{zahlen neonics} and shows that this class may pose a high risk to freshwaters \todo{anderes Wort}.
-Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality. 
+Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality, sldo during periods with lower pesticide usage. 
 This is also reflected in the different sample sizes (1,566 vs. 2,918,604 measurements \todo{use number for substances with RAC}) and the high number of non-detects in the monitoring data.
 
 Contrary, \citet{knauer_pesticides_2016} found exceedances from monitoring data mainly for herbicides and fungicides and only one insecticide Chlorpyrifos.
@@ -325,28 +330,14 @@ This highlights that national monitoring programs need to improve chemical analy
 
 The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with mainly one compound dominating the toxicity.
 % Mixtures
-Nevertheless, most pesticides did not occur individually but in mixtures.
+Nevertheless, most pesticides did not occur individually but in mixtures \cite{schreiner_pesticide_2016}.
 This highlights that future risk assessment needs to take mixtures into account.
-
-
-
-
-% Mixtures
 
 
 % EQS & RAC
 
-% WFD 10km² 0> brauchen auch kleinere.
-
-% combination with biological data.
-
-
-% maxtu vs sumTU vs most sensitive => check publication.
-
-% Stehle + Munz + Schulz kleine gewässer mehr belastet?
 % Munz auch landwirtschaft
 
-% kleinere prozent werte wegen saisonalität / Proben im winter
 
 
 
@@ -362,7 +353,7 @@ Exceedances of RACs are undesirable ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{acknowledgement}
-The authors thank the authorities for providing chemical monitoring data and the German Federal Environmental Protection Agency (UBA) for funding this project.
+The authors thank the federal state authorities for providing chemical monitoring data and the German Federal Environmental Protection Agency (UBA) for funding this project.
 \end{acknowledgement}
 
 
