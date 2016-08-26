@@ -23,7 +23,7 @@
 %% possible, and avoid layout-changing macros (which are not used
 %% when typesetting).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*\mycommand[1]{\texttt{\emph{#1}}}
+%% \newcommand*\mycommand[1]{\texttt{\emph{#1}}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,7 +66,24 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Fehlt noch...
+% 150-200 words
+Small streams are important refuge areas for biodiversity.
+Although, small agricultural streams may be a high risk of pesticide pollution, relatively little is know on their chemical status.
+Monitoring of chemical status is performed in Germany be the federal states for surveillance of chemical status and might shed some light also on small streams.
+
+We compiled available monitoring data from federal states with a focus on small streams, resulting in a dataset of 2,918,604 measurements from 42,236 samples from 3,049 sampling sites in the years 2005-2014.
+The dataset covered 484 different compounds that can be classified as pesticides.
+We found a lack of data for small streams \textless 10 km\textsuperscript{2} catchment size.
+Especially neonicotinoid insecticides and Chlorpyrifos showed exceedancas of regulatory acceptable concentrations (RACs), which could be related to agricultural land use.
+However, a nation-wide assessment was hampered by a high heterogeneity between states.
+
+Our result suggest that pesticides might be a major thread for aquatic life.
+However, future monitoring programs need to be unified between states to provide more reliable assessments.
+
+\todo{not finished yet}
+
+
+%% Word
 \end{abstract}
 
 
@@ -94,7 +111,7 @@ Although small streams comprise a major fraction of streams \citep{nadeau_hydrol
 The aim of this study was to compile all available chemical monitoring data in Germany and to answer the questions: \\
 (i) Can the currently available monitoring data used for a representative description of the pollution situation? \\
 (ii) Are small agricultural waters more polluted compared to bigger streams? Are there thresholds in these relationships? \\
-(iii) How polluted are small streams and which pesticides are most important?
+(iii) How polluted are small streams and which pesticides are most important? Is the current approval process protective for these streams?  
 
 
 \section{Methods}
@@ -106,7 +123,7 @@ This yielded to a total of more then 30 datasets of different formats.
 In the following we will use the ISO 3166-2:DE standard abbreviations for federal states.
 
 We homogenized and unified these datasets into a common database.
-We implemented a robust and reproducible data cleaning work flow \citep{poisot_best_2015}, though parts of the dataset are proprietary.
+We implemented a robust and reproducible data cleaning work flow (Supplement, Figure S1) \citep{poisot_best_2015}, though parts of the dataset are proprietary.
 An overview of the data cleaning process is provided in the supplemental materials.  
 To assess whether samples were taken during potential rainfall events we performed spatio-temporal intersection of sampling events with daily precipitation data from the sampling date and the day before. \citep{rauthe_central_2013}.
 
@@ -116,12 +133,12 @@ We characterized chemical pollution (excluding sum parameters) using three indic
 \begin{enumerate}
   \item National and international Environmental Quality Standards (EQS) \citep{ogewv_verordnung_2011,european_union_directive_2013}:
   We used only Maximum Annual Concentration EQS (MAC-EQS) for characterization.
-  These were available for 29 compounds (Supplement, Table xxx\todo{ref}).
+  These were available for 29 compounds (Supplement, Table S2).
 
   \item Regulatory Acceptable Concentrations (RAC) \citep{brock_linking_2010}:
   This is the lowest concentration at which no acceptable biological effects are expected. 
-  These are derived during authorization process of pesticides and incorporate also an uncertainty factor.
-  The German Federal Environmental Agency provided RACs for 105 compounds (Supplement, Table xxx\todo{ref}).  
+  These are derived during authorization process of pesticides, incorporate also an uncertainty factor and aim to be protective especially for small streams.
+  The German Federal Environmental Agency provided RACs for 105 compounds (Supplement, Table S2).  
   We expressed RAC as Risk Quotient (RQ):
   \begin{equation}
   RQ_i = \frac{C_i}{RAC_i}
@@ -135,7 +152,7 @@ We characterized chemical pollution (excluding sum parameters) using three indic
 
   Where $C_i$ is the concentration of compound $i$ in a sample and $EC_{50, D.magna, i}$ is the concentration of this compound where 50\% of the exposed animals showed after 48 hours an effect in a laboratory study.
   We compiled $EC_{50, D.magna}$ values from literature \citep{malaj_organic_2014}, databases \citep{lewis_international_2016,u.s._epa_ecotoxicology_2015} or model predictions \citep{schuurmann_quantitative_2011}, where experimental data had priority.
-  We could compile $EC_{50, D.magna}$ values for 394 compounds (Supplement, Table xxx\todo{ref})).
+  We could compile $EC_{50, D.magna}$ values for 394 compounds (Supplement, Table S2)).
   We used the maximum TU per sample, as it is independent of the number of measured compounds and makes no assumptions on the mode of action.
   Additionally, we also calculated the sum of toxic units ($TU_{sum}$).
   A table of all included compounds can be found in the supplement.
@@ -180,7 +197,7 @@ GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 The compiled dataset comprised only few standing waters (58 sites) and the majority (90\%) of samples where taken via grab sampling.  % see clean.R for numbers
 Therefore, we report only results of grab samples from streams. 
 The analyzed dataset comprised 2,918,604 measurements from 42,236 samples from 3,049 sampling sites.  %see do_overview.R for numbers.
-We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table \todo{Set ref to table}).
+We found big differences in the number of sampling sites between federal states (Figure \ref{fig:fig1} and Supplement, Table S1).
 
 \begin{figure}[ht]
   \includegraphics[width=0.6\textwidth]{figure1.pdf}
@@ -188,16 +205,16 @@ We found big differences in the number of sampling sites between federal states 
   \label{fig:fig1}
 \end{figure}
 
-In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplement, Table \todo{Set ref to table}). 
+In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplement, Table S2). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
-We found substantial differences of the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2}).
+We found substantial differences of the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2} and Supplement Figure S2).
 Hierarchical clustering revealed three groups:
 i) with less then 100 compounds (SL, ST and TH), \\
 ii) with a medium sized spectra and \\
 iii) with a big and distinct spectra (RP and NI).
 
 Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
-The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day. \todo{ref supplement}.
+The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day (Supplement, Figure S3).
 
 \begin{figure}[ht]
   \includegraphics[width=\textwidth]{figure2.pdf}
@@ -235,7 +252,7 @@ We could no detect any effect of catchment size on the number of RAC exceedances
   \label{fig:fig4}
 \end{figure}
 
-The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed similar patterns and thresholds (see Supplement Figure Sxxx - Sxxx). \todo{references}
+The number of EQS-exceedances and the 95th percentile of $TU_{max}$ showed similar patterns and thresholds (see Supplement, Figures S4-S8). 
 
 
 \subsection{Pollution of small agricultural streams}
@@ -252,7 +269,7 @@ Highest RQ were observed for Chlorpyrifos (244), Dimoxystrobin(117) and Isoprotu
 In 33\% of the samples no pesticides were detected. 
 The mean $log_{10}(TU_{max})$ for detects was -4.6.
 2.6\% of the samples showed $log_{10}(TU_{max})$ values greater then -2 (Figure \ref{fig:fig5}C).
-We found a high correlation of $log_{10}(TU_{max})$ and $log_{10}(TU_{sum})$ (r = 0.985, with a maximum higher value of $log_{10}(TU_{sum})$ of 0.75 units (Supplement) \todo{ref}.
+We found a high correlation of $log_{10}(TU_{max})$ and $log_{10}(TU_{sum})$ (r = 0.985, with a maximum higher value of $log_{10}(TU_{sum})$ of 0.75 units (Supplement, Figure S9).
 % see do_polluion.R for numbers
 %Mixtures
 In most samples (55.5\%) more then one compound was detected, with a maximum of 54 different compounds (Figure \ref{fig:fig5}D). 
@@ -261,7 +278,7 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
 
 \begin{figure}[h]
   \includegraphics[width=0.9\textwidth]{figure5.pdf}
-  \caption{Overview on pesticide pollution of small agricultural streams. 
+  \caption{Overview on pesticide pollution of small agricultural streams (catchment size \textless 30 km\textsuperscript{2} and \textgreater 25\% agriculture). 
       \textbf{A}: 10 compounds with most frequent EQS exceedances. See B for color legend.
       \textbf{B}: Distribution of $TU_{max}$ values. Values with $TU_{max} = 0$ are not displayed (3501 out of 10591 samples). Non-detects are not shown due to the logarithmic axis.
       \textbf{C}: 15 compounds with highest risk quotients. Non-detects are not shown due to the logarithmic axis.
@@ -273,23 +290,25 @@ In most samples (55.5\%) more then one compound was detected, with a maximum of 
 
 
 \section{Discussion}
-\subsection{Overview of the compiled dataset}
+\subsection{Overview on the compiled dataset}
 The compiled dataset of governmental monitoring data represents currently the most comprehensive one available for Germany.
 Similar nationwide datasets have been compiled for the Netherlands \citep{vijver_spatial_2008}, Switzerland \citep{munz_pestizidmessungen_2011} and the United States (Water Quality Portal (WQP) \url{www.waterqualitydata.us}).
-The data compiled in Germany is of similar quantity and quality.
+The data compiled here for Germany is of similar quantity and quality.
 
 % current problems in monitoring and possible solutions
 Nevertheless, a nationwide assessment of pesticide pollution is hampered by the inhomogeneity of monitoring data between federal states:
-There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analyzed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses.
-Our dataset comprised several thousand of stream sampling sites, the was nearly no data available for standing waters. 
-Although, standing waters are abundant in the agricultural landscape and may have a high contribution to biodiversity \citep{davies_comparison_2008}, nearly nothing is known on their pollution.
-Although, small streams comprise most of the total stream length \citep{nadeau_hydrological_2007} sampling sites with catchment sizes below $10km^2$ are underrepresented by the current monitoring scheme (Figure \ref{fig:fig3}).
-This arises because catchments under $10km^2$ are not specified by the WFD.
-Nevertheless, they should not be neglected.
+There are not only big differences in the spatial distribution and quantity of sampling sites (Figure \ref{fig:fig1}), but also the spectrum of analyzed compounds (Figure \ref{fig:fig2}) and differences in the quality of chemical analyses. 
+An increase of the analyzed compound spectra to all registered compounds and a lowering of LOQ are desirable for a reliable assessment.
+Our dataset comprised several thousand stream sampling sites, but nearly no data could be compiled for standing waters. 
+Although, standing waters are abundant in the agricultural landscape and may have a high contribution to biodiversity \citep{davies_comparison_2008}, nearly nothing is known on their chemical status.
+Small streams comprise most of the total stream length \citep{nadeau_hydrological_2007}.
+However, sampling sites with catchment sizes below $10km^2$ are underrepresented by the current monitoring scheme (Figure \ref{fig:fig3}).
+This likely arises because catchments under $10km^2$ are not specified by the WFD.
+Nevertheless, small streams should not be neglected for ecological and chemical quality assessment.
 Future monitoring programs should aim at resolving these issues in order to enable a nationwide and representative assessment of freshwaters. 
 
 % underestimation
-Given the fixed term monitoring design \citep{stehle_probabilistic_2013} and the low amount of samples taken at precipitation events that could lead to run-off, the data resents a underestimation of the real pollution and peak concentrations.
+Given the fixed term monitoring design \citep{stehle_probabilistic_2013} and the low amount of samples taken at precipitation events that could lead to run-off, the data represents a underestimation of the real pollution and peak concentrations.
 Automatic event-drive samplers and passive samplers may help overcome these shortcomings and provide a better representation \citep{fernandez_calibration_2014,moschet_evaluation_2015}.
 Nevertheless, such nationwide compilations, may not only be used for governmental surveillance, but also to answer other questions, like validation of exposure modeling \cite{knabel_fungicide_2014}, retrospective evaluation of regulatory risk assessment \citep{knauer_pesticides_2016,stehle_pesticide_2015}or occurrences of pesticide mixtures \cite{schreiner_pesticide_2016}.
 
@@ -297,65 +316,64 @@ Nevertheless, such nationwide compilations, may not only be used for governmenta
 \subsection{Influence of catchment area and agriculture}
 % agriculture
 We found a strong influence of agriculture on the pollution of streams.
-If there is more the 25\% agriculture within a catchment pesticides can be detected in streams and may have biological effects \todo{citation needed}.
+If there is more the 25\% agriculture within a catchment pesticides can generally be detected in streams with an increase in fully agricultural catchments (above 75 \% agriculture).
+To our knowledge this is the first study \todo{True? Could not find anything...} investigating such thresholds of pesticide occurrences.
+Our results suggest that only catchments with \textless 25\% agriculture may be regarded as unpolluted and used as reference sites.
+Slightly higher thresholds (20-40\%) have been found for biological responses of lotic assemblages to land-use \citep{waite_agricultural_2014, feld_response_2013}, though they might be differences between taxonomic groups and landscape \citep{feld_response_2013}.
 
 % size
-We did not find support for our hypothesis that small streams are more polluted then big streams, though previous studies have show such a relationship \citep{schulz_field_2004,stehle_pesticide_2015}.
-This could be explained by the relatively small gradient of catchment sizes in our dataset, with most of the streams being \textless $100~km^2$ (Figure \ref{fig:fig3}, top).
+We did not find support for our hypothesis that small streams are more polluted then big streams, though previous studies have show such a relationship \citep{schulz_field_2004,stehle_pesticide_2015,knauer_pesticides_2016}.
+This could be explained by the relatively short gradient of catchment sizes in our dataset, with most of the streams being \textless $100~km^2$ (Figure \ref{fig:fig3}, top).
 For example the gradient of \citet{schulz_field_2004} covered 6 orders of magnitude.
-Another reason might be the the unequal distribution of catchment sizes, with less sites \textless $10~km^2$ and \textgreater $100~km^2$(Figure \ref{fig:fig3}, top).
-
+Another reason might be the the unequal distribution of catchment sizes, with less sites \textless $10~km^2$ and \textgreater $100~km^2$ (Figure \ref{fig:fig3}, top).
 
 
 \subsection{Pollution of streams}
-
-% EQS
-
 % RAC
 \citet{stehle_pesticide_2015} found the highest percentage of RAC exceedances organophosphate insecticides. 
 Our results revealed that neonicotinoid insecticides show high exceedances, followed by the organophosphate chlorpyrifos. 
-This difference can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here \todo{zahlen neonics} and shows that this class may pose a high risk to freshwaters \todo{anderes Wort}.
-Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality, sldo during periods with lower pesticide usage. 
-This is also reflected in the different sample sizes (1,566 vs. 2,918,604 measurements \todo{use number for substances with RAC}) and the high number of non-detects in the monitoring data.
-
+This difference can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here (n = 3516-4745) and shows that this particular class of insecticides may currently pose a high risk to freshwater ecosystems.
+Our results show lower proportions of exceedances compared to \citet{stehle_pesticide_2015}, which can be attributed to different aims of the data sources: scientific research aims at finding pollutants, whereas monitoring aims mainly at surveillance of water quality, also during periods with lower pesticide usage. 
+This is also reflected in the different sample sizes (1,566 vs. 1,117,988 measurements of compounds with RAC) and the high number of non-detects in the monitoring data.
 Contrary, \citet{knauer_pesticides_2016} found exceedances from monitoring data mainly for herbicides and fungicides and only one insecticide Chlorpyrifos.
-This might reflect differences in pesticide use between countries and also RACs.
-
+This might reflect differences in pesticide use between countries and defined RACs.
 For three insecticides all detected values where above the RAC.
 This highlights that national monitoring programs need to improve chemical analytics and lower the LOQ for these highly toxic compounds.
 
-
 % TU
 8.2\% of samples showed $TU_{max}$ values greater than -3 (Figure \ref{fig:fig5}C), a threshold above biological effects have been shown \citep{schafer_thresholds_2012}.
-
-The high correlation of TU and the relatively low exceedance of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with mainly one compound dominating the toxicity.
+This suggests that pesticides may act as a common stressor to freshwaters and should not be neglected \citep{schafer_contribution_2016}.
+The high correlation of TU and the relatively low increase of $TU_{sum}$ reveals that in compound mixtures occurring in the field there is a skewed distribution of toxicities with mainly one compound dominating the toxicity.
 % Mixtures
-Nevertheless, most pesticides did not occur individually but in mixtures \cite{schreiner_pesticide_2016}.
-This highlights that future risk assessment needs to take mixtures into account.
+Nevertheless, most pesticides did not occur individually but in mixtures \cite{schreiner_pesticide_2016} and future risk assessment should take mixtures into account.
+
+% EQS
+For only a limited number of compounds EQS have been defined. 
+We found generally low exceedances of EQS with only three herbicides showing higher exceedances.
+However, compared to the results from RAC comparisons it is clear that the currently defined EQS cannot capture the full risk exposed by pesticides.
+In order to provide a reliable measure of a good chemical status EQS for additional compounds must be defined.
+
+% Approval / Risk Assessment
+Monitoring data, despite the outlined limitations, provides an opportunity to study environmental occurrences of pesticides after approval.
+The high exceedances of RAC indicate that the approval process must be checked and refined.
 
 
-% EQS & RAC
-
-% Munz auch landwirtschaft
-
-
-
-
-% Conclusions
-Exceedances of RACs are undesirable ...
-
-
-%%% Word count
-%% Figures  = 2400
-% 3 big = 3*600 = 1800
-% 2 small = 2*300 = 600
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{acknowledgement}
-The authors thank the federal state authorities for providing chemical monitoring data and the German Federal Environmental Protection Agency (UBA) for funding this project.
+The authors thank the federal state authorities for providing chemical monitoring data and the German Federal Environmental Protection Agency (UBA) for funding this project. 
 \end{acknowledgement}
 
+
+%%% Word count
+% abstract    :
+% 3 big(600)  : 1800
+% 2 small(300): 600
+% text body   : 3000 
+% ackno       : 24
+% ======================================
+% total       : 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{suppinfo}
