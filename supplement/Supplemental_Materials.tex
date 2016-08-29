@@ -87,25 +87,6 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \chapter{Are small agricultural waters more polluted compared to bigger streams?}
 
-\section{EQS Exceedances}
-We modeled the number of EQS exceedances (No) the same way as RAC exceedances (see main article).
-
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width = 0.7\textwidth]{ezgagrieqs}
-	\caption{Raw data used for modelling EQS exceedances. Color codes the number of EQS exceedances (on a log-scale). Grey points denote sites without any exceedance.}
-	\label{fig:ezgagrieqs}
-\end{figure}
-
-\begin{figure}1.5, 2, 1, 12
-  \includegraphics[width=0.8\textwidth]{ezgagrieqsmodel}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of EQS exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% Confidence Intervals.
-  }
-  \label{fig:ezgeqsagrimodel}
-\end{figure}
-
-
 \section{RAC Exceedances}
 \begin{figure}[h]
 	\centering
@@ -114,71 +95,6 @@ We modeled the number of EQS exceedances (No) the same way as RAC exceedances (s
 	\label{fig:ezgagrirac}
 \end{figure}
 \todo{update refs}
-
-
-\pagebreak
-
-\section{Toxic Units}
-
-
-We modeled the 95th percentile of $TU_{max}$ on a logarithmic scale assuming a Normal distribution:
-
-\begin{align}
-\begin{split}
-  log(TU_{max}) \sim Normal(\mu_i, \sigma) \\
-  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i)
-\end{split}
-\end{align}
-
-where $TU_{max i}$ is 95th percentile of $TU_{max}$ at site $i$, $Agri_i$ the proportion of agriculture within the catchment and $Size_i$ the catchment size of the site.  
-$f_1$ and $f_2$ are smoothing functions.
-
-Because of samples at low polluted sites contained only values below the limit of quantification (LOQ) the derived $TU_{max}$ were also left censored (at a value of $10^{-8.75}$), thus we have
-
-\begin{align}
-  log(TU_{max~i})=\begin{cases}
-    \beta_0 + f_1(Agri_i) + f_2(Size_i) + \epsilon_i, & \text{if $log(TU_{max}) > -8.75 $}\\
-    -8.75, & \text{if $log(TU_{max}) \le -8.75 $}.
-  \end{cases}
-\end{align}
-
-
-Instead of assuming a fixed value for the data \textless LOQ, we use a model taking this censoring into account \citep{helsel_fabricating_2006} with the expected value being a mixture of censored and uncensored data.
-
-\begin{align}
-\begin{split}
-	E(y_i | x_i) = P(uncensored|x_i) \times E(y_i | y_i > -8.75)) + P(censored|x_i) \times -8.75\\
-	Var(y_i) = \sigma
-\end{split}
-\end{align}
-
-With $y_i$ being $log(TU_{max~i})$ and $x_i$ the predictor functions $f_1(Agri_i) + f_2(Size_i)$. $P(censored|x_i)$ is the probability of censoring at given predictors and $E(y_i | y_i > -8.75))$ the expectet value given non-censoring. Further, we assumed constant variance. This model was fitted using the gamlss package \citep{stasinopoulos_generalized_2007}.
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width = 0.7\textwidth]{ezgagritu}
-	\caption{Raw data of effect of agriculture and catchment size on the 95th percentile of $log(TU_{max})$.}
-	\label{fig:ezgagritu}
-\end{figure}
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width = 0.9\textwidth]{ezgagritumodel}
-	\caption{Effect of agriculture within the catchment (left) and catchment size (rigth) on the 95th percentile of log(TUmax). The model took censored data into account (see description above). Dashed lines denote 95\% Confidence Intervals.}
-	\label{fig:ezgagritumodel}
-\end{figure}
-
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width = 0.7\textwidth]{tusummax}
-	\caption{Correlation between $log(TU_{max})$ and $log(TU_{sum})$. n = 7067 observations with TU \textgreater 0.}
-	\label{fig:tusummax}
-\end{figure}
-
 
 
 \bibliographystyle{apalike}      % basic style, author-year citations
