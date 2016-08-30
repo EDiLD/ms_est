@@ -76,6 +76,9 @@ table(unique(psm_samples[, list(sample_id, sample_type)])[ , sample_type], useNA
 100 - 4357 / (4357 + 23277 + 19624) * 100
 #!~ 90% of samples are grabsamples.
 #! NA assumed to be individual samples
+length(unique(psm_samples[sample_type == 'composite', sample_id]))
+length(unique(psm_samples[sample_type == 'composite', site_id]))
+
 #! keep only grab samples
 psm_samples <- psm_samples[sample_type == 'individual' | is.na(sample_type)]
 

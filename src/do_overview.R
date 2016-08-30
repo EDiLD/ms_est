@@ -31,6 +31,28 @@ length(psm_samples[value_fin > 0, value_fin]) / tot * 100
 
 
 
+# overview on Catchment derivation
+table(psm_sites_info$ezg_fin_source, useNA = 'always')
+# NA = no inforamtion available
+# auth = from authorities direct
+# drain = from river segments
+# TRUE = from DEM
+psm_sites_info[is.na(ezg_fin_source)]
+nrow(psm_sites) # 3049 sites in total
+nrow(psm_sites) - sum(table(psm_sites_info$ezg_fin_source))
+# 293 (=10%) without any information
+# 1452 (=47%) with data from authorities
+# 909 (=30%) with data from dem
+# 395 (=13%) with data from stream segments
+
+table(psm_sites_info$agri_fin_source, useNA = 'always')
+# 573 (=18\%) from auhtorities
+nrow(psm_sites) - sum(table(psm_sites_info$agri_fin_source))
+# 650 (=(without information)
+
+nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
+# 2376 (=77%) with both informations
+
 
 # Spatial distribution ----------------------------------------------------
 # (=Figure 1)
@@ -51,14 +73,14 @@ p <- ggplot() +
   geom_point(data = psm_sites, aes(x = easting, y = northing, col = state_ab), 
              size = 1) +
   theme(legend.key = element_rect(fill = 'white')) +
-  guides(colour = FALSE) +
+  # guides(colour = FALSE) +
   labs(x = 'Lon.', y = 'Lat.') +
-  scale_color_hue(l = 50) +
+  scale_color_hue(name = 'state', l = 50) +
   mytheme +
   coord_equal()
 p
 ggsave(file.path(prj, "figure1.pdf"),
-       p, width = 3.3, height = 3, units = 'in', dpi = 300, scale = 2)
+       p, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
 
 
 
@@ -202,6 +224,18 @@ dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
 # hierarchical clustering
 hc <- hclust(dp, method = 'complete')
 plot(hc, labels = vw$site_id)
+# # fusion level plot
+# plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
+# text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
+#  #silhoutte
+# library(cluster)
+# nr <- nrow(vw[ , -1, with = FALSE])
+# asw <- numeric(nr)
+# for(k in 2:(nr-1)) {
+#   sil <- silhouette(cutree(hc, k = k), dp)
+# }
+#! continue here
+
 # 3 distinct groups: NI+RP; ST+SL+TH; Rest
 bl_groups <- cutree(hc, k = 3)
 
@@ -500,6 +534,4 @@ psm_sites[!site_id %in% psm_sites_info$site_id]
 table(psm_sites[!site_id %in% psm_sites_info$site_id, substr(site_id, 1, 2)], useNA = 'always')
 # BW, NW, RP & SN
 #! Why check!
-
-# Convert SVG to PDF ------------------------------------------------------
 
