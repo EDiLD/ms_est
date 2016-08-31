@@ -98,11 +98,10 @@ We compiled a large data set with chemical monitoring data for Germany and aimed
 
 \begin{enumerate}[(i)]
 	\item Can the currently available monitoring data be used for a representative description of the pollution situation?
-	\item Are there thresholds for agricultural land use above pesticide pollution becomes apparent?
-	\item Are there thresholds of stream size below pesticide pollution becomes apparent
+	\item Are there thresholds for agricultural land use and catchment size where pesticide pollution becomes apparent?
 	\item  How polluted are small agricultural streams in Germany and which pesticides are most important? 
 \end{enumerate}
-
+\todo{add precipitation to aims}
 
 
 
@@ -138,6 +137,7 @@ We delineated catchments upstream for each of the sampling sites using a digital
 Catchment delineation was manually checked for accuracy by comparison with a stream network provided by the government.
 The delineation algorithm produced only for 30\% of the sites accurate results.
 For the rest we were able to compile catchment size data from authorities (47\% of sites) or drainage basins per stream segment provided by authorities (13\% of sites).
+\todo{check numbers with new catchment calculations from NRW}
 For 10\% of the sites we were not able to compile catchment size data.
 For each derived catchment (either from DEM or drainage basins) we calculated the relative cover (in \%) with agricultural areas based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}.
 We additionally used agricultural cover data provided by authorities (18\% of sites), which resulted to 21\% of sites with missing agricultural cover data. 
@@ -190,8 +190,8 @@ We found large differences in the number of sampling sites between federal state
 In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplement, Table S2 \todo{remove LC50 and MAC-EQS from table!}). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
 Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
-We found substantial differences in the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2} and Supplement Figure S2).
-Hierarchical clustering revealed three groups:
+We found substantial differences in the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2}).
+Hierarchical clustering revealed three groups (see also Supplement Figure S2):
 
 \begin{enumerate}[i)]
 	\item with less then 100 compounds (SL, ST and TH)
@@ -206,6 +206,38 @@ Hierarchical clustering revealed three groups:
   Colors according to three groups determined by hierarchical clustering (see Supplement Figure S2).}
   \label{fig:fig2}
 \end{figure}
+
+The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure \ref{fig:fig3}).
+The proportion of agriculture in the catchments decreased with increasing catchment size.
+
+\begin{figure}[ht]
+  \includegraphics[width=.8\textwidth]{figure3.pdf}
+  \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
+  Only sampling sites with catchment area < 150 km\textsuperscript{2} are displayed. 
+  Colour codes the 2-dimensional density of points.
+  }
+  \label{fig:fig3}
+\end{figure}
+
+
+
+\subsection{Thresholds for agricultural land use and catchment size}
+
+Modeling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
+Above this threshold the exceedances level off followed by a increase above 75\% (Figure \ref{fig:fig4}, left).
+
+We could no detect any effect of catchment size on the number of RAC exceedances (Figure \ref{fig:fig4}, right) and no interaction between these two predictors.
+
+\begin{figure}[ht]
+  \includegraphics[width=0.95\textwidth]{figure4.pdf}
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% pointwise Confidence Intervals.
+  }
+  \label{fig:fig4}
+\end{figure}
+
+
+
+
 
 
 \todo{precipitation section should be moved / more}

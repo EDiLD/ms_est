@@ -31,7 +31,21 @@ length(psm_samples[value_fin > 0, value_fin]) / tot * 100
 
 
 
-# overview on Catchment derivation
+# Temporal overview of samples --------------------------------------------
+
+month(psm_samples[2, date])
+monthly <- psm_samples[ , length(unique(sample_id)), by = month(date)]
+ggplot(monthly, aes(x = factor(month), y = V1)) + 
+  geom_bar(stat = 'identity')
+yearlymonthly <- psm_samples[ , length(unique(sample_id)), by = list(year(date), month(date))]
+p <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
+  geom_bar(stat = 'identity') +
+  facet_grid(~year) +
+  labs(x = 'Month', y = 'No. samples')
+ggsave(file.path(prj, 'supplement/temporal.pdf'), p, width = 20, height = 7)
+
+
+# overview on Catchment derivation ----------------------------------------
 table(psm_sites_info$ezg_fin_source, useNA = 'always')
 # NA = no inforamtion available
 # auth = from authorities direct
@@ -224,9 +238,12 @@ dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
 # hierarchical clustering
 hc <- hclust(dp, method = 'complete')
 plot(hc, labels = vw$site_id)
+
+# fit <- cascadeKM(scale(d, center = TRUE,  scale = TRUE), 1, 10, iter = 1000)
+
 # # fusion level plot
-# plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
-# text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
+plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
+text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
 #  #silhoutte
 # library(cluster)
 # nr <- nrow(vw[ , -1, with = FALSE])
@@ -234,7 +251,7 @@ plot(hc, labels = vw$site_id)
 # for(k in 2:(nr-1)) {
 #   sil <- silhouette(cutree(hc, k = k), dp)
 # }
-#! continue here
+# #! continue here
 
 # 3 distinct groups: NI+RP; ST+SL+TH; Rest
 bl_groups <- cutree(hc, k = 3)
