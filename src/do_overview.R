@@ -180,7 +180,7 @@ var_tab_x <- xtable(var_tab,
                                          epa: US EPA \\citep{u.s._epa_ecotoxicology_2015};
                                          malaj:\\citep{malaj_organic_2014};
                                          ppdb: Pesticides Properties database \\citep{lewis_international_2016};
-                                         none: no LC50 could be found.
+                                         none: no LC50 available.
                     \\textsuperscript{e} Maximum Anual Concentration Environmental Quality Standard [ug/L].
                     \\textsuperscript{f} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
                     align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}p{1cm}p{1cm}p{1cm}')
