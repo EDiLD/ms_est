@@ -31,7 +31,21 @@ length(psm_samples[value_fin > 0, value_fin]) / tot * 100
 
 
 
-# overview on Catchment derivation
+# Temporal overview of samples --------------------------------------------
+
+month(psm_samples[2, date])
+monthly <- psm_samples[ , length(unique(sample_id)), by = month(date)]
+ggplot(monthly, aes(x = factor(month), y = V1)) + 
+  geom_bar(stat = 'identity')
+yearlymonthly <- psm_samples[ , length(unique(sample_id)), by = list(year(date), month(date))]
+p <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
+  geom_bar(stat = 'identity') +
+  facet_grid(~year) +
+  labs(x = 'Month', y = 'No. samples')
+ggsave(file.path(prj, 'supplement/temporal.pdf'), p, width = 20, height = 7)
+
+
+# overview on Catchment derivation ----------------------------------------
 table(psm_sites_info$ezg_fin_source, useNA = 'always')
 # NA = no inforamtion available
 # auth = from authorities direct
@@ -166,7 +180,7 @@ var_tab_x <- xtable(var_tab,
                                          epa: US EPA \\citep{u.s._epa_ecotoxicology_2015};
                                          malaj:\\citep{malaj_organic_2014};
                                          ppdb: Pesticides Properties database \\citep{lewis_international_2016};
-                                         none: no LC50 could be found.
+                                         none: no LC50 available.
                     \\textsuperscript{e} Maximum Anual Concentration Environmental Quality Standard [ug/L].
                     \\textsuperscript{f} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
                     align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}p{1cm}p{1cm}p{1cm}')
@@ -224,9 +238,12 @@ dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
 # hierarchical clustering
 hc <- hclust(dp, method = 'complete')
 plot(hc, labels = vw$site_id)
+
+# fit <- cascadeKM(scale(d, center = TRUE,  scale = TRUE), 1, 10, iter = 1000)
+
 # # fusion level plot
-# plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
-# text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
+plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
+text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
 #  #silhoutte
 # library(cluster)
 # nr <- nrow(vw[ , -1, with = FALSE])
@@ -234,7 +251,7 @@ plot(hc, labels = vw$site_id)
 # for(k in 2:(nr-1)) {
 #   sil <- silhouette(cutree(hc, k = k), dp)
 # }
-#! continue here
+# #! continue here
 
 # 3 distinct groups: NI+RP; ST+SL+TH; Rest
 bl_groups <- cutree(hc, k = 3)

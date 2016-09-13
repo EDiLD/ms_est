@@ -47,52 +47,6 @@ length(take_samples[value_fin > 0, value_fin])
 length(take_samples[variable_id == 457, value_fin])
 
 
-# EQS as endpoint ---------------------------------------------------------
-# restrict samples to variables with eqs
-eqs <- psm_variables[!is.na(wrrl_zhkuqn), list(variable_id, name, cas, pgroup, wrrl_zhkuqn)]
-# join eqs
-setkey(take_samples, variable_id)
-setkey(eqs, variable_id)
-take_eqs <- take_samples[eqs]
-
-# check if value is greater than EQS
-take_eqs[ , g_wrrl_zhkuqn := value_fin > wrrl_zhkuqn]
-# split up by compounds
-deqs <- take_eqs[!is.na(g_wrrl_zhkuqn), list(abs = sum(g_wrrl_zhkuqn), 
-                                               prop = sum(g_wrrl_zhkuqn) / length(g_wrrl_zhkuqn), 
-                                               n = length(g_wrrl_zhkuqn)), 
-                   by = list(variable_id)][order(prop, decreasing = TRUE)]
-deqs
-
-# join variable name and type
-setkey(deqs, variable_id)
-setkey(psm_variables, variable_id)
-deqs <- psm_variables[ , list(variable_id, name, psm_type)][deqs][order(prop, decreasing = TRUE)]
-
-
-# take only fist 10 compounds
-deqs <- deqs[1:10]
-deqs$name <- factor(deqs$name)
-# # manually change type for irgarol
-# dd[variable_id == 375, psm_type := 'biocide']
-
-peqs <- ggplot() +
-  geom_point(data = deqs,
-             aes(x = prop * 100, y = reorder(name, prop), size = n, col = psm_type)) +
-  scale_size_continuous(name = 'no.samples',
-                        range = c(2, 6), breaks = c(min(deqs$n), max(deqs$n))) +
-  labs(y = 'Compound', x = 'Proportion Samples > EQS [%]') +
-  scale_color_manual(name = 'Group',
-                     values = c('#4daf4a', '#B31010'),
-                     labels = c('Herbicide', 'Insekticide')) +
-  mytheme +
-  theme(legend.key = element_blank(),
-        legend.position = "bottom") +
-  guides(colour = FALSE)
-
-
-
-
 # Risk Quotients ----------------------------------------------------------
 # restrict samples to variables with rac
 rac <- psm_variables[!is.na(rak_uba), list(variable_id, name, cas, pgroup, rak_uba)]
@@ -144,65 +98,6 @@ prac <- ggplot(take_dd) +
 
 
 
-
-# Toxic Units -------------------------------------------------------------
-
-# calculate withing R (for verification)
-setkey(var_props, variable_id)
-setkey(take_samples, variable_id)
-
-take_lc50 <- var_props[ , list(variable_id, lc50_dm_fin)][take_samples]
-# rm samples without lc50 data
-take_lc50 <- take_lc50[!is.na(lc50_dm_fin)]
-
-# calculate TU
-take_lc50[ , tu := value_fin / lc50_dm_fin]
-
-# calculate TUmax per sample
-tumax <- take_lc50[ , list(tumax = max(tu)), by = sample_id]
-
-# number of non-detects
-nrow(tumax[tumax == 0])
-nrow(tumax)
-nrow(tumax[tumax == 0]) / nrow(tumax) * 100
-
-# number of logTU > -2
-nrow(tumax[tumax > 0.01]) / nrow(tumax) * 100
-nrow(tumax[tumax > 0.01]) / nrow(tumax[tumax != 0]) * 100
-
-# mean logTU
-mean(log10(tumax[tumax != 0, tumax]))
-
-
-ptu <- ggplot(data = tumax, aes(x = log10(tumax))) +
-  geom_histogram(fill = 'grey75') +
-  geom_rug(alpha = 0.05) +
-  mytheme +
-  labs(x = expression(log[10]*'('~TU[max]~')'), y = 'No. samples')
-
-
-# calculate TUmax und TUsum per sample
-tumaxsum <- take_lc50[ , list(tumax = max(tu), tusum = sum(tu)), by = sample_id]
-cor(tumaxsum$tumax, tumaxsum$tusum)
-# r = 0.985
-with(tumaxsum, max(log10(tusum) - log10(tumax), na.rm = TRUE))
-# maximum deviation is 0.75 log TU units
-
-p_tusummax <- ggplot(tumaxsum, aes(x = log10(tumax), y = log10(tusum))) +
-  geom_point(alpha = 0.05, size = 1) +
-  guides(alpha = FALSE, fill = FALSE) +
-  mytheme +
-  labs(x = expression(log[10]*'('~TU[max]~')'), 
-       y = expression(log[10]*'('~TU[sum]~')')) 
-p_tusummax
-ggsave(file.path(prj, "supplement/tusummax.pdf"),
-       p_tusummax)
-
-
-sum(tumaxsum[tumax != 0, log10(tumax) > -3]) #865
-865/10568*100
-
-
 # Mixtures ----------------------------------------------------------------
 
 # calculate the number of compounds per sample
@@ -231,5 +126,5 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
 
 pall <- plot_grid(peqs, ptu, prac, pmix, labels = c('A', 'B', 'C', 'D'), 
                   label_size = 20)
-ggsave(file.path(prj, "figure5.pdf"), pall, width = 7, height = 6.5, 
+ggsave(file.path(prj, "figure6.pdf"), pall, width = 7, height = 6.5, 
        units = 'in', dpi = 300, scale = 1.5)
