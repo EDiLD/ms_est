@@ -150,40 +150,36 @@ setkey(var_props, variable_id)
 var_tab <- var_props[var_tab] 
 var_tab[ , variable_id := NULL]
 
+setcolorder(var_tab, c(names(var_tab)[3:5], names(var_tab)[8:9], names(var_tab)[1:2], names(var_tab)[6:7]))
+var_tab <- var_tab[ , c(1,2,3,4, 5, 9), with = FALSE]
+
 var_tab[ , ger_auth_2015 := as.character(ger_auth_2015)]
 var_tab[ger_auth_2015 == 'FALSE', ger_auth_2015 := NA]
 var_tab[ger_auth_2015 == 'TRUE', ger_auth_2015 := 'x']
 var_tab[ , eu_auth_2015 := as.character(eu_auth_2015)]
 var_tab[eu_auth_2015 == 'FALSE', eu_auth_2015 := NA]
 var_tab[eu_auth_2015 == 'TRUE', eu_auth_2015 := 'x']
-setcolorder(var_tab, c(names(var_tab)[3:5], names(var_tab)[8:9], names(var_tab)[1:2], names(var_tab)[6:7]))
+
 names(var_tab) <- c('Name', 'CAS', 'Group', 
                     'Auth. GER\\textsuperscript{a}', 
                     'Auth. EU\\textsuperscript{b}',
-                    'LC50\\textsubscript{D.magna}\\textsuperscript{c}',
-                    'Source LC50\\textsuperscript{d}',
-                    'MAC-EQS\\textsuperscript{e}', 
-                    'RAC \\textsuperscript{f}'
+                    'RAC \\textsuperscript{c}'
                     )
 var_tab$Group <- gsub('organics, psm, ', '', var_tab$Group)
 
 # fix bug with encoding (extra space or so....)
 var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
 
+
+
+
 var_tab_x <- xtable(var_tab, 
                     label = 'tab:phch_var',
-                    caption = 'Analysed chemical compounds. \\
+                    caption = 'Overview on pesticides in the database. \\
                     \\textsuperscript{a} Authorized in Germany (Source: BVL, 2015). 
                     \\textsuperscript{b} Authorized in the EU (Source: EU).
-                    \\textsuperscript{c} [ug/L].
-                    \\textsuperscript{d} chemprop: Read-Across \\citep{schuurmann_quantitative_2011};
-                                         epa: US EPA \\citep{u.s._epa_ecotoxicology_2015};
-                                         malaj:\\citep{malaj_organic_2014};
-                                         ppdb: Pesticides Properties database \\citep{lewis_international_2016};
-                                         none: no LC50 available.
-                    \\textsuperscript{e} Maximum Anual Concentration Environmental Quality Standard [ug/L].
-                    \\textsuperscript{f} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
-                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}p{1cm}p{1cm}p{1cm}')
+                    \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
+                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1cm}')
                     
 print(var_tab_x, 
       file = file.path(prj, 'supplement/phchvar.tex'),

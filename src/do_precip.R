@@ -100,9 +100,36 @@ hist(props[tot < 1000, tot])
 keep <- props[prop > 0.05 & tot > 1000]
 # 25 compounds left
 
+# export overview for supplement
+keep
+setkey(psm_variables, variable_id)
+setkey(keep, variable_id)
+keep_tab <- psm_variables[ , list(variable_id, name, cas, psm_type)][keep]
+keep_tab[ , prop := round(prop*100, 2)]
+setnames(keep_tab, c('id', 'Name', 'CAS', 'Group', '\\%>LOQ', 'no. > LOQ', 'total no.'))
+keep_tab$id <- NULL
+keep_tab
+
+keep_tab_x <- xtable(keep_tab, 
+                    label = 'tab:var_model',
+                    caption = '24 pesticides for which we modelled the relationship with precipitation and seasonality.',
+                    align = 'lp{3cm}rlp{1cm}p{1cm}p{1cm}')
+
+print(keep_tab_x, 
+      file = file.path(prj, 'supplement/keeptab.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0),
+      sanitize.text.function = identity,
+      size="\\fontsize{8pt}{10pt}\\selectfont"
+)
+
+
+
 take <- take[variable_id %in% keep$variable_id]
-
-
 psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
 
 
@@ -248,9 +275,35 @@ plot(p)
 ggsave(file.path(prj, "figure5.pdf"), p, width = 10, height = 9)
 
 
+resdf
 
 
 
+
+
+# extract random effect variances
+
+# function to extract the needed model components, 
+ra_extr <- function(file){
+  message('Working on file: ', file)
+  mod <- readRDS(file)
+  lme_out <- mod$mu.coefSmo[[1]]
+  vc <- VarCorr(lme_out)
+  suppressWarnings(storage.mode(vc) <- 'numeric')
+  vc <- vc[c(2, 4), 'StdDev']
+  names(vc) <- c('state/site', 'state')
+  vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
+   # generalized rsq
+  vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
+  # calculate CIs
+  return(vc)
+}
+
+ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
+ra_res <- do.call(rbind, ra_res)
+ra_res <- apply(ra_res, 2, as.numeric)
+# ramnge of rsq values
+range(ra_res[,4])
 
 
 # # try by compound models
