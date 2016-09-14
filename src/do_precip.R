@@ -100,9 +100,37 @@ hist(props[tot < 1000, tot])
 keep <- props[prop > 0.05 & tot > 1000]
 # 25 compounds left
 
+# export overview for supplement
+keep
+setkey(psm_variables, variable_id)
+setkey(keep, variable_id)
+keep_tab <- psm_variables[ , list(variable_id, name, cas, psm_type)][keep]
+keep_tab[ , prop := round(prop*100, 2)]
+setnames(keep_tab, c('id', 'Compound', 'CAS', 'Group', '\\%>LOQ', 'no. > LOQ', 'total no.'))
+keep_tab$id <- NULL
+keep_tab
+
+keep_tab_x <- xtable(keep_tab, 
+                    label = 'tab:var_model',
+                    caption = '24 pesticides for which we modelled the relationship with precipitation and seasonality.
+                    Order is the same as in Figure 5 of the articles. See Table \\ref{tab:var_model_coef} for model coefficients.',
+                    align = 'lp{2.5cm}rlp{1.5cm}p{2cm}p{2cm}')
+
+print(keep_tab_x, 
+      file = file.path(prj, 'supplement/keeptab.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0, nrow(keep_tab)),
+      sanitize.text.function = identity,
+      size="\\fontsize{8pt}{10pt}\\selectfont"
+)
+
+
+
 take <- take[variable_id %in% keep$variable_id]
-
-
 psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
 
 
@@ -190,32 +218,88 @@ resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci), 'cisig', 'nocisig'
 
 resdf$termind <- substr(resdf$term, 1, 2)
 
-# display as tile plot
-ggplot() +
-  geom_tile(data = resdf[!grepl('Intercept|si|mu.pre|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
-  scale_fill_gradient2(na.value = "white") +
-  ggtitle('mu.season')
+# export other table
+keep_tab2 <- resdf[!grepl('Intercept', term) & term_type != 'sigma', 
+                   list(variable, term2, term_type, est, lowci, upci)]
+keep_tab2[ , variable := as.numeric(variable)]
+setkey(keep_tab2, variable)
+setkey(psm_variables, variable_id)
+keep_tab2 <- psm_variables[ , list(variable_id, name)][keep_tab2]
+keep_tab2 <- keep_tab2[order(term2, term_type)]
+keep_tab2[ , est := round(est, 2)]
+keep_tab2[ , lowci := round(lowci, 2)]
+keep_tab2[ , upci := round(upci, 2)]
+make_bold <- function(string) {
+  paste0("\\textbf{", string, "}")
+}
+keep_tab2[ , est := as.character(est)]
+keep_tab2[ sign(upci)  == sign(lowci), est := make_bold(est)]
+keep_tab2[ , estci := paste0(est, '\\newline (', lowci, ' - ', upci, ')')]
+keep_tab2[ , term2_p := mapvalues(term2, c("precip0", "precip_1", "seasonQ2", 
+                                           "seasonQ3", "seasonQ4"),
+                       c("$precip_0$", "$precip_{-1}$", "$season_{Q2}$", 
+                         "$season_{Q3}$", "$season_{Q4}$"))]
 
-ggplot() +
-  geom_tile(data = resdf[!grepl('Intercept|si|Q|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
-  ggtitle('mu.precip') +
-  scale_fill_gradient2(na.value = "white") 
+keep_tab2[ , term_type_p := mapvalues(term_type, c('mu', 'pi'),
+                                     c('$\\mu$', '$\\pi$'))]
+setnames(keep_tab2, c("variable_id", "Compound", "term2", "term_type", "est", 
+                      "lowci", "upci", "coefficient", 
+                      "variable", "effect"))
+
+keep_tab2_w <- keep_tab2[ , list(Compound, variable, effect, coefficient)]
+keep_tab2_w <- dcast(keep_tab2_w, Compound + effect ~ variable)
+keep_tab2_w <- keep_tab2_w[order(keep_tab2_w$effect), ]
+rownames(keep_tab2_w)<-NULL
+
+keep_tab2_x <- xtable(keep_tab2_w, 
+                     label = 'tab:var_model_coef',
+                     caption = 'Raw data for figure 5 in the main article. 
+                     Bold values denote coefficients where the CI encompasses zero.',
+                     align = 'lp{2cm}p{0.7cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}')
+
+print(keep_tab2_x, 
+      file = file.path(prj, 'supplement/keeptab2.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0, 24, 48),
+      sanitize.text.function = identity,
+      size="\\fontsize{8pt}{10pt}\\selectfont"
+)
 
 
-ggplot() +
-  geom_tile(data = resdf[!grepl('Intercept|si|nu.pre|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
-  scale_fill_gradient2(na.value = "white") +
-  ggtitle('nu.season')
 
-ggplot() +
-  geom_tile(data = resdf[!grepl('Intercept|si|Q|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
-  scale_fill_gradient2(na.value = "white") +
-  ggtitle('nu.precip')
+
+# # display as tile plot
+# ggplot() +
+#   geom_tile(data = resdf[!grepl('Intercept|si|mu.pre|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
+#   scale_fill_gradient2(na.value = "white") +
+#   ggtitle('mu.season')
+# 
+# ggplot() +
+#   geom_tile(data = resdf[!grepl('Intercept|si|Q|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
+#   ggtitle('mu.precip') +
+#   scale_fill_gradient2(na.value = "white") 
+# 
+# 
+# ggplot() +
+#   geom_tile(data = resdf[!grepl('Intercept|si|nu.pre|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
+#   scale_fill_gradient2(na.value = "white") +
+#   ggtitle('nu.season')
+# 
+# ggplot() +
+#   geom_tile(data = resdf[!grepl('Intercept|si|Q|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
+#   scale_fill_gradient2(na.value = "white") +
+#   ggtitle('nu.precip')
 
 
 
 # display estimates and errors
-p_precip <- ggplot(data = resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('precip0', 'precip_1')]) +
+pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('precip0', 'precip_1')]
+pdata[ , variable := factor(variable, levels = rev(sort(unique(pdata[ , variable]))))]
+p_precip <- ggplot(data = pdata) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
                       col = cisig), 
                   position=position_dodge(width = .6)) +
@@ -227,9 +311,12 @@ p_precip <- ggplot(data = resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
   scale_x_discrete(breaks = c('precip_1', 'precip0'), 
-                   labels = c(expression(prec[-1]), expression(prec[0])))
+                   labels = c(expression(prec[-1]), expression(prec[0]))) +
+  theme(strip.text.x = element_text(size = 22))
 
-p_season <- ggplot(data = resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('precip0', 'precip_1')]) +
+pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('precip0', 'precip_1')]
+pdata2[ , variable := factor(variable, levels = rev(sort(unique(pdata2[ , variable]))))]
+p_season <- ggplot(data = pdata2) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
                       col = cisig), 
                   position=position_dodge(width = .6)) +
@@ -241,16 +328,43 @@ p_season <- ggplot(data = resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
   scale_x_discrete(breaks = c('seasonQ4', 'seasonQ3', 'seasonQ2'), 
-                   labels = c(expression(seas[Q4]), expression(seas[Q3]),expression(seas[Q2])))
+                   labels = c(expression(seas[Q4]), expression(seas[Q3]),expression(seas[Q2]))) +
+  theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1)
-plot(p)
+# plot(p)
 ggsave(file.path(prj, "figure5.pdf"), p, width = 10, height = 9)
 
 
 
 
 
+
+
+
+# extract random effect variances
+
+# function to extract the needed model components, 
+ra_extr <- function(file){
+  message('Working on file: ', file)
+  mod <- readRDS(file)
+  lme_out <- mod$mu.coefSmo[[1]]
+  vc <- VarCorr(lme_out)
+  suppressWarnings(storage.mode(vc) <- 'numeric')
+  vc <- vc[c(2, 4), 'StdDev']
+  names(vc) <- c('state/site', 'state')
+  vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
+   # generalized rsq
+  vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
+  # calculate CIs
+  return(vc)
+}
+
+ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
+ra_res <- do.call(rbind, ra_res)
+ra_res <- apply(ra_res, 2, as.numeric)
+# ramnge of rsq values
+range(ra_res[,4])
 
 
 # # try by compound models

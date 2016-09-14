@@ -62,6 +62,23 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \end{figure}
 
 
+\chapter{Catchment size - stream width relationships}
+We studied the relationship between catchment size based on three datasets containing this informations:
+Data delivered by the federal state Thuringia, \citet{vos_organic_2015} and \citet{fernandez_effects_2015} (both from Rhineland-Palatinate).
+We fitted to each dataset separately and to the combined dataset a power-function.
+The resulting models are shown in Figure \ref{fig:size_width}. 
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{width_size}
+	\caption[Relationship between catchment size and stream width.]{Relationship between catchment size and stream width. A power function has been fitted to each dataset separately and the combined dataset (black line and equation). The gray rectangle marks the estimated with for a catchment size of 25km\textsuperscript{2}.}
+	\label{fig:size_width}
+\end{figure}
+
+
+
+
 \chapter{Overview on compiled data}
 % Overview samples
 % table generated in do_overview.R
@@ -85,6 +102,9 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 % table generated in do_overview.R
 \input{phchvar}
 
+
+
+\chapter{Effect of precipitation and season on RQ}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{precip}
@@ -93,11 +113,12 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \end{figure}
 
 
+\input{keeptab}
+\input{keeptab2}
 
 
-\chapter{Are small agricultural waters more polluted compared to bigger streams?}
 
-\section{RAC Exceedances}
+\chapter{Pollution of small streams}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.7\textwidth]{ezgagrirac}
