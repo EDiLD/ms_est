@@ -89,6 +89,10 @@ nrow(dd[rq >1]) / nrow(dd) * 100
 nrow(dd[rq >1]) / nrow(dd[rq>0]) * 100
 
 
+length(unique(dd[rq > 1.12, site_id])) / length(unique(dd[, site_id]))* 100
+
+
+
 # calculate percentage of non-detects
 loqd <- take_dd[ , list(tot = length(rq),
                 n_n0 = sum(rq > 0),
@@ -126,6 +130,10 @@ psm_variables[name %like% c('Nicosu') | name %like% c('Diflufe') | name %like% c
 nrow(take_dd[variable_id %in% c(272) & rq > 1]) / nrow( take_dd[variable_id %in% c(272) & rq > 0]) * 100
 nrow(take_dd[variable_id %in% c(282) & rq > 1]) / nrow( take_dd[variable_id %in% c(282) & rq > 0]) * 100
 nrow(take_dd[variable_id %in% c(457) & rq > 1]) / nrow( take_dd[variable_id %in% c(457) & rq > 0]) * 100
+
+# number of samples for Thiaclorpid
+take_samples[variable_id == 588]
+
 
 # detects
 dt <- take_samples[ , list(tot = length(value_fin),
