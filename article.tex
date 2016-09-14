@@ -142,7 +142,6 @@ The WFD defines SWB with a catchment size between 10 and 100 km\textsuperscript{
 Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure \ref{fig:fig3}) we define in this study all streams below 25~km\textsuperscript{2} as SWB. This catchment size corresponds to a stream width of approximately 2~meters (see Supplement Figure S2).
 
 
-
 \subsection{Characterization of pesticide pollution}
 We characterized pesticide pollution using regulatory acceptable concentrations (RAC) \citep{brock_linking_2010}.
 RACs are derived during pesticide authorization and no unacceptable ecological effect are expected if the environmental concentration remains below this concentration.
@@ -179,7 +178,6 @@ The number of samples per site ($n_i$) was used as an offset to account differen
 We used point-wise 95\% Confidence Intervals (CI) of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
-
 While agricultural land use and catchment size vary only between sites, this is not the case for precipitation that changes also with time.
 Therefore, we modeled the effects of precipitation in a separate model.
 RQ showed a skewed distribution with an excess of zeros (no pesticides with RAC detected). 
@@ -197,7 +195,6 @@ RQ_i \sim ZAGA(\mu_i, \pi_i) =
 $\pi_i$ denotes the probability of a observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, where $\mu$ is the mean of the gamma function.
 We used the precipitation at sampling date ($prec_0$) and the day before ($prec_{-1}$), as well as quarters of the year ($season_{Q1-Q4}$) as linear predictors for $\mu$ and $\pi$.
 To account for temporal autocorrelation and differences between federal states we used the site nested within state as random intercepts:
-
 
 \begin{align}
 \begin{split}
@@ -264,7 +261,6 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 \end{figure}
 
 
-
 \subsection{Thresholds for agricultural land use and catchment size}
 Modeling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
 Above this threshold the exceedances level off followed by a increase above 75\% (Figure \ref{fig:fig4}, left).
@@ -279,9 +275,7 @@ We also found no statistically significant interaction between catchment size an
 \end{figure}
 
 
-
 \subsection{Effect of precipitation on pesticide exposure}
-
 The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day (Supplement, Figure S3).
 Precipitation at the day before ($precip_{-1}$) sampling increased $\mu$ and also $\pi$ for nearly all modeled compounds. 
 The effects were less pronounced ($\pi$) or not directed ($\mu$) for precipitation at the day of sampling ($precip_{0}$)(Figure \ref{fig:fig5}, top).
@@ -300,14 +294,29 @@ We found similar effects on $\pi$.
 \end{figure}
 
 
-
 \subsection{Pesticides in small water bodies}
+The dataset comprised 12,887 samples from 1313 small water bodies.
+1173 samples (0.3\% of all and 5.6\% of samples with detects) RQ higher then 1 were observed.
+Neonicotinoid Insecticides and Chlorpyrifos showed highest risk quotients (Figure \ref{fig:fig6}).
+For Thiacloprid, Imidacloprid and Chlorpyrifos RAC was less than LOQ, therefore, all detections have a RQ \textgreater 1. 
+The herbicides Nicosulfuron and Diflufenican, as well as the fungicide Dimoxystrobin showed also high exceedances of RQ (29.5/14.2/21.4 \% of all samples with detects).
+Highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
+Metabolites were most commonly detected in samples (Metazachlor sulfonix acid was in 82\% of all samples were it was analysed) (Supplement Figure S8)
+Glyphosate was the compound with highest detection rates, followed by Boscalid and Isoproturon. 
+However, only the latter showed RQ exceedances (Figure \ref{fig:fig6}).
+In 44.8\% of samples more then one compound was quantified, with a maximum of 54 different compounds in one samples (supplemental figure S7). 
+
+\begin{figure}[h]
+  \includegraphics[width=0.6\textwidth]{figure6.pdf}
+  \caption{15 compounds with highest risk quotients in SWB. Non-detects are not shown due to the logarithmic axis. Numbers on the right give the percentage of RQ \textgreater 0 and total number of samples.
+  }
+  \label{fig:fig6}
+\end{figure}
 
 
 
 
-
-
+%% -------------------------------------------------------------------------
 \section{Discussion}
 \subsection{Overview on the compiled dataset}
 The compiled dataset of governmental monitoring data represents currently the most comprehensive one available for Germany.
