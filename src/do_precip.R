@@ -134,16 +134,14 @@ take <- take[variable_id %in% keep$variable_id]
 psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
 
 
-# add compound group
-
 
 
 # Model -------------------------------------------------------------------
-take_c <- take[variable_id == 228]
+take_c <- take[variable_id == 457]
 
 # gamma hurdle model with precipitation as groups, season and psm_type as predictors
 # site within state as random effect
-mod_l_m <- gamlss(rq ~ precip_1 + precip0 + season +
+mod_l_m <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
                     re(random=~1|state_fac/s_id_fac),
                   # model also pi with same predictors 
                   nu.formula =~precip_1_g + precip0_g + season + 
@@ -151,6 +149,7 @@ mod_l_m <- gamlss(rq ~ precip_1 + precip0 + season +
                   # sigma is constant
                   data = take_c,
                   family = ZAGA)
+plot(mod_l_m)
 summary(mod_l_m)
 term.plot(mod_l_m)
 res <- residuals(mod_l_m)
@@ -160,17 +159,17 @@ hist(res)
 model_foo <- function(var){
   message('Running model on compound: ', var)
   take_c <<- take[variable_id == var]
-  mod <- gamlss(rq ~ precip_1 + precip0 + season +
+  mod <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
                       re(random=~1|state_fac/s_id_fac),
                     # model also pi with same predictors 
-                    nu.formula =~precip_1 + precip0 + season + 
+                    nu.formula =~log_precip_1 + log_precip0 + season + 
                       re(random=~1|state_fac/s_id_fac),
                     # sigma is constant
                     data = take_c,
                     family = ZAGA)
   # save model to cache
   # since would be to big to hold in RAM
-  saveRDS(mod, file.path(cachedir, 'models', paste0('mod_', var, '.rds')))
+  saveRDS(mod, file.path(cachedir, 'lmodels', paste0('mod_', var, '.rds')))
 }
 
 # model_foo(727)
@@ -178,7 +177,7 @@ model_foo <- function(var){
 lapply(keep$variable_id, model_foo)
 
 
-# function to extract the needed model components, 
+                  # function to extract the needed model components, 
 model_extr <- function(file){
   mod <- readRDS(file)
   ss <- summary(mod)
@@ -201,7 +200,7 @@ model_extr <- function(file){
   return(smod)
 }
 
-res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), model_extr)
+res <- lapply(file.path(cachedir, 'lmodels', paste0('mod_', keep$variable_id, '.rds')), model_extr)
 
 
 resdf <- rbindlist(res)
@@ -297,7 +296,7 @@ print(keep_tab2_x,
 
 
 # display estimates and errors
-pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('precip0', 'precip_1')]
+pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('log_precip0', 'log_precip_1')]
 pdata[ , variable := factor(variable, levels = rev(sort(unique(pdata[ , variable]))))]
 p_precip <- ggplot(data = pdata) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
@@ -310,11 +309,11 @@ p_precip <- ggplot(data = pdata) +
   theme(legend.position="none") +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
-  scale_x_discrete(breaks = c('precip_1', 'precip0'), 
-                   labels = c(expression(prec[-1]), expression(prec[0]))) +
+  scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'), 
+                   labels = c(expression('log'~prec[-1]), expression('log'~prec[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
-pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('precip0', 'precip_1')]
+pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('log_precip0', 'log_precip_1')]
 pdata2[ , variable := factor(variable, levels = rev(sort(unique(pdata2[ , variable]))))]
 p_season <- ggplot(data = pdata2) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
