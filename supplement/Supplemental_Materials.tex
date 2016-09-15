@@ -26,10 +26,13 @@
 
 
 
+%% -------------------------------------------------------------------------
 \title{Supplemental Materials for the paper: \\Pesticides pollution of small streams in
 Germany}
 \author{Eduard Szöcs, Marvin Brinke, Bilgin Karaoglan, Ralf B. Schäfer}
 
+
+%% -------------------------------------------------------------------------
 \begin{document}
 \maketitle
 
@@ -38,6 +41,8 @@ Germany}
 \listoftables
 
 
+
+%% -------------------------------------------------------------------------
 \chapter{Data Cleaning}
 More then 30 datasets have been cleaned and homogenized separately, before combing into a common database.
 Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overview).
@@ -53,7 +58,6 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\item Validity Checks: Simple rules for validity checks have been implemented (e.g. no negative concentrations).
 \end{enumerate}
 
-
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
@@ -62,12 +66,13 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \end{figure}
 
 
+
+%% -------------------------------------------------------------------------
 \chapter{Catchment size - stream width relationships}
 We studied the relationship between catchment size based on three datasets containing this informations:
 Data delivered by the federal state Thuringia, \citet{vos_organic_2015} and \citet{fernandez_effects_2015} (both from Rhineland-Palatinate).
 We fitted to each dataset separately and to the combined dataset a power-function.
 The resulting models are shown in Figure \ref{fig:size_width}. 
-
 
 \begin{figure}[h]
 	\centering
@@ -78,7 +83,7 @@ The resulting models are shown in Figure \ref{fig:size_width}.
 
 
 
-
+%% -------------------------------------------------------------------------
 \chapter{Overview on compiled data}
 % Overview samples
 % table generated in do_overview.R
@@ -104,28 +109,50 @@ The resulting models are shown in Figure \ref{fig:size_width}.
 
 
 
+
+%% -------------------------------------------------------------------------
+\chapter{Thresholds for agricultural land use and catchment size}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{ezgagrirac}
+	\caption{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
+	\label{fig:ezgagrirac}
+\end{figure}
+
+
+
+%% -------------------------------------------------------------------------
 \chapter{Effect of precipitation and season on RQ}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width = 0.6\textwidth]{precip}
+	\includegraphics[width = 0.8\textwidth]{precip}
 	\caption{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
 	\label{fig:precip}
 \end{figure}
-
 
 \input{keeptab}
 \input{keeptab2}
 
 
 
-\chapter{Pollution of small streams}
+%% -------------------------------------------------------------------------
+\chapter{Pesticides in small water bodies}
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width = 0.7\textwidth]{ezgagrirac}
-	\caption{Raw data used for the model in equation xxx and Figure xxx of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
-	\label{fig:ezgagrirac}
+	\includegraphics[width = 0.8\textwidth]{pmix}
+	\caption{Distribution the number of quantified compounds in the samples from small water bodies.}
+	\label{fig:pmix}
 \end{figure}
-\todo{update refs}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{pdetects}
+	\caption{Proportion of samples with detects in SWB. Only Compounds with more than 100 samples and 15\% of detects are show.}
+	\label{fig:pdetects}
+\end{figure}
+
+
 
 
 \bibliographystyle{apalike}      % basic style, author-year citations
