@@ -362,9 +362,29 @@ ra_extr <- function(file){
 ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
 ra_res <- do.call(rbind, ra_res)
 ra_res <- apply(ra_res, 2, as.numeric)
-# ramnge of rsq values
+# range of rsq values
 range(ra_res[,4])
 
+
+
+
+# plot for talk2
+psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
+sort(table(take[variable_id == 349, site_id]))
+
+df <- take[variable_id == 349 & site_id == 'RP_2375572100']
+take_df <- psm_samples[sample_id %chin% df$sample_id & variable_id == 349]
+p <- ggplot(take_df, aes(x = as.Date(date), y = value_fin)) + 
+  geom_point() +
+  geom_hline(aes(yintercept = 0.05), linetype = 'dashed', col = 'darkorange', size = 1) +
+  mytheme +
+  labs(y = 'Glyphosate [ug/L]', x = 'Date') +
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y') +
+  ggtitle('Erlenbach / Rheinzabern')
+
+require(ggExtra)
+pout <- ggMarginal(p, type = 'histogram', margins = 'y')
+ggsave('/home/user/Documents/projects_git/talk_work2/fig/glyph.pdf', pout, width = 7, height = 5)
 
 # # try by compound models
 # take_c <- take[variable_id == 349]
@@ -648,133 +668,3 @@ range(ra_res[,4])
 # term.plot(mod_sr_m_car, what = 'mu', pages = 1, ask = FALSE) # oversmooth? why this break?!
 # term.plot(mod_sr_m_car, what = 'nu', pages = 1, ask = FALSE) 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-plot(rq ~ log_precip_1, data = take)
-preds <- predictAll(mod2gc, type = 'response')
-# observed vs fitted
-plot(take$rq, preds$mu)
-abline(0, 1)
-plot(take$rq, preds$mu * (1-preds$nu))
-abline(0, 1)
-
-
-plot(take$log_precip_1, preds$mu * (1-preds$nu))
-# same as
-plot(take$log_precip_1, meanZAGA(mod2gc))
-
-
-sort(table(take$site_id))
-# plot only for one site
-ts <- which(take$site_id == 'SL_189')
-plot(take$log_precip_1[ts], meanZAGA(mod2gc)[ts])
-
-
-# devel section.... -------------------------------------------------------
-
-
-# psm_variables[grepl('Chlorp', name)]
-ggplot(samples_rac[variable_id == 378], aes(x = precip_1, y = rq)) + 
-  geom_point(alpha = 0.2) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_hline(aes(yintercept = 0.0015))
-
-
-sub <- samples_rac[variable_id == 378]
-# rm obs without precip information
-sub <- sub[!(is.na(precip_1) | is.na(precip0))]
-# assume all values belwo rq < 0.0015 as censored
-hist(sub$rq[sub$rq < 0.01])
-cens <- 0.0015
-sub[, is_cens := ifelse(rq < cens, TRUE, FALSE)]
-# set censored values to 1/2 censoring values 
-sub[is_cens == TRUE, rq := cens / 2]
-# log-transform (this is eqivalnet to a log10(x + 0.0075) transformation)
-sub[, log_rq := log10(rq)]
-# log-transform precipitation
-hist(sub$precip_1[sub$precip_1 < 0.5])
-# use log10(x + 0.05 transformation)
-sub[, log_precip_1 := log10(precip_1 + 0.05)]
-
-# devide into two groups (@10mm)
-sub[ , precip_1_group := ifelse(precip_1 < 10, 'low', 'high')]
-plot(log_rq ~ factor(precip_1_group), data = sub)
-
-
-
-ggplot(sub, aes(x = log_precip_1, y = log_rq, col = is_cens)) + 
-  geom_point(alpha = 0.2) 
-
-
-# use mixed model
-mod <- lmer(log_rq ~ precip_1_group + (1|site_id), data = sub)
-summary(mod)
-plot(mod)
-plot(ranef(mod))
-#! doesn't look nice
-mod0<- lmer(log_rq ~ 1 + (1|site_id), data = sub)
-anova(mod, mod0)
-
-# gamma (cens set at 1/2 loq)
-mod <- glmer(rq ~ precip_1 + (date|site_id), family = Gamma(link = "log"), data = sub)
-summary(mod)
-plot(mod)
-plot(ranef(mod))
-#! doesn't look nice
-
-# normal with temporal ar1
-require(nlme)
-mod <- lme(log_rq ~ precip_1_group, random=~1|site_id, data = sub)
-summary(mod)
-plot(mod)
-plot(ranef(mod))
-plot(ACF(mod), alpha = 0.05)
-
-modar <- lme(log_rq ~ precip_1_group, random=~1|site_id, data = sub, correlation = corAR1())
-summary(modar)
-plot(modar)
-plot(ranef(modar))
-plot(ACF(modar, resType="pearson"), alpha = 0.05)
-# much better job, still sime negativ autocorrelation?
-
-
-
-
-data(Pixel)
-l1 <- lme(pixel~ day+I(day^2), data=Pixel, random=random=~1|Side,
-          method="ML")
-summary(l1)
-t1<-gamlss(pixel~re(fixed=~day+I(day^2), random=~1|Side, 
-                    opt="optim"), data=Pixel)
-summary(t1)
-getSmo(t1)
-# fixed part in gamlss formula
-t1a <- gamlss(pixel~day+I(day^2) + re(random=~1|Side), 
-            data=Pixel, 
-            opt="optim")
-summary(t1a)
-getSmo(t1a)
-
-plot(fitted(l1), fitted(t1))
-plot(fitted(l1), fitted(t1a))
-# with smoother
-t1b <- gamlss(pixel~cs(day, df = 1) + re(random=~1|Side), 
-              data=Pixel, 
-              opt="optim")
-summary(t1b)
-getSmo(t1b)
-
-plot(fitted(t1a), fitted(t1b))
