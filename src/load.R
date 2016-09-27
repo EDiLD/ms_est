@@ -71,6 +71,7 @@ library(gamlss.dist)
 library(gamlss.add)
 library(lme4)
 library(nlme)
+library(metafor)
 
 ### ----------------------------------------------------------------------------
 ### Source defined functions

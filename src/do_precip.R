@@ -353,9 +353,29 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 # metaanalysis of coefficients
 
 unique(resdf$term)
+# fixed effect meta analysis
+mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'FE')
+mmod
+plot(mmod)
+
+
+# by hand (See Harrison (2011), MEE, eqn 1+2)
+dat <- resdf[term == 'nu.log_precip_1']
+#+ weights
+wi <- 1/dat$stderr^2
+# weighted mean
+sum(wi*dat$est) / sum(wi)
+# CI
+sum(wi*dat$est) / sum(wi) + sqrt(1/sum(wi)) * qnorm(0.975)
+sum(wi*dat$est) / sum(wi) - sqrt(1/sum(wi)) * qnorm(0.975)
+
+
+# random effect meta analysis
 mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'REML')
 mmod
 plot(mmod)
+
+
 
 # fit top each term
 terms <- unique(resdf$term)
@@ -395,9 +415,9 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
                    labels = c(expression('log'~precip[-1]), expression('log'~precip[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
-p <- arrangeGrob(p_precip, p_season, ncol = 1)
+p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 # plot(p)
-ggsave("figure5.pdf", p, width = 10, height = 9)
+ggsave("figure5.pdf", p, width = 7, height = 5.5)
 
 
 # extract random effect variances

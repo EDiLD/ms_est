@@ -11,7 +11,7 @@
 \usepackage{amsmath}
 \usepackage{enumerate}
 
-% \usepackage{todonotes}
+\usepackage{todonotes}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% If issues arise when submitting your manuscript, you may want to
@@ -195,7 +195,7 @@ GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 While agricultural land use and catchment size vary only between sites, this is not the case for precipitation that changes also with time.
 Therefore, we modeled the effects of precipitation in a separate model.
-RQ showed a skewed distribution with an excess of zeros (no pesticides with RAC detected). 
+RQ showed a skewed distribution with an excess of zeros (no pesticides detected). 
 Therefore, we modeled these as two processes (one generating values below the limit of quantification (LOQ) and one generating values above LOQ) using a Zero-Adjusted Gamma (ZAGA) distribution \cite{rigby_generalized_2005,stasinopoulos_gamlss.dist:_2016}:
 
 \begin{align}
@@ -208,23 +208,25 @@ RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) =
 \end{align}
 
 $\nu_i$ denotes the probability of a observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
-We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($season_{Q1-Q4}$) as linear predictors for $\mu$ and $\nu$. 
+We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($Q1-Q4$) as linear predictors for $\mu$ and $\nu$. 
 $\sigma$ was assumed to be constant. 
 To account for temporal autocorrelation and differences between federal states we used $site$ nested within $state$ as random intercepts:
 
 \begin{align}
 \begin{split}
-\log(\mu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + season_{ijk} + state_j + site_{jk}\\
-logit(\nu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + season_{ijk} + state_j + site_{jk}\\
+\log(\mu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + Q1-4_{ijk} + state_j + site_{jk}\\
+logit(\nu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + Q1-4_{ijk} + state_j + site_{jk}\\
 state_{j} \sim N(0, \sigma^2_{state}) \\
 site_{jk} \sim N(0, \sigma^2_{site})
 \end{split}
 \label{eqn:eqn4}
 \end{align}
 
-Changes in $\mu$ can be interpreted as changes in the absolute value of RQ, whereas changes in $\nu$ can be interpreted as changes in the probability of exceeding LOQ.
-We fitted this model separately to each compound with a RAC, at least 1000 samples and more then 5\% of values above quantification limit (see Supplement, Table S3 for a list of compounds). 
-We implemented the model using the gamlss package \cite{stasinopoulos_generalized_2007}.
+Changes on $\mu$ can be interpreted as changes in the absolute value of RQ, whereas changes in $\nu$ can be interpreted as changes in the probability of exceeding LOQ and showing any risk. 
+We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}.
+
+We fitted this model separately to each compound with a RAC, measured in least 1000 samples and more then 5\% of values above LOQ (n = 24 compounds, see Supplement, Table S3 for a list of compounds). 
+To summarise the coefficients across the modeled compounds we used a random effect meta-analysis
 
 
 
