@@ -116,24 +116,24 @@ keep_tab_x <- xtable(keep_tab,
                     Order is the same as in Figure 5 of the articles. See Table \\ref{tab:var_model_coef} for model coefficients.',
                     align = 'lp{2.5cm}rlp{1.5cm}p{2cm}p{2cm}')
 
-print(keep_tab_x, 
-      file = file.path(prj, 'supplement/keeptab.tex'),
-      tabular.environment="longtable",
-      floating = FALSE,
-      caption.placement = 'top',
-      comment = FALSE,
-      booktabs = TRUE,
-      hline.after = c(-1, 0, nrow(keep_tab)),
-      sanitize.text.function = identity,
-      size="\\fontsize{8pt}{10pt}\\selectfont"
-)
+# print(keep_tab_x, 
+#       file = file.path(prj, 'supplement/keeptab.tex'),
+#       tabular.environment="longtable",
+#       floating = FALSE,
+#       caption.placement = 'top',
+#       comment = FALSE,
+#       booktabs = TRUE,
+#       hline.after = c(-1, 0, nrow(keep_tab)),
+#       sanitize.text.function = identity,
+#       size="\\fontsize{8pt}{10pt}\\selectfont"
+# )
 
 
 
 take <- take[variable_id %in% keep$variable_id]
 psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
 
-
+rm(samples_rac, psm_sites, psm_sites_info, take_si, rac, keep_tab, keep_tab_x)
 
 
 # Model -------------------------------------------------------------------
@@ -144,7 +144,7 @@ take_c <- take[variable_id == 457]
 mod_l_m <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
                     re(random=~1|state_fac/s_id_fac),
                   # model also pi with same predictors 
-                  nu.formula =~precip_1_g + precip0_g + season + 
+                  nu.formula =~precip_1 + precip0 + season + 
                     re(random=~1|state_fac/s_id_fac),
                   # sigma is constant
                   data = take_c,
@@ -155,14 +155,30 @@ term.plot(mod_l_m)
 res <- residuals(mod_l_m)
 hist(res)
 
+# random slope model, does not converge?
+# gco <- glim.control(glm.trace = TRUE, bf.trace = TRUE)
+# mod_l_m_ra <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
+#                     re(random=~1|state_fac/s_id_fac) +
+#                       # random slope
+#                       re(random=~precip_1 + precip0 + season|v_id_fac),
+#                   # model also pi with same predictors
+#                   nu.formula =~precip_1 + precip0 + season +
+#                     re(random=~1|state_fac/s_id_fac) + re(random=~precip_1 + precip0 + season|v_id_fac),
+#                   # sigma is constant
+#                   data = take,
+#                   family = ZAGA,
+#                   i.control = gco)
 
+
+
+# fit model for each compound
 model_foo <- function(var){
   message('Running model on compound: ', var)
   take_c <<- take[variable_id == var]
-  mod <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
+  mod <- gamlss(rq ~ 0+log_precip_1 + log_precip0 + season +
                       re(random=~1|state_fac/s_id_fac),
                     # model also pi with same predictors 
-                    nu.formula =~log_precip_1 + log_precip0 + season + 
+                    nu.formula =~0+log_precip_1 + log_precip0 + season + 
                       re(random=~1|state_fac/s_id_fac),
                     # sigma is constant
                     data = take_c,
@@ -177,7 +193,7 @@ model_foo <- function(var){
 lapply(keep$variable_id, model_foo)
 
 
-                  # function to extract the needed model components, 
+# function to extract the needed model components,
 model_extr <- function(file){
   mod <- readRDS(file)
   ss <- summary(mod)
@@ -185,7 +201,7 @@ model_extr <- function(file){
   # remove NA coefficients
   mu.na <- which(is.na(mod$mu.coefficients))
   nu.na <- which(is.na(mod$nu.coefficients))
-  
+
   # extract coefs
   smod$terms <- c(paste0('mu.', names(mod$mu.coefficients)[-mu.na]),
                 'sigma',
@@ -196,7 +212,6 @@ model_extr <- function(file){
   smod$Estimate[grepl('nu\\.', smod$terms)] <- -smod$Estimate[grepl('nu\\.', smod$terms)]
   smod$upci <- smod$Estimate + smod$Std..Error * mult
   smod$lowci <- smod$Estimate - smod$Std..Error * mult
-  # calculate CIs
   return(smod)
 }
 
@@ -208,9 +223,8 @@ names(resdf) <- c('est', 'stderr', 'tval', 'pval', 'term', 'variable', 'upci', '
 resdf$term_type <- gsub('^(.*)\\..*', '\\1', resdf$term)
 resdf$term2 <- gsub('^.*\\.(.*)$', '\\1', resdf$term)
 resdf$pval <- round(resdf$pval, 4)
-resdf$term_type[resdf$term_type == 'nu'] <- 'pi'
 
-# indicatopr for significant based on p
+# indicator for significant based on p
 resdf$estsig <- ifelse(resdf$pval < 0.05, resdf$est, NA)
 # indicatopr for significant based on ci
 resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci), 'cisig', 'nocisig')
@@ -232,15 +246,15 @@ make_bold <- function(string) {
   paste0("\\textbf{", string, "}")
 }
 keep_tab2[ , est := as.character(est)]
-keep_tab2[ sign(upci)  == sign(lowci), est := make_bold(est)]
+keep_tab2[ sign(upci)  == sign(lowci) & !grepl('season', term2), est := make_bold(est)]
 keep_tab2[ , estci := paste0(est, '\\newline (', lowci, ' - ', upci, ')')]
-keep_tab2[ , term2_p := mapvalues(term2, c("precip0", "precip_1", "seasonQ2", 
+keep_tab2[ , term2_p := mapvalues(term2, c("log_precip0", "log_precip_1", "seasonQ1", "seasonQ2", 
                                            "seasonQ3", "seasonQ4"),
-                       c("$precip_0$", "$precip_{-1}$", "$season_{Q2}$", 
-                         "$season_{Q3}$", "$season_{Q4}$"))]
+                       c("$log~precip_0$", "$log~precip_{-1}$", "Quarter 1", 
+                         "Quarter 2", "Quarter 3", "Quarter 4"))]
 
-keep_tab2[ , term_type_p := mapvalues(term_type, c('mu', 'pi'),
-                                     c('$\\mu$', '$\\pi$'))]
+keep_tab2[ , term_type_p := mapvalues(term_type, c('mu', 'nu'),
+                                     c('$\\mu$', '$\\nu$'))]
 setnames(keep_tab2, c("variable_id", "Compound", "term2", "term_type", "est", 
                       "lowci", "upci", "coefficient", 
                       "variable", "effect"))
@@ -252,9 +266,10 @@ rownames(keep_tab2_w)<-NULL
 
 keep_tab2_x <- xtable(keep_tab2_w, 
                      label = 'tab:var_model_coef',
-                     caption = 'Raw data for figure 5 in the main article. 
-                     Bold values denote coefficients where the CI encompasses zero.',
-                     align = 'lp{2cm}p{0.7cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}')
+                     caption = 'Coefficients and CI from per compound models. 
+                     Bold values denote coefficients where the CI for precipitation encompasses zero.
+                     Coefficients are on the link scale (log for $mu$ and logit for $\nu$).',
+                     align = 'lp{2cm}p{0.6cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}')
 
 print(keep_tab2_x, 
       file = file.path(prj, 'supplement/keeptab2.tex'),
@@ -271,36 +286,12 @@ print(keep_tab2_x,
 
 
 
-# # display as tile plot
-# ggplot() +
-#   geom_tile(data = resdf[!grepl('Intercept|si|mu.pre|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
-#   scale_fill_gradient2(na.value = "white") +
-#   ggtitle('mu.season')
-# 
-# ggplot() +
-#   geom_tile(data = resdf[!grepl('Intercept|si|Q|nu', resdf$term, )], aes(x = term, y = factor(variable), fill = estsig)) +
-#   ggtitle('mu.precip') +
-#   scale_fill_gradient2(na.value = "white") 
-# 
-# 
-# ggplot() +
-#   geom_tile(data = resdf[!grepl('Intercept|si|nu.pre|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
-#   scale_fill_gradient2(na.value = "white") +
-#   ggtitle('nu.season')
-# 
-# ggplot() +
-#   geom_tile(data = resdf[!grepl('Intercept|si|Q|mu', resdf$term, )], aes(x = term, y = factor(variable), fill = -estsig)) +
-#   scale_fill_gradient2(na.value = "white") +
-#   ggtitle('nu.precip')
-
-
-
 # display estimates and errors
 pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('log_precip0', 'log_precip_1')]
 pdata[ , variable := factor(variable, levels = rev(sort(unique(pdata[ , variable]))))]
 p_precip <- ggplot(data = pdata) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
-                      col = cisig), 
+                      col = cisig),
                   position=position_dodge(width = .6)) +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
   facet_wrap(~term_type, labeller = label_parsed) +
@@ -308,8 +299,8 @@ p_precip <- ggplot(data = pdata) +
   mytheme +
   theme(legend.position="none") +
   scale_color_manual(values = c('black', 'grey70')) +
-  labs(x = '', y = 'Coefficient') +
-  scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'), 
+  labs(x = '', y = '') +
+  scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'),
                    labels = c(expression('log'~prec[-1]), expression('log'~prec[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
@@ -317,7 +308,7 @@ pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('log_pre
 pdata2[ , variable := factor(variable, levels = rev(sort(unique(pdata2[ , variable]))))]
 p_season <- ggplot(data = pdata2) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
-                      col = cisig), 
+                      col = cisig),
                   position=position_dodge(width = .6)) +
   coord_flip() +
   facet_wrap(~term_type,labeller = label_parsed) +
@@ -326,19 +317,87 @@ p_season <- ggplot(data = pdata2) +
   theme(legend.position="none") +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
-  scale_x_discrete(breaks = c('seasonQ4', 'seasonQ3', 'seasonQ2'), 
-                   labels = c(expression(seas[Q4]), expression(seas[Q3]),expression(seas[Q2]))) +
+  scale_x_discrete(breaks = c('seasonQ4', 'seasonQ3', 'seasonQ2', 'seasonQ1'),
+                   labels = c(' Quarter Q4', ' Quarter Q3', ' Quarter Q2', ' Quarter Q1')) +
+  theme(strip.text.x = element_text(size = 22))
+
+p <- arrangeGrob(p_precip, p_season, ncol = 1)
+plot(p)
+ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
+
+
+
+
+# # plot for talk2
+# psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
+# sort(table(take[variable_id == 349, site_id]))
+# 
+# df <- take[variable_id == 349 & site_id == 'RP_2375572100']
+# take_df <- psm_samples[sample_id %chin% df$sample_id & variable_id == 349]
+# p <- ggplot(take_df, aes(x = as.Date(date), y = value_fin)) + 
+#   geom_point() +
+#   geom_hline(aes(yintercept = 0.05), linetype = 'dashed', col = 'darkorange', size = 1) +
+#   mytheme +
+#   labs(y = 'Glyphosate [ug/L]', x = 'Date') +
+#   scale_x_date(date_breaks = '1 year', date_labels = '%Y') +
+#   ggtitle('Erlenbach / Rheinzabern')
+# 
+# require(ggExtra)
+# pout <- ggMarginal(p, type = 'histogram', margins = 'y')
+# ggsave('/home/user/Documents/projects_git/talk_work2/fig/glyph.pdf', pout, width = 7, height = 5)
+
+
+
+
+### ------------------------------------------------------------------------
+# metaanalysis of coefficients
+
+unique(resdf$term)
+mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'REML')
+mmod
+plot(mmod)
+
+# fit top each term
+terms <- unique(resdf$term)
+terms <- terms[!(terms == 'sigma' | grepl('Intercept', terms))]
+fit_meta <- function(tm){
+  mmod <- rma(est, sei=stderr, data = resdf[term == tm], method = 'REML')
+  out <- data.frame(term = tm, est = mmod$b[,1], upr = mmod$ci.ub, lwr = mmod$ci.lb)
+  return(out)
+}
+
+resm <- lapply(terms, fit_meta)
+resm
+resmd <- rbindlist(resm)
+
+# coefplot
+resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)
+resmd$coeftype <- ifelse(grepl('season', resmd$term), 'season', 'precip')
+p_season <- ggplot(resmd[resmd$coeftype == 'season', ]) +
+  geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
+  coord_flip() +
+  facet_grid(.~type , scales ='free_x', labeller = label_parsed) +
+  mytheme +
+  labs(x = '', y = 'Coefficient') +
+  scale_x_discrete(breaks = c('mu.seasonQ4', 'mu.seasonQ3', 'mu.seasonQ2', 'mu.seasonQ1'),
+                   labels = c(' Quarter Q4', ' Quarter Q3', ' Quarter Q2', ' Quarter Q1')) +
+  theme(strip.text.x = element_blank())
+
+
+p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
+  geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
+  coord_flip() +
+  geom_hline(aes(yintercept = 0), linetype = 'dotted') +
+  facet_grid(.~type , scales ='free_x', labeller = label_parsed) +
+  mytheme +
+  labs(x = '', y = '') +
+  scale_x_discrete(breaks = c('mu.log_precip_1', 'mu.log_precip0'),
+                   labels = c(expression('log'~precip[-1]), expression('log'~precip[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1)
 # plot(p)
-ggsave(file.path(prj, "figure5.pdf"), p, width = 10, height = 9)
-
-
-
-
-
-
+ggsave("figure5.pdf", p, width = 10, height = 9)
 
 
 # extract random effect variances
@@ -353,7 +412,7 @@ ra_extr <- function(file){
   vc <- vc[c(2, 4), 'StdDev']
   names(vc) <- c('state/site', 'state')
   vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
-   # generalized rsq
+  # generalized rsq
   vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
   # calculate CIs
   return(vc)
@@ -364,307 +423,3 @@ ra_res <- do.call(rbind, ra_res)
 ra_res <- apply(ra_res, 2, as.numeric)
 # range of rsq values
 range(ra_res[,4])
-
-
-
-
-# plot for talk2
-psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
-sort(table(take[variable_id == 349, site_id]))
-
-df <- take[variable_id == 349 & site_id == 'RP_2375572100']
-take_df <- psm_samples[sample_id %chin% df$sample_id & variable_id == 349]
-p <- ggplot(take_df, aes(x = as.Date(date), y = value_fin)) + 
-  geom_point() +
-  geom_hline(aes(yintercept = 0.05), linetype = 'dashed', col = 'darkorange', size = 1) +
-  mytheme +
-  labs(y = 'Glyphosate [ug/L]', x = 'Date') +
-  scale_x_date(date_breaks = '1 year', date_labels = '%Y') +
-  ggtitle('Erlenbach / Rheinzabern')
-
-require(ggExtra)
-pout <- ggMarginal(p, type = 'histogram', margins = 'y')
-ggsave('/home/user/Documents/projects_git/talk_work2/fig/glyph.pdf', pout, width = 7, height = 5)
-
-# # try by compound models
-# take_c <- take[variable_id == 349]
-# 
-# (tc <- take[ , list(ng0 = sum(rq > 0), ng0p = sum(rq > 0) / length(rq)), by = variable_id][order(ng0p,decreasing = TRUE )])
-# tc[1:100]
-# # # take_cc <- take[variable_id %in% tc[ng0p > 0.1, variable_id]]
-# # take_cc <- take[variable_id %in% tc[1:5, variable_id]]
-# 
-# # start with mixed model (site nested within state) and linear effects
-# # use only precipitation, as random effect takes most of ezg and agri?
-# mod_l_m_g <- gamlss(rq ~ precip_1_g + precip0_g + 
-#                       re(random=~1|state_fac/s_id_fac),
-#                     # model also pi with same predictors 
-#                     nu.formula =~precip_1 + precip0 +
-#                       re(random=~1|state_fac/s_id_fac),
-#                     # sigma is constant
-#                     data = take_c,
-#                     family = ZAGA)
-# summary(mod_l_m_g)
-# term.plot(mod_l_m_g)
-# mod_l_m_g$mu.coefSmo
-# res <- residuals(mod_l_m_g)
-# pacf(res)
-# # Ok can life with that...
-# plot(coef(mod_l_m_g))
-
-
-
-
-######
-### Give up (for now) to model this as regression....
-
-# # try ZAGA (=Gamma Hurdle model?)
-# # to handle zeros correctly?
-# # order according to date (for temporal autocorrelation)
-# take2 <- take[order(take$date)]
-# take2[ , state_fac := factor(substr(sample_id, 1, 2))]
-# rm(take)
-# 
-# head(take2)
-# ggplot(take2, aes(x = log_precip0, y = rq)) +
-#   geom_point(alpha = 0.1) +
-#   scale_y_log10()
-# 
-# # start with mixed model (site nested within state) and linear effectes
-# mod_l_m <- gamlss(rq ~ log_precip_1 + log_precip0 + re(random=~1|state_fac/s_id_fac),
-#                # model also pi 
-#                nu.formula =~log_precip_1 + log_precip0 + re(random=~1|state_fac/s_id_fac),
-#                # sigma is constant
-#                data = take2,
-#                family = ZAGA)
-# res_l_m <- residuals(mod_l_m) # dunn-smyth residuals
-# hist(res_l_m)    # OK
-# acf(res_l_m)     #! temporal autocorrelation 
-# pacf(res_l_m)
-# term.plot(mod_l_m, what = 'mu') 
-# term.plot(mod_l_m, what = 'nu') 
-# summary(mod_l_m)
-# mod_l_m$mu.coefSmo
-# 
-# # with simple random effect
-# mod_l_ms <- gamlss(rq ~ log_precip_1 + log_precip0 + re(random=~1|s_id_fac),
-#                   # model also pi 
-#                   nu.formula =~log_precip_1 + log_precip0 + re(random=~1|state_fac),
-#                   # sigma is constant
-#                   data = take2,
-#                   family = ZAGA)
-# extractAIC(mod_l_m)
-# extractAIC(mod_l_ms)
-# #! nested random effect is much better
-# 
-# 
-# # model with smoother from gamlss (but also linear (df = 0))
-# # just to check if re and smoother work together
-# mod_s_m <- gamlss(rq ~ cs(log_precip_1, df = 0) + cs(log_precip0, df = 0) + 
-#                     re(random=~1|state_fac/s_id_fac),
-#                 # model also pi 
-#                 nu.formula =~cs(log_precip_1, df = 0) + cs(log_precip0, df = 0) + 
-#                   re(random=~1|state_fac/s_id_fac),
-#                 # sigma is constant
-#                 data = take2,
-#                 family = ZAGA)
-# plot(fitted(mod_l_m), fitted(mod_s_m))
-# # gives identical fits
-# mod_l_m$mu.coefSmo[[1]]
-# mod_s_m$mu.coefSmo[[3]]
-# # identical random effects
-# #! => works
-# res_s_m <- residuals(mod_s_m) # dunn-smyth residuals
-# hist(res_s_m)    # OK
-# acf(res_s_m)     #! temporal autocorrelation 
-# pacf(res_s_m)    #! temporal autocorrelation 
-# 
-# # model with smoother from mgcv (penalized cubic splince estimated via REML)
-# gac <- ga.control(method = 'REML')
-# mod_sr_m <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                          re(random=~1|state_fac/s_id_fac),
-#                        # model also pi 
-#                        nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                          re(random=~1|state_fac/s_id_fac),
-#                        # sigma is constant
-#                        data = take2,
-#                        family = ZAGA)
-# mod_sr_m$mu.coefSmo[[2]]
-# #! phi is estimated and different from cubic smooth
-# res_sr_m <- residuals(mod_sr_m) # dunn-smyth residuals
-# hist(res_sr_m)    # OK
-# acf(res_sr_m)     #! temporal autocorrelation 
-# pacf(res_sr_m)    #! temporal autocorrelation 
-# pacf(res_s_m) 
-# term.plot(mod_sr_m, what = 'mu', pages = 1, ask = FALSE) # oversmooth?
-# # CI seems no appropriate...
-# term.plot(mod_sr_m, what = 'nu', pages = 1, ask = FALSE) # nearly linear
-# 
-# 
-# 
-# 
-# # # model with smoother from gamlss (but also linear (df = 0))
-# # # and ar1 process
-# # mod_s_m_ar1 <- gamlss(rq ~ cs(log_precip_1, df = 0) + cs(log_precip0, df = 0) + 
-# #                     re(random=~1|state_fac/s_id_fac, correlation = corARMA(form = ~ 1|state_fac/s_id_fac, p = 1)),
-# #                   # model also pi 
-# #                   nu.formula =~cs(log_precip_1, df = 0) + cs(log_precip0, df = 0) + 
-# #                     re(random=~1|state_fac/s_id_fac, correlation = corARMA(form = ~ 1|state_fac/s_id_fac, p = 1)),
-# #                   # sigma is constant
-# #                   data = take2,
-# #                   family = ZAGA)
-# # mod_s_m$mu.coefSmo[[3]]
-# # mod_s_m_ar1$mu.coefSmo[[3]]
-# # #! phi is estimated! (and small)
-# # #! works
-# # res_s_m_ar1 <- residuals(mod_s_m_ar1) # dunn-smyth residuals
-# # hist(res_s_m_ar1)    # OK
-# # acf(res_s_m_ar1)     #! temporal autocorrelation 
-# # pacf(res_s_m_ar1)    #! temporal autocorrelation 
-# 
-# 
-# 
-# # model with smoother from mgcv (penalized cubic splince estimated via REML)
-# # and ar1 process
-# gac <- ga.control(method = 'REML')
-# mod_sr_m_ar1 <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                         re(random=~1|state_fac/s_id_fac, correlation = corAR1(form = ~ 1|state_fac/s_id_fac)),
-#                       # model also pi 
-#                       nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                         re(random=~1|state_fac/s_id_fac, correlation = corAR1(form = ~ 1|state_fac/s_id_fac)),
-#                       # sigma is constant
-#                       data = take2,
-#                       family = ZAGA)
-# #! take very long to run
-# mod_s_m_ar1$mu.coefSmo[[3]]
-# mod_sr_m_ar1$mu.coefSmo[[2]]
-# #! phi is estimated and different from cubic smooth
-# res_sr_m_ar1 <- residuals(mod_sr_m_ar1) # dunn-smyth residuals
-# hist(res_sr_m_ar1)    # OK
-# acf(res_sr_m_ar1)     #! temporal autocorrelation 
-# pacf(res_sr_m_ar1)    #! temporal autocorrelation 
-# pacf(res_s_m_ar1) 
-# term.plot(mod_sr_m_ar1, what = 'mu', pages = 1, ask = FALSE) # oversmooth?
-# # CI seems no appropriate...
-# term.plot(mod_sr_m_ar1, what = 'nu', pages = 1, ask = FALSE) # nearly linear
-# 
-# 
-# 
-# # Try CAR1 (=continuos version of AR1)
-# #! take forevever...
-# gac <- ga.control(method = 'REML')
-# # make numeric date
-# take2$date_num <- as.numeric(factor(take2$date))
-# mod_sr_m_car <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                          re(random=~1|state_fac/s_id_fac, correlation = corCAR1(form = ~ date_num|state_fac/s_id_fac)),
-#                        # model also pi 
-#                        nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                          re(random=~1|state_fac/s_id_fac, correlation = corCAR1(form = ~ date_num|state_fac/s_id_fac)),
-#                        # sigma is constant
-#                        data = take2,
-#                        family = ZAGA)
-# #! takes very long!!!
-# mod_sr_m_car$mu.coefSmo[[2]]
-# #! phi is estimated and different from cubic smooth
-# res_sr_m_car <- residuals(mod_sr_m_car) # dunn-smyth residuals
-# hist(res_sr_m_car)    # OK
-# acf(res_sr_m_car)     #! temporal autocorrelation 
-# acf(res_sr_m_ar2)     #! temporal autocorrelation slightly better
-# pacf(res_sr_m_car)   
-# pacf(res_sr_m_ar2) 
-# term.plot(mod_sr_m_car, what = 'mu', pages = 1, ask = FALSE) # oversmooth? why this break?!
-# term.plot(mod_sr_m_car, what = 'nu', pages = 1, ask = FALSE) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # model with smoother from mgcv (penalized cubic splince estimated via REML)
-# # and ar2 process
-# gac <- ga.control(method = 'REML')
-# mod_sr_m_ar2 <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                          re(random=~1|s_id_fac, correlation = corARMA(form = ~ 1|s_id_fac, p = 2)),
-#                        # model also pi 
-#                        nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                          re(random=~1|s_id_fac, correlation = corARMA(form = ~ 1|s_id_fac, p = 2)),
-#                        # sigma is constant
-#                        data = take2,
-#                        family = ZAGA)
-# mod_sr_m_ar1$mu.coefSmo[[2]]
-# mod_sr_m_ar2$mu.coefSmo[[2]]
-# #! phi is estimated and different from cubic smooth
-# res_sr_m_ar2 <- residuals(mod_sr_m_ar2) # dunn-smyth residuals
-# hist(res_sr_m_ar2)    # OK
-# acf(res_sr_m_ar2)     #! temporal autocorrelation 
-# acf(res_sr_m_ar1)     #! temporal autocorrelation slightly better
-# pacf(res_sr_m_ar2)   
-# pacf(res_sr_m_ar1) 
-# term.plot(mod_sr_m_ar2, what = 'mu', pages = 1, ask = FALSE) # oversmooth? why this break?!
-# term.plot(mod_sr_m_ar2, what = 'nu', pages = 1, ask = FALSE) 
-# 
-# 
-# # LRT (correct?)
-# a <- extractAIC(mod_sr_m_ar1)
-# b <- extractAIC(mod_sr_m_ar2)
-# 1-pchisq(b[2]-a[2], b[1]-a[1])
-# 
-# 
-# # Try AR(3) process?!
-# #! take forevever...
-# gac <- ga.control(method = 'REML')
-# mod_sr_m_ar3 <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                          re(random=~1|s_id_fac, correlation = corARMA(form = ~ 1|s_id_fac, p = 3)),
-#                        # model also pi 
-#                        nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                          re(random=~1|s_id_fac, correlation = corARMA(form = ~ 1|s_id_fac, p = 3)),
-#                        # sigma is constant
-#                        data = take2,
-#                        family = ZAGA)
-# #! takes forevever... abborted
-# 
-# 
-# # Try CAR1 (=continuos version of AR1)
-# #! take forevever...
-# gac <- ga.control(method = 'REML')
-# # make numeric date
-# take2$date_num <- as.numeric(factor(take2$date))
-# mod_sr_m_car <- gamlss(rq ~ ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) + 
-#                          re(random=~1|s_id_fac, correlation = corCAR1(form = ~ date_num|s_id_fac)),
-#                        # model also pi 
-#                        nu.formula =~ga(~s(log_precip_1, bs = 'cr') + s(log_precip0, bs = 'cr'), control = gac) +
-#                          re(random=~1|s_id_fac, correlation = corCAR1(form = ~ date_num|s_id_fac)),
-#                        # sigma is constant
-#                        data = take2,
-#                        family = ZAGA)
-# #! take very long!!!
-# 
-# mod_sr_m_car$mu.coefSmo[[2]]
-# #! phi is estimated and different from cubic smooth
-# res_sr_m_car <- residuals(mod_sr_m_car) # dunn-smyth residuals
-# hist(res_sr_m_car)    # OK
-# acf(res_sr_m_car)     #! temporal autocorrelation 
-# acf(res_sr_m_ar2)     #! temporal autocorrelation slightly better
-# pacf(res_sr_m_car)   
-# pacf(res_sr_m_ar2) 
-# term.plot(mod_sr_m_car, what = 'mu', pages = 1, ask = FALSE) # oversmooth? why this break?!
-# term.plot(mod_sr_m_car, what = 'nu', pages = 1, ask = FALSE) 
-

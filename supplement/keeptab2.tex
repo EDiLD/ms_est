@@ -1,59 +1,61 @@
 \begingroup\fontsize{8pt}{10pt}\selectfont
-\begin{longtable}{lp{2cm}p{0.7cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
-\caption{Raw data for figure 5 in the main article. 
-                     Bold values denote coefficients where the CI encompasses zero.} \\ 
+\begin{longtable}{lp{2cm}p{0.6cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}}
+\caption{Coefficients and CI from per compound models. 
+                     Bold values denote coefficients where the CI for precipitation encompasses zero.
+                     Coefficients are on the link scale (log for $mu$ and logit for $
+u$).} \\ 
   \toprule
- & Compound & effect & $log~precip_0$ & $log~ precip_{-1}$ & $season_{Q2}$ & $season_{Q3}$ & $season_{Q4}$ \\ 
+ & Compound & effect & $log~precip_0$ & $log~precip_{-1}$ & Quarter 1 & Quarter 2 & Quarter 3 & Quarter 4 \\ 
   \midrule
-1 & Azoxystrobin & $\mu$ & \textbf{0.23}\newline (0.16 - 0.31) & 0.04\newline (-0.04 - 0.11) & \textbf{0.35}\newline (0.16 - 0.54) & \textbf{0.23}\newline (0.04 - 0.42) & -0.09\newline (-0.31 - 0.13) \\ 
-  2 & Bentazon & $\mu$ & -0.02\newline (-0.06 - 0.01) & 0.02\newline (-0.02 - 0.05) & \textbf{0.46}\newline (0.38 - 0.55) & \textbf{0.29}\newline (0.2 - 0.37) & -0.02\newline (-0.11 - 0.07) \\ 
-  3 & Boscalid & $\mu$ & \textbf{0.05}\newline (0.01 - 0.08) & \textbf{0.09}\newline (0.06 - 0.13) & \textbf{0.26}\newline (0.18 - 0.35) & \textbf{0.19}\newline (0.1 - 0.28) & \textbf{0.13}\newline (0.03 - 0.22) \\ 
-  4 & Carbendazim & $\mu$ & \textbf{-0.08}\newline (-0.14 - -0.01) & \textbf{0.12}\newline (0.06 - 0.18) & \textbf{0.34}\newline (0.17 - 0.51) & 0.13\newline (-0.04 - 0.3) & -0.08\newline (-0.27 - 0.11) \\ 
-  5 & Chlorpyrifos & $\mu$ & \textbf{0.07}\newline (0.03 - 0.12) & 0\newline (-0.04 - 0.05) & \textbf{0.21}\newline (0.12 - 0.3) & 0.02\newline (-0.08 - 0.12) & 0.05\newline (-0.06 - 0.16) \\ 
-  6 & Clothianidin & $\mu$ & 0.04\newline (-0.07 - 0.15) & -0.05\newline (-0.16 - 0.06) & \textbf{-0.26}\newline (-0.47 - -0.04) & -0.02\newline (-0.28 - 0.23) & \textbf{0.86}\newline (0.6 - 1.12) \\ 
-  7 & Diflufenican & $\mu$ & -0.03\newline (-0.07 - 0.01) & \textbf{0.06}\newline (0.03 - 0.1) & \textbf{-0.44}\newline (-0.53 - -0.36) & \textbf{-0.5}\newline (-0.6 - -0.41) & \textbf{-0.14}\newline (-0.23 - -0.06) \\ 
-  8 & Dimethenamid & $\mu$ & \textbf{-0.09}\newline (-0.16 - -0.03) & 0.06\newline (-0.01 - 0.12) & \textbf{0.2}\newline (0.03 - 0.37) & \textbf{0.24}\newline (0.07 - 0.42) & 0\newline (-0.18 - 0.18) \\ 
-  9 & Dimoxystrobin & $\mu$ & \textbf{0.35}\newline (0.2 - 0.5) & 0.02\newline (-0.14 - 0.18) & \textbf{0.73}\newline (0.4 - 1.07) & \textbf{1.1}\newline (0.7 - 1.49) & \textbf{1.14}\newline (0.73 - 1.55) \\ 
-  10 & Diuron & $\mu$ & -0.01\newline (-0.04 - 0.02) & \textbf{0.07}\newline (0.04 - 0.1) & \textbf{0.26}\newline (0.14 - 0.37) & \textbf{0.2}\newline (0.08 - 0.31) & 0.01\newline (-0.12 - 0.13) \\ 
-  11 & Ethofumesat & $\mu$ & \textbf{0.11}\newline (0.06 - 0.17) & 0.01\newline (-0.05 - 0.06) & \textbf{0.63}\newline (0.47 - 0.79) & -0.04\newline (-0.21 - 0.14) & 0.08\newline (-0.12 - 0.28) \\ 
-  12 & Flufenacet & $\mu$ & 0.04\newline (-0.01 - 0.09) & 0.04\newline (0 - 0.08) & 0.04\newline (-0.09 - 0.17) & \textbf{0.41}\newline (0.25 - 0.57) & 0.07\newline (-0.03 - 0.16) \\ 
-  13 & Glyphosate & $\mu$ & -0.04\newline (-0.09 - 0.02) & \textbf{0.14}\newline (0.09 - 0.19) & \textbf{0.22}\newline (0.04 - 0.39) & \textbf{0.55}\newline (0.38 - 0.73) & 0.18\newline (-0.01 - 0.36) \\ 
-  14 & Imidacloprid & $\mu$ & 0.08\newline (-0.01 - 0.17) & -0.01\newline (-0.09 - 0.07) & \textbf{0.39}\newline (0.13 - 0.65) & \textbf{0.56}\newline (0.3 - 0.82) & \textbf{0.48}\newline (0.18 - 0.78) \\ 
-  15 & Isoproturon & $\mu$ & 0.02\newline (-0.02 - 0.05) & \textbf{0.2}\newline (0.16 - 0.23) & \textbf{0.26}\newline (0.17 - 0.34) & \textbf{-0.15}\newline (-0.24 - -0.05) & \textbf{0.45}\newline (0.37 - 0.54) \\ 
-  16 & MCPA & $\mu$ & 0.03\newline (0 - 0.06) & \textbf{0.08}\newline (0.05 - 0.11) & \textbf{0.89}\newline (0.79 - 0.99) & \textbf{0.63}\newline (0.53 - 0.73) & \textbf{0.39}\newline (0.29 - 0.5) \\ 
-  17 & Mecoprop & $\mu$ & 0.04\newline (0 - 0.09) & 0.05\newline (0 - 0.09) & \textbf{0.68}\newline (0.55 - 0.82) & \textbf{0.5}\newline (0.35 - 0.64) & \textbf{0.19}\newline (0.04 - 0.35) \\ 
-  18 & Metazachlor & $\mu$ & \textbf{-0.08}\newline (-0.12 - -0.04) & \textbf{0.09}\newline (0.05 - 0.14) & 0.06\newline (-0.06 - 0.19) & \textbf{0.78}\newline (0.67 - 0.88) & \textbf{0.24}\newline (0.13 - 0.34) \\ 
-  19 & Nicosulfuron & $\mu$ & \textbf{0.22}\newline (0.11 - 0.32) & \textbf{-0.26}\newline (-0.36 - -0.16) & \textbf{0.86}\newline (0.6 - 1.13) & \textbf{1.03}\newline (0.75 - 1.31) & 0.16\newline (-0.12 - 0.45) \\ 
-  20 & Penconazol & $\mu$ & 0.08\newline (-0.01 - 0.17) & \textbf{0.09}\newline (0.01 - 0.18) & \textbf{1.58}\newline (1.28 - 1.87) & \textbf{2.02}\newline (1.72 - 2.32) & \textbf{0.7}\newline (0.39 - 1) \\ 
-  21 & Propiconazol & $\mu$ & \textbf{0.07}\newline (0.02 - 0.12) & 0.04\newline (-0.01 - 0.09) & \textbf{0.49}\newline (0.35 - 0.63) & \textbf{0.38}\newline (0.24 - 0.53) & \textbf{0.38}\newline (0.22 - 0.53) \\ 
-  22 & Quinmerac & $\mu$ & 0\newline (-0.07 - 0.06) & \textbf{0.09}\newline (0.03 - 0.15) & 0.01\newline (-0.15 - 0.17) & \textbf{0.65}\newline (0.48 - 0.81) & \textbf{0.47}\newline (0.33 - 0.61) \\ 
-  23 & Tebuconazol & $\mu$ & -0.01\newline (-0.06 - 0.03) & \textbf{0.09}\newline (0.05 - 0.14) & \textbf{0.23}\newline (0.1 - 0.35) & -0.06\newline (-0.19 - 0.07) & 0\newline (-0.14 - 0.14) \\ 
-  24 & Terbuthylazin & $\mu$ & \textbf{0.09}\newline (0.06 - 0.13) & \textbf{0.12}\newline (0.09 - 0.15) & \textbf{0.87}\newline (0.78 - 0.97) & \textbf{0.36}\newline (0.26 - 0.46) & 0.09\newline (-0.02 - 0.2) \\ 
+1 & Azoxystrobin & $\mu$ & \textbf{0.23}\newline (0.16 - 0.31) & 0.04\newline (-0.04 - 0.11) & -3.4\newline (-3.56 - -3.24) & -3.05\newline (-3.17 - -2.93) & -3.17\newline (-3.29 - -3.05) & -3.49\newline (-3.65 - -3.33) \\ 
+  2 & Bentazon & $\mu$ & -0.02\newline (-0.06 - 0.01) & 0.02\newline (-0.02 - 0.05) & -9.72\newline (-9.79 - -9.65) & -9.26\newline (-9.31 - -9.21) & -9.44\newline (-9.5 - -9.38) & -9.74\newline (-9.81 - -9.68) \\ 
+  3 & Boscalid & $\mu$ & \textbf{0.05}\newline (0.01 - 0.08) & \textbf{0.09}\newline (0.06 - 0.13) & -6.74\newline (-6.81 - -6.67) & -6.47\newline (-6.53 - -6.41) & -6.55\newline (-6.61 - -6.49) & -6.61\newline (-6.68 - -6.54) \\ 
+  4 & Carbendazim & $\mu$ & \textbf{-0.08}\newline (-0.14 - -0.01) & \textbf{0.12}\newline (0.06 - 0.18) & -2.25\newline (-2.39 - -2.1) & -1.91\newline (-2.01 - -1.81) & -2.12\newline (-2.22 - -2.01) & -2.32\newline (-2.45 - -2.19) \\ 
+  5 & Chlorpyrifos & $\mu$ & \textbf{0.07}\newline (0.03 - 0.12) & 0\newline (-0.04 - 0.05) & 0.96\newline (0.88 - 1.03) & 1.17\newline (1.1 - 1.23) & 0.98\newline (0.91 - 1.06) & 1.01\newline (0.93 - 1.09) \\ 
+  6 & Clothianidin & $\mu$ & 0.04\newline (-0.07 - 0.15) & -0.05\newline (-0.16 - 0.06) & 0.91\newline (0.75 - 1.08) & 0.66\newline (0.5 - 0.81) & 0.89\newline (0.68 - 1.1) & 1.77\newline (1.57 - 1.97) \\ 
+  7 & Diflufenican & $\mu$ & -0.03\newline (-0.07 - 0.01) & \textbf{0.06}\newline (0.03 - 0.1) & -0.59\newline (-0.66 - -0.53) & -1.04\newline (-1.1 - -0.97) & -1.1\newline (-1.17 - -1.02) & -0.74\newline (-0.8 - -0.68) \\ 
+  8 & Dimethenamid & $\mu$ & \textbf{-0.09}\newline (-0.16 - -0.03) & 0.06\newline (-0.01 - 0.12) & -4.02\newline (-4.16 - -3.87) & -3.81\newline (-3.92 - -3.71) & -3.77\newline (-3.88 - -3.66) & -4.01\newline (-4.13 - -3.89) \\ 
+  9 & Dimoxystrobin & $\mu$ & \textbf{0.35}\newline (0.2 - 0.5) & 0.02\newline (-0.14 - 0.18) & -1.19\newline (-1.46 - -0.91) & -0.45\newline (-0.67 - -0.23) & -0.09\newline (-0.41 - 0.23) & -0.05\newline (-0.37 - 0.28) \\ 
+  10 & Diuron & $\mu$ & -0.01\newline (-0.04 - 0.02) & \textbf{0.07}\newline (0.04 - 0.1) & -2.72\newline (-2.83 - -2.61) & -2.46\newline (-2.5 - -2.42) & -2.52\newline (-2.57 - -2.48) & -2.71\newline (-2.78 - -2.65) \\ 
+  11 & Ethofumesat & $\mu$ & \textbf{0.11}\newline (0.06 - 0.17) & 0.01\newline (-0.05 - 0.06) & -6.14\newline (-6.29 - -5.99) & -5.51\newline (-5.57 - -5.44) & -6.18\newline (-6.28 - -6.08) & -6.06\newline (-6.2 - -5.92) \\ 
+  12 & Flufenacet & $\mu$ & 0.04\newline (-0.01 - 0.09) & 0.04\newline (0 - 0.08) & -3.73\newline (-3.81 - -3.65) & -3.69\newline (-3.8 - -3.59) & -3.32\newline (-3.46 - -3.18) & -3.67\newline (-3.72 - -3.61) \\ 
+  13 & Glyphosate & $\mu$ & -0.04\newline (-0.09 - 0.02) & \textbf{0.14}\newline (0.09 - 0.19) & -6.29\newline (-6.45 - -6.13) & -6.08\newline (-6.15 - -6) & -5.74\newline (-5.81 - -5.67) & -6.12\newline (-6.21 - -6.02) \\ 
+  14 & Imidacloprid & $\mu$ & 0.08\newline (-0.01 - 0.17) & -0.01\newline (-0.09 - 0.07) & 0.8\newline (0.54 - 1.05) & 1.18\newline (1.06 - 1.31) & 1.35\newline (1.23 - 1.48) & 1.28\newline (1.1 - 1.45) \\ 
+  15 & Isoproturon & $\mu$ & 0.02\newline (-0.02 - 0.05) & \textbf{0.2}\newline (0.16 - 0.23) & -3.28\newline (-3.35 - -3.21) & -3.02\newline (-3.07 - -2.97) & -3.42\newline (-3.49 - -3.35) & -2.83\newline (-2.88 - -2.78) \\ 
+  16 & MCPA & $\mu$ & 0.03\newline (0 - 0.06) & \textbf{0.08}\newline (0.05 - 0.11) & -5.27\newline (-5.36 - -5.18) & -4.38\newline (-4.42 - -4.34) & -4.65\newline (-4.69 - -4.6) & -4.88\newline (-4.94 - -4.82) \\ 
+  17 & Mecoprop & $\mu$ & 0.04\newline (0 - 0.09) & 0.05\newline (0 - 0.09) & -8.31\newline (-8.44 - -8.19) & -7.63\newline (-7.69 - -7.57) & -7.82\newline (-7.9 - -7.74) & -8.12\newline (-8.22 - -8.03) \\ 
+  18 & Metazachlor & $\mu$ & \textbf{-0.08}\newline (-0.12 - -0.04) & \textbf{0.09}\newline (0.05 - 0.14) & -3.1\newline (-3.19 - -3.01) & -3.03\newline (-3.12 - -2.95) & -2.32\newline (-2.39 - -2.26) & -2.86\newline (-2.93 - -2.8) \\ 
+  19 & Nicosulfuron & $\mu$ & \textbf{0.22}\newline (0.11 - 0.32) & \textbf{-0.26}\newline (-0.36 - -0.16) & -1.08\newline (-1.31 - -0.85) & -0.22\newline (-0.37 - -0.06) & -0.05\newline (-0.22 - 0.12) & -0.92\newline (-1.1 - -0.73) \\ 
+  20 & Penconazol & $\mu$ & 0.08\newline (-0.01 - 0.17) & \textbf{0.09}\newline (0.01 - 0.18) & -6.78\newline (-7.05 - -6.51) & -5.2\newline (-5.33 - -5.07) & -4.76\newline (-4.92 - -4.6) & -6.08\newline (-6.25 - -5.92) \\ 
+  21 & Propiconazol & $\mu$ & \textbf{0.07}\newline (0.02 - 0.12) & 0.04\newline (-0.01 - 0.09) & -4.34\newline (-4.46 - -4.21) & -3.84\newline (-3.92 - -3.77) & -3.95\newline (-4.04 - -3.86) & -3.96\newline (-4.06 - -3.86) \\ 
+  22 & Quinmerac & $\mu$ & 0\newline (-0.07 - 0.06) & \textbf{0.09}\newline (0.03 - 0.15) & -9.11\newline (-9.23 - -8.99) & -9.1\newline (-9.22 - -8.98) & -8.46\newline (-8.59 - -8.33) & -8.64\newline (-8.72 - -8.55) \\ 
+  23 & Tebuconazol & $\mu$ & -0.01\newline (-0.06 - 0.03) & \textbf{0.09}\newline (0.05 - 0.14) & -2.18\newline (-2.29 - -2.07) & -1.96\newline (-2.03 - -1.89) & -2.24\newline (-2.32 - -2.16) & -2.18\newline (-2.27 - -2.09) \\ 
+  24 & Terbuthylazin & $\mu$ & \textbf{0.09}\newline (0.06 - 0.13) & \textbf{0.12}\newline (0.09 - 0.15) & -3.72\newline (-3.81 - -3.64) & -2.85\newline (-2.9 - -2.8) & -3.36\newline (-3.42 - -3.31) & -3.64\newline (-3.71 - -3.57) \\ 
    \midrule
-25 & Azoxystrobin & $\pi$ & 0\newline (-0.13 - 0.13) & \textbf{0.23}\newline (0.1 - 0.35) & \textbf{1.14}\newline (0.85 - 1.44) & \textbf{1.37}\newline (1.06 - 1.68) & 0.28\newline (-0.05 - 0.62) \\ 
-  26 & Bentazon & $\pi$ & 0.01\newline (-0.07 - 0.09) & 0.05\newline (-0.03 - 0.13) & \textbf{0.71}\newline (0.52 - 0.91) & \textbf{0.36}\newline (0.15 - 0.57) & -0.02\newline (-0.23 - 0.2) \\ 
-  27 & Boscalid & $\pi$ & -0.04\newline (-0.13 - 0.04) & \textbf{0.48}\newline (0.39 - 0.56) & \textbf{0.81}\newline (0.61 - 1.01) & \textbf{0.79}\newline (0.58 - 0.99) & \textbf{0.22}\newline (0.01 - 0.43) \\ 
-  28 & Carbendazim & $\pi$ & 0.05\newline (-0.07 - 0.18) & \textbf{0.19}\newline (0.07 - 0.32) & \textbf{1.19}\newline (0.88 - 1.5) & \textbf{1.44}\newline (1.12 - 1.76) & \textbf{0.41}\newline (0.07 - 0.75) \\ 
-  29 & Chlorpyrifos & $\pi$ & 0.1\newline (0 - 0.19) & \textbf{0.11}\newline (0.01 - 0.2) & \textbf{0.58}\newline (0.37 - 0.79) & 0\newline (-0.23 - 0.22) & -0.15\newline (-0.39 - 0.09) \\ 
-  30 & Clothianidin & $\pi$ & 0\newline (-0.24 - 0.24) & 0.21\newline (-0.04 - 0.45) & 0.08\newline (-0.45 - 0.6) & \textbf{-0.65}\newline (-1.24 - -0.05) & \textbf{-0.99}\newline (-1.59 - -0.39) \\ 
-  31 & Diflufenican & $\pi$ & 0.07\newline (-0.01 - 0.14) & \textbf{0.24}\newline (0.16 - 0.32) & \textbf{-0.53}\newline (-0.7 - -0.35) & \textbf{-1.21}\newline (-1.41 - -1.02) & -0.17\newline (-0.35 - 0) \\ 
-  32 & Dimethenamid & $\pi$ & -0.07\newline (-0.19 - 0.04) & \textbf{0.25}\newline (0.14 - 0.36) & \textbf{0.78}\newline (0.49 - 1.06) & \textbf{0.7}\newline (0.4 - 0.99) & \textbf{0.52}\newline (0.21 - 0.82) \\ 
-  33 & Dimoxystrobin & $\pi$ & 0.2\newline (-0.02 - 0.42) & \textbf{0.24}\newline (0.01 - 0.46) & \textbf{1.16}\newline (0.66 - 1.65) & 0.24\newline (-0.32 - 0.8) & -0.16\newline (-0.73 - 0.41) \\ 
-  34 & Diuron & $\pi$ & 0.05\newline (-0.02 - 0.11) & \textbf{0.3}\newline (0.23 - 0.36) & \textbf{2.2}\newline (1.99 - 2.42) & \textbf{2.12}\newline (1.9 - 2.34) & \textbf{1.16}\newline (0.93 - 1.39) \\ 
-  35 & Ethofumesat & $\pi$ & 0.08\newline (-0.01 - 0.17) & \textbf{0.22}\newline (0.13 - 0.31) & \textbf{2.16}\newline (1.91 - 2.4) & \textbf{0.91}\newline (0.63 - 1.18) & 0.16\newline (-0.14 - 0.46) \\ 
-  36 & Flufenacet & $\pi$ & \textbf{0.15}\newline (0.05 - 0.25) & \textbf{0.57}\newline (0.47 - 0.67) & \textbf{-1.17}\newline (-1.44 - -0.91) & \textbf{-1.59}\newline (-1.91 - -1.28) & \textbf{0.81}\newline (0.61 - 1.01) \\ 
-  37 & Glyphosate & $\pi$ & 0.11\newline (0 - 0.22) & \textbf{0.28}\newline (0.17 - 0.39) & \textbf{1.65}\newline (1.32 - 1.98) & \textbf{2.09}\newline (1.76 - 2.42) & \textbf{1.25}\newline (0.9 - 1.6) \\ 
-  38 & Imidacloprid & $\pi$ & 0.03\newline (-0.21 - 0.28) & -0.06\newline (-0.3 - 0.17) & \textbf{1.53}\newline (0.85 - 2.21) & \textbf{1.64}\newline (0.95 - 2.34) & 0.57\newline (-0.18 - 1.33) \\ 
-  39 & Isoproturon & $\pi$ & 0.04\newline (-0.01 - 0.09) & \textbf{0.29}\newline (0.24 - 0.34) & \textbf{0.63}\newline (0.5 - 0.75) & \textbf{-0.29}\newline (-0.44 - -0.15) & \textbf{1.01}\newline (0.88 - 1.14) \\ 
-  40 & MCPA & $\pi$ & -0.05\newline (-0.12 - 0.02) & \textbf{0.34}\newline (0.27 - 0.41) & \textbf{2.52}\newline (2.26 - 2.77) & \textbf{1.97}\newline (1.7 - 2.23) & \textbf{1}\newline (0.72 - 1.28) \\ 
-  41 & Mecoprop & $\pi$ & \textbf{0.09}\newline (0.01 - 0.16) & \textbf{0.35}\newline (0.27 - 0.42) & \textbf{1.44}\newline (1.23 - 1.65) & \textbf{1.1}\newline (0.87 - 1.32) & \textbf{0.28}\newline (0.04 - 0.51) \\ 
-  42 & Metazachlor & $\pi$ & 0.04\newline (-0.03 - 0.1) & \textbf{0.22}\newline (0.15 - 0.28) & \textbf{-0.39}\newline (-0.56 - -0.22) & \textbf{0.7}\newline (0.55 - 0.86) & \textbf{0.75}\newline (0.6 - 0.91) \\ 
-  43 & Nicosulfuron & $\pi$ & \textbf{0.23}\newline (0.04 - 0.41) & \textbf{0.23}\newline (0.05 - 0.41) & \textbf{0.91}\newline (0.45 - 1.37) & \textbf{0.85}\newline (0.38 - 1.32) & \textbf{0.57}\newline (0.08 - 1.05) \\ 
-  44 & Penconazol & $\pi$ & -0.05\newline (-0.36 - 0.26) & \textbf{0.54}\newline (0.23 - 0.85) & \textbf{2.31}\newline (1.46 - 3.16) & \textbf{3.67}\newline (2.8 - 4.53) & \textbf{2.15}\newline (1.26 - 3.04) \\ 
-  45 & Propiconazol & $\pi$ & -0.02\newline (-0.12 - 0.08) & \textbf{0.41}\newline (0.31 - 0.51) & \textbf{1.25}\newline (0.98 - 1.52) & \textbf{1.11}\newline (0.82 - 1.39) & \textbf{0.58}\newline (0.29 - 0.88) \\ 
-  46 & Quinmerac & $\pi$ & -0.04\newline (-0.14 - 0.06) & \textbf{0.34}\newline (0.24 - 0.44) & \textbf{-0.34}\newline (-0.59 - -0.08) & -0.23\newline (-0.5 - 0.04) & \textbf{1.05}\newline (0.82 - 1.28) \\ 
-  47 & Tebuconazol & $\pi$ & 0.1\newline (0 - 0.19) & \textbf{0.32}\newline (0.23 - 0.41) & \textbf{0.77}\newline (0.54 - 1) & \textbf{0.52}\newline (0.27 - 0.76) & 0.23\newline (-0.03 - 0.48) \\ 
-  48 & Terbuthylazin & $\pi$ & \textbf{0.06}\newline (0.01 - 0.11) & \textbf{0.27}\newline (0.22 - 0.32) & \textbf{1.46}\newline (1.32 - 1.6) & \textbf{1.44}\newline (1.29 - 1.58) & \textbf{0.45}\newline (0.3 - 0.6) \\ 
+25 & Azoxystrobin & $\nu$ & 0\newline (-0.13 - 0.13) & \textbf{0.23}\newline (0.1 - 0.35) & -3.48\newline (-3.73 - -3.24) & -2.34\newline (-2.54 - -2.14) & -2.11\newline (-2.33 - -1.9) & -3.2\newline (-3.44 - -2.95) \\ 
+  26 & Bentazon & $\nu$ & 0.01\newline (-0.07 - 0.09) & 0.05\newline (-0.03 - 0.13) & -2.27\newline (-2.44 - -2.1) & -1.56\newline (-1.68 - -1.44) & -1.91\newline (-2.05 - -1.77) & -2.29\newline (-2.43 - -2.15) \\ 
+  27 & Boscalid & $\nu$ & -0.04\newline (-0.13 - 0.04) & \textbf{0.48}\newline (0.39 - 0.56) & -2\newline (-2.16 - -1.84) & -1.19\newline (-1.33 - -1.05) & -1.21\newline (-1.35 - -1.07) & -1.78\newline (-1.93 - -1.63) \\ 
+  28 & Carbendazim & $\nu$ & 0.05\newline (-0.07 - 0.18) & \textbf{0.19}\newline (0.07 - 0.32) & -2.63\newline (-2.89 - -2.36) & -1.44\newline (-1.63 - -1.24) & -1.19\newline (-1.4 - -0.98) & -2.22\newline (-2.45 - -1.99) \\ 
+  29 & Chlorpyrifos & $\nu$ & 0.1\newline (0 - 0.19) & \textbf{0.11}\newline (0.01 - 0.2) & -3.21\newline (-3.37 - -3.04) & -2.63\newline (-2.78 - -2.47) & -3.21\newline (-3.37 - -3.04) & -3.35\newline (-3.54 - -3.17) \\ 
+  30 & Clothianidin & $\nu$ & 0\newline (-0.24 - 0.24) & 0.21\newline (-0.04 - 0.45) & -2.61\newline (-3.01 - -2.22) & -2.54\newline (-2.92 - -2.16) & -3.26\newline (-3.75 - -2.77) & -3.6\newline (-4.08 - -3.13) \\ 
+  31 & Diflufenican & $\nu$ & 0.07\newline (-0.01 - 0.14) & \textbf{0.24}\newline (0.16 - 0.32) & -1.89\newline (-2.03 - -1.76) & -2.42\newline (-2.55 - -2.29) & -3.11\newline (-3.26 - -2.96) & -2.07\newline (-2.2 - -1.94) \\ 
+  32 & Dimethenamid & $\nu$ & -0.07\newline (-0.19 - 0.04) & \textbf{0.25}\newline (0.14 - 0.36) & -3.47\newline (-3.71 - -3.22) & -2.69\newline (-2.87 - -2.51) & -2.77\newline (-2.96 - -2.58) & -2.95\newline (-3.15 - -2.75) \\ 
+  33 & Dimoxystrobin & $\nu$ & 0.2\newline (-0.02 - 0.42) & \textbf{0.24}\newline (0.01 - 0.46) & -3.42\newline (-3.83 - -3.01) & -2.26\newline (-2.59 - -1.93) & -3.18\newline (-3.59 - -2.77) & -3.58\newline (-4.01 - -3.15) \\ 
+  34 & Diuron & $\nu$ & 0.05\newline (-0.02 - 0.11) & \textbf{0.3}\newline (0.23 - 0.36) & -3.86\newline (-4.06 - -3.66) & -1.65\newline (-1.74 - -1.56) & -1.73\newline (-1.84 - -1.63) & -2.7\newline (-2.82 - -2.58) \\ 
+  35 & Ethofumesat & $\nu$ & 0.08\newline (-0.01 - 0.17) & \textbf{0.22}\newline (0.13 - 0.31) & -4.4\newline (-4.63 - -4.17) & -2.24\newline (-2.36 - -2.12) & -3.49\newline (-3.66 - -3.33) & -4.24\newline (-4.45 - -4.03) \\ 
+  36 & Flufenacet & $\nu$ & \textbf{0.15}\newline (0.05 - 0.25) & \textbf{0.57}\newline (0.47 - 0.67) & -2.59\newline (-2.77 - -2.42) & -3.77\newline (-3.98 - -3.56) & -4.19\newline (-4.46 - -3.92) & -1.78\newline (-1.9 - -1.67) \\ 
+  37 & Glyphosate & $\nu$ & 0.11\newline (0 - 0.22) & \textbf{0.28}\newline (0.17 - 0.39) & -1.81\newline (-2.11 - -1.51) & -0.16\newline (-0.33 - 0.01) & 0.28\newline (0.11 - 0.45) & -0.56\newline (-0.76 - -0.36) \\ 
+  38 & Imidacloprid & $\nu$ & 0.03\newline (-0.21 - 0.28) & -0.06\newline (-0.3 - 0.17) & -4.5\newline (-5.13 - -3.87) & -2.97\newline (-3.32 - -2.62) & -2.85\newline (-3.23 - -2.47) & -3.92\newline (-4.39 - -3.45) \\ 
+  39 & Isoproturon & $\nu$ & 0.04\newline (-0.01 - 0.09) & \textbf{0.29}\newline (0.24 - 0.34) & -1.81\newline (-1.92 - -1.7) & -1.18\newline (-1.26 - -1.11) & -2.1\newline (-2.2 - -2) & -0.8\newline (-0.88 - -0.72) \\ 
+  40 & MCPA & $\nu$ & -0.05\newline (-0.12 - 0.02) & \textbf{0.34}\newline (0.27 - 0.41) & -3.8\newline (-4.05 - -3.56) & -1.29\newline (-1.38 - -1.19) & -1.84\newline (-1.96 - -1.72) & -2.8\newline (-2.95 - -2.66) \\ 
+  41 & Mecoprop & $\nu$ & \textbf{0.09}\newline (0.01 - 0.16) & \textbf{0.35}\newline (0.27 - 0.42) & -2.98\newline (-3.17 - -2.79) & -1.54\newline (-1.65 - -1.44) & -1.89\newline (-2.01 - -1.76) & -2.71\newline (-2.85 - -2.56) \\ 
+  42 & Metazachlor & $\nu$ & 0.04\newline (-0.03 - 0.1) & \textbf{0.22}\newline (0.15 - 0.28) & -2.77\newline (-2.9 - -2.65) & -3.17\newline (-3.29 - -3.04) & -2.07\newline (-2.17 - -1.97) & -2.02\newline (-2.12 - -1.92) \\ 
+  43 & Nicosulfuron & $\nu$ & \textbf{0.23}\newline (0.04 - 0.41) & \textbf{0.23}\newline (0.05 - 0.41) & -3.81\newline (-4.19 - -3.43) & -2.9\newline (-3.19 - -2.62) & -2.96\newline (-3.27 - -2.65) & -3.24\newline (-3.57 - -2.92) \\ 
+  44 & Penconazol & $\nu$ & -0.05\newline (-0.36 - 0.26) & \textbf{0.54}\newline (0.23 - 0.85) & -6.47\newline (-7.21 - -5.72) & -4.16\newline (-4.64 - -3.69) & -2.8\newline (-3.35 - -2.26) & -4.32\newline (-4.89 - -3.75) \\ 
+  45 & Propiconazol & $\nu$ & -0.02\newline (-0.12 - 0.08) & \textbf{0.41}\newline (0.31 - 0.51) & -3.83\newline (-4.07 - -3.59) & -2.58\newline (-2.73 - -2.44) & -2.73\newline (-2.89 - -2.56) & -3.25\newline (-3.43 - -3.06) \\ 
+  46 & Quinmerac & $\nu$ & -0.04\newline (-0.14 - 0.06) & \textbf{0.34}\newline (0.24 - 0.44) & -2.24\newline (-2.44 - -2.04) & -2.58\newline (-2.75 - -2.4) & -2.47\newline (-2.66 - -2.27) & -1.19\newline (-1.33 - -1.05) \\ 
+  47 & Tebuconazol & $\nu$ & 0.1\newline (0 - 0.19) & \textbf{0.32}\newline (0.23 - 0.41) & -3.44\newline (-3.64 - -3.24) & -2.67\newline (-2.8 - -2.53) & -2.92\newline (-3.07 - -2.76) & -3.21\newline (-3.38 - -3.04) \\ 
+  48 & Terbuthylazin & $\nu$ & \textbf{0.06}\newline (0.01 - 0.11) & \textbf{0.27}\newline (0.22 - 0.32) & -2.89\newline (-3.01 - -2.77) & -1.42\newline (-1.5 - -1.35) & -1.45\newline (-1.53 - -1.37) & -2.44\newline (-2.54 - -2.34) \\ 
    \bottomrule
 \label{tab:var_model_coef}
 \end{longtable}

@@ -199,30 +199,31 @@ RQ showed a skewed distribution with an excess of zeros (no pesticides with RAC 
 Therefore, we modeled these as two processes (one generating values below the limit of quantification (LOQ) and one generating values above LOQ) using a Zero-Adjusted Gamma (ZAGA) distribution \cite{rigby_generalized_2005,stasinopoulos_gamlss.dist:_2016}:
 
 \begin{align}
-RQ_i \sim ZAGA(\mu_i, \pi_i) = 
+RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) = 
   \begin{cases}
-    (1 - \pi_i)   & \quad  \text{if } y < LOQ \\
-    \pi_i \times f_{Gamma} (\mu_i) & \quad \text{if } y \ge LOQ \\
+    (1 - \nu_i)   & \quad  \text{if } y < LOQ \\
+    \nu_i \times f_{Gamma} (\mu_i, \sigma) & \quad \text{if } y \ge LOQ \\
   \end{cases}
   \label{eqn:eqn3}
 \end{align}
 
-$\pi_i$ denotes the probability of a observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, where $\mu$ is the mean of the gamma function.
-We used the log(x+0.05) transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($season_{Q1-Q4}$) as linear predictors for $\mu$ and $\pi$.
-To account for temporal autocorrelation and differences between federal $state$ we used the $site$ nested within $state$ as random intercepts.
+$\nu_i$ denotes the probability of a observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
+We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($season_{Q1-Q4}$) as linear predictors for $\mu$ and $\nu$. 
+$\sigma$ was assumed to be constant. 
+To account for temporal autocorrelation and differences between federal states we used $site$ nested within $state$ as random intercepts:
 
 \begin{align}
 \begin{split}
 \log(\mu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + season_{ijk} + state_j + site_{jk}\\
-logit(\pi_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + season_{ijk} + state_j + site_{jk}\\
+logit(\nu_{ijk}) = log~prec_{0 ijk} + log~prec_{-1 ijk} + season_{ijk} + state_j + site_{jk}\\
 state_{j} \sim N(0, \sigma^2_{state}) \\
 site_{jk} \sim N(0, \sigma^2_{site})
 \end{split}
 \label{eqn:eqn4}
 \end{align}
 
-Changes in $\mu$ can be interpreted as changes in the absolute value of RQ, whereas changes in $\pi$ can be interpreted as changes in the probability that there is any risk.
-We fitted this model separately to each compound with a RAC, with at least 1000 samples and more then 5\% of values above quantification limit (see Supplement, Table S3 for a list of compounds). 
+Changes in $\mu$ can be interpreted as changes in the absolute value of RQ, whereas changes in $\nu$ can be interpreted as changes in the probability of exceeding LOQ.
+We fitted this model separately to each compound with a RAC, at least 1000 samples and more then 5\% of values above quantification limit (see Supplement, Table S3 for a list of compounds). 
 We implemented the model using the gamlss package \cite{stasinopoulos_generalized_2007}.
 
 
@@ -292,20 +293,22 @@ We also found no statistically significant interaction between catchment size an
 
 \subsection{Effect of precipitation on pesticide exposure}
 The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day (Supplement, Figure S6).
-Precipitation at the day before ($log~precip_{-1}$) sampling increased $\mu$ and also $\pi$ for nearly all analysed compounds. 
-The effects were less pronounced ($\pi$) or not clearly directed ($\mu$) for precipitation at the day of sampling ($log~precip_{0}$)(Figure \ref{fig:fig5}, top).
+Precipitation at the day before ($log~precip_{-1}$) sampling increased $\mu$ and also $\nu$ for nearly all analysed compounds. 
+The effects were less pronounced ($\nu$) or not clearly directed ($\mu$) for precipitation at the day of sampling ($log~precip_{0}$)(Figure \ref{fig:fig5}, top).
 
 Q2, Q3 and Q4 showed generally higher $\mu$ than in Q1, with smallest differences for Q4.
 An exception was the herbicide Diflufenican, that showed througout all quarters lower RQ in Q2-Q4 compared to Q1 (Figure \ref{fig:fig5}, bottom and Supplement Table S4).
-We found similar effects of season on $\pi$, but with more compounds showing a reduction in $\pi$.
+We found similar effects of season on $\nu$, but with more compounds showing a reduction in $\nu$.
 
 \begin{figure}[ht]
   \includegraphics[width=0.95\textwidth]{figure5.pdf}
-  \caption{Estimated coefficients and their 95\% CI for the model described in equations \ref{eqn:eqn3} and \ref{eqn:eqn4} for each of the 24 analysed compounds (see Supplement Tables S3 and S4 for a list of compounds from top to bottom and their respective coefficients). Left column: Effect on mean RQ ($\mu$); Right column: effect on the probability that RQ \textgreater 0 ($\pi$).
+  \caption{Estimated coefficients and their 95\% CI for the model described in equations \ref{eqn:eqn3} and \ref{eqn:eqn4} for each of the 24 analysed compounds (see Supplement Tables S3 and S4 for a list of compounds from top to bottom and their respective coefficients). Left column: Effect on mean RQ ($\mu$); Right column: effect on the probability that RQ \textgreater 0 ($\nu$).
   Coefficients where the CI encompasses zero are shown in gray colour.
   }
   \label{fig:fig5}
 \end{figure}
+
+\todo{rewrite + new figures to supplement}
 
 
 \subsection{Pesticides in small water bodies}
