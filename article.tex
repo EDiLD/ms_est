@@ -76,15 +76,15 @@ Data from governmental water quality monitoring provides an opportunity to study
 We compiled monitoring data focusing on small streams, resulting in a data set of 2,918,604 measurements from 42,236 samples in 3,049 sampling sites and 484 different pesticides. 
 We investigated the relationships between pesticide exposure and agricultural land use, catchment size, as well as precipitation and seasonal dynamics using new modeling techniques. 
 
-We found that the influence of agriculture is detectable even if there is only a small proportion of agriculture with a catchment.
+Our results show that the influence of agriculture is detectable even if there is only a small proportion of agriculture with a catchment.
 Precipitation during and before sampling increased measured pesticide concentrations.
-Highest concentrations were found during the summer season, but with differences between compounds.
+The highest concentrations were found during summer, but with differences between compounds.
 Small waters are currently underrepresented in German pesticide monitoring.
 Nevertheless, we show that neonicotinoid and other insecticides frequently exceed regulatory acceptable concentrations.
 
 We conclude that pesticides from agricultural land use are a major treat to small water bodies, the biodiversity they host and services they provide. 
 
-% Total words: 
+% Total words: 199
 \end{abstract}
 
 
@@ -95,7 +95,7 @@ In the year 2014 more than 45,000 tonnes of 766 authorized pesticides were sold 
 The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage \citep{stehle_probabilistic_2013,schulz_comparison_2001,liess_determination_1999}.
 Especially run-off after heavy precipitation events has been shown to be one of the major input routes for pesticides \citep{schulz_field_2004}.
 Once entered the surface waters they may have adverse effects on biota and ecosystem functioning \citep{schafer_thresholds_2012}. 
-Although, it is known that pesticides pollution and its effect increase with agricultural land-use \citep{schulz_field_2004}, studies investigating the shape of this relationships are missing.
+Although, it is known that pesticide pollution and its effects increase with agricultural land-use \citep{schulz_field_2004}, studies investigating the shape of these relationships are currently missing.
 
 \citet{malaj_organic_2014} analyzed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that most European water bodies are at risk from pesticides.
 \citet{stehle_pesticide_2015} compiled 1,566 measured concentrations of 23 insecticides in the EU from scientific publications. 
@@ -145,7 +145,7 @@ We delineated catchments upstream for each of the sampling sites using a digital
 Catchment delineation was manually checked for accuracy by comparison with a stream network provided by the government.
 The delineation algorithm produced only for 30\% of the sites accurate results.
 For the rest we were able to compile catchment size data from authorities (47\% of sites) or drainage basins per stream segment provided by authorities (13\% of sites).
-For 10\% of the sites we were not able to compile catchment size data.
+We were not able to compile catchment size data for 10\% of the sites.
 For each derived catchment (either from DEM or drainage basins) we calculated the relative cover (in \%) with agricultural areas based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}.
 We additionally used agricultural cover data provided by authorities (18\% of sites), which resulted to 21\% of sites with missing agricultural cover data. 
 For 78\% of the sites both, the proportion of agricultural land use and catchment size were available.
@@ -161,14 +161,14 @@ Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure \
 We characterized pesticide pollution using regulatory acceptable concentrations (RAC) \citep{brock_linking_2010}.
 RACs are derived during pesticide authorization as part of the ecological risk assessment.
 No unacceptable ecological effect are expected if the environmental concentration remains below this concentration.
-The German Federal Environmental Agency provided RACs for the 105 compounds with highest detection rates (Supplement, Table S2). 
+The German Federal Environmental Agency provided RACs for 105 compounds with the highest detection rates (Supplement, Table S2). 
 We expressed RACs as Risk Quotient (RQ):
 
 \begin{equation}
 RQ_i = \frac{C_i}{RAC_i}
 \end{equation}
 
-Where $C_i$ is the concentration of a compound $i$ in a sample.
+where $C_i$ is the concentration of a compound $i$ in a sample.
 
 
 \subsection{Statistical analyses}
@@ -181,13 +181,13 @@ We modeled the number of RAC exceedances (RQ \textgreater 1) as:
 \begin{split}
   No_i \sim NB(\mu_i, \kappa) \\
   % E(No_i) = \mu_i~and~Var(No_i) = \mu_i + \frac{\mu_i^2}{\kappa} \\
-  log(\mu_i)= \beta_0 + f_1(Agri_i) + f_2(Size_i) + log(n_i) \\
+  log(\mu_i)= \beta_0 + f_1(agri_i) + f_2(size_i) + log(n_i) \\
 \end{split}
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$. 
 We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
-The proportion of agriculture within the catchment ($Agri_i$) and the catchment size of the site ($Size_i$) were used as predictors. 
+The proportion of agriculture within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors. 
 $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
 The number of samples per site ($n_i$) was used as an offset to account different sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modeling the rate of exceedances. 
@@ -208,10 +208,10 @@ RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) =
   \label{eqn:eqn3}
 \end{align}
 
-$\nu_i$ denotes the probability of a observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
+$\nu_i$ denotes the probability of an observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
 We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($Q1-Q4$) as linear predictors for $\mu$ and $\nu$. 
 $\sigma$ was assumed to be constant. 
-To account for temporal autocorrelation and differences between federal states we used $site$ nested within $state$ as random intercepts:
+To account for temporal auto-correlation and differences between federal states we used $site$ nested within $state$ as random intercepts:
 
 \begin{align}
 \begin{split}
@@ -226,7 +226,7 @@ site_{jk} \sim N(0, \sigma^2_{site})
 Changes on $\mu$ can be interpreted as changes in the absolute value of RQ, whereas changes in $\nu$ can be interpreted as changes in the probability of exceeding LOQ and showing any risk. 
 We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}.
 
-We fitted this model separately to each compound with a RAC, measured in least 1000 samples and more then 5\% of values above LOQ (n = 24 compounds, see Supplement, Table S3 for a list of compounds). 
+We fitted this model separately to each compound with a RAC, measured in least 1000 samples and more than 5\% of values above LOQ (n = 24 compounds, see Supplement, Table S3 for a list of compounds). 
 To summarise the coefficients across the modeled compounds we used a random effect meta-analysis \citep{harrison_getting_2011}.
 
 
@@ -250,13 +250,13 @@ We found large differences in the number of sampling sites between federal state
 
 In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplement, Table S2). 
 Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
-Most samples were take in the months April till October, with less samples in the winter (see Supplement, Figure S3).
+Most samples were taken in the months April till October, with fewer samples in the winter (see Supplement, Figure S3).
 Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
 We found substantial differences in the spectra of analyzed compounds between federal states (Figure \ref{fig:fig2}).
-Hierarchical clustering revealed three groups (see also Supplemen,t Figure S4):
+Hierarchical clustering revealed three groups (see also Supplement Figure S4):
 
 \begin{enumerate}[i)]
-	\item with less then 100 compounds (SL, ST and TH)
+	\item with less than 100 compounds (SL, ST and TH)
 	\item with medium sized spectra
 	\item with a big and distinct spectrum (RP and NI)
 \end{enumerate}
@@ -288,7 +288,7 @@ We also found no statistically significant interaction between catchment size an
 
 \begin{figure}[ht]
   \includegraphics[width=0.95\textwidth]{figure4.pdf}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% pointwise Confidence Intervals.
+  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% point-wise Confidence Intervals.
   }
   \label{fig:fig4}
 \end{figure}
@@ -300,9 +300,9 @@ Precipitation at the day of sampling and the day before increased the probabilit
 Precipitation at day before sampling had a stronger effect, than at day of sampling. 
 This difference was less pronounced for the value RQ (Figure \ref{fig:fig5}, top).
 
-The first quarter showed lowest RQ and probability of exceeding LOQ.
+The first quarter showed the lowest RQ and probability of exceeding LOQ.
 Both increased during summer months and decreased towards the end of the year.
-The differences were more less pronounced for the value RQ (Figure \ref{fig:fig5}, bottom), with wider CI.
+The differences were less pronounced for the value RQ (Figure \ref{fig:fig5}, bottom), with wider CI.
 
 
 \begin{figure}[ht]
@@ -318,19 +318,19 @@ The differences were more less pronounced for the value RQ (Figure \ref{fig:fig5
 
 \subsection{Pesticides in small water bodies}
 The dataset comprised 12,710 samples from 1,295 small water bodies.
-In 1173 samples (0.3\% of all and 5.6\% of samples with detects) RQ higher then 1 were observed.
-Neonicotinoid Insecticides and Chlorpyrifos showed highest risk quotients (Figure \ref{fig:fig6}).
+In 1173 samples (0.3\% of all and 5.6\% of samples with detects) RQ higher than 1 were observed.
+Neonicotinoid Insecticides and Chlorpyrifos showed the highest RQ exceedances (Figure \ref{fig:fig6}).
 For Thiacloprid, Imidacloprid and Chlorpyrifos RAC was less than LOQ, therefore, all detections have a RQ~\textgreater~1. 
 The herbicides Nicosulfuron and Diflufenican, as well as the fungicide Dimoxystrobin also showed high exceedances of RQ (29.5, 14.2 and 21.4 \% of all samples with detects).
-Highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
-Metabolites were most commonly detected in samples (Metazachlor sulfonic acid was in 82\% of all samples were it was analysed) (Supplement Figure S8).
-Glyphosate was the compound with highest detection rates, followed by Boscalid and Isoproturon. 
+The highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
+Metabolites were most commonly detected in samples (for example, Metazachlor sulfonic acid was detected in 82\% of all samples were it was analysed) (Supplement Figure S8).
+Glyphosate was the compound with the highest detection rates, followed by Boscalid and Isoproturon. 
 However, only the latter showed RQ exceedances (Figure \ref{fig:fig6}).
-In 44.8\% of samples more then one compound was quantified, with a maximum of 54 different compounds in one sample (Supplement, Figure S7). 
+In 44.8\% of samples more than one compound was quantified, with a maximum of 54 different compounds in one sample (Supplement, Figure S7). 
 
 \begin{figure}[ht]
   \includegraphics[width=0.6\textwidth]{figure6.pdf}
-  \caption{15 compounds with highest risk quotients in SWB. Non-detects are not shown due to the logarithmic axis. Numbers on the right give the percentage of RQ \textgreater 0 and total number of samples.
+  \caption{15 compounds with the highest risk quotients in SWB. Non-detects are not shown due to the logarithmic axis. Numbers on the right give the percentage of RQ \textgreater 0 and total number of samples.
   }
   \label{fig:fig6}
 \end{figure}
@@ -360,7 +360,7 @@ Especially, streams below 10~km\textsuperscript{2} are missing, which could be a
 \subsection{Thresholds for agricultural land use and catchment size}
 % agriculture
 We found a strong influence of agriculture on the pollution of streams.
-If there is more the 25\% agriculture within a catchment pesticides it is likely that RAC will be exceeded with an increase in fully agricultural catchments (above 75 \% agriculture).
+If there is more the 25\% agriculture within a catchment pesticides, it is likely that RAC will be exceeded with an increase in fully agricultural catchments (above 75 \% agriculture).
 To our knowledge this is the first study investigating such thresholds of pesticide exposure.
 Thresholds for agricultural land use have only been investigated in the past for biological communities.
 \citet{feld_response_2013} found change points of biological community metric for agricultural land use at 40\% in low lands. 
@@ -372,14 +372,14 @@ We did not find a relationship between pesticide pollution and catchment size.
 However, previous studies have shown that SWB are more polluted that bigger streams \citep{schulz_field_2004,stehle_pesticide_2015,knauer_pesticides_2016}.
 This could be explained by the relatively short gradient of catchment sizes in our dataset, with most of the streams being \textless $100~km^2$ (Figure \ref{fig:fig3}, top).
 For example the gradient of \citet{schulz_field_2004} covered 6 orders of magnitude.
-Another reason might be the the unequal distribution of catchment sizes, with less sites \textless $10~km^2$ and \textgreater $100~km^2$ (Figure \ref{fig:fig3}, top).
+Another reason might be the unequal distribution of catchment sizes, with fewer sites \textless $10~km^2$ and \textgreater $100~km^2$ (Figure \ref{fig:fig3}, top).
 
 
 
 \subsection{Effect of precipitation on pesticide exposure}
 Our results revealed that pesticide sampling for chemical monitoring in Germany is mainly performed when no precipitation occurs. 
 Nevertheless, we found higher RQ if samples where taken after rainfall events. 
-Samples taken at they day of a rainfall-event showed less risk, than samples taken one day after a rainfall-event.
+Samples taken at the day of a rainfall-event showed less risk, than samples taken one day after a rainfall-event.
 This could be explained by a sampling just before the actual rainfall event.
 Pesticide concentration in agricultural SWB generally show short term peak concentrations \citep{wittmer_significance_2010}, therefore, a sampling at the day after a rainfall-event might miss peak concentrations.
 The effects were more pronounced for the probability to exceed LOQ, with smaller effect sizes for RQ.
@@ -387,10 +387,10 @@ This could be attributed to a higher variability of absolute concentrations.
 Overall, our results indicate that current pesticide monitoring strongly underestimates pesticide exposure.
 Automatic event-drive samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for SWB \citep{lorenz_specifics_2016}. 
 
-We found highest the probability of exceeding LOQ during the summer season (9.9\% for Q2) and lowest in the first Quarter (2.8\%, Figure \ref{fig:fig5}, bottom right).
+We found highest the probability of exceeding LOQ during summer (9.9\% for Q2) and lowest in the first Quarter (2.8\%, Figure \ref{fig:fig5}, bottom right).
 This yearly pattern coincides with their main application season for pesticides.
 Nevertheless, there are compound specific differences in the yearly pattern, which explain the wide CI for the absolute RQ (Figure \ref{fig:fig5}, bottom left).
-For example, the herbicide Diflufenican showed highest RQ during the winter quarters (Supplement, Table S4) , which is application period for which it is registered in Germany \citep{bvl_online_2016}.
+For example, the herbicide Diflufenican showed highest RQ during the winter quarters (Supplement, Table S4), which is application period in the German registration \citep{bvl_online_2016}.
 Our study suggest that pesticide exposure shows compound specific spatio-temporal dynamics.
 Currently, little is known on these and further research on those might provide useful information for future ecological risk assessment. 
 
@@ -428,13 +428,13 @@ The authors thank the federal state authorities for providing chemical monitorin
 
 
 %%% Word count
-% abstract    :
+% abstract    :  200
 % 4 big(600)  : 2400
-% 2 small(300): 600
-% text body   : 3000 
-% ackno       : 24
+% 2 small(300):  600
+% text body   : 3200
+% ackno       :   24
 % ======================================
-% total       : 
+% total       : 6424
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{suppinfo}
