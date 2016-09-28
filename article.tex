@@ -47,8 +47,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title[Pesticides small streams]{Pesticides in small streams in Germany}
 % \abbreviations{mo, neon, ra, tu, fw}
-\keywords{Monitoring, Neonicotinoid, Risk Assessment Toxic Units, Freshwater}
-% RAC, 
+\keywords{Monitoring, Neonicotinoid, Risk Assessment, Exposure, Freshwater}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -69,17 +69,18 @@
 \begin{abstract}
 % 150-200 words
 Small streams are important refugia for biodiversity.
-In agricultural areas, they may be at high risk from pesticides that enter streams during rainfall. 
+In agricultural areas they may be at high risk from pesticides that enter streams during rainfall. 
 However, most related studies have been limited to a few streams on the regional level, hampering extrapolation to larger scales.
-In Germany, pesticide monitoring is performed by the federal states as part of water quality surveillance. 
+Data from governmental water quality monitoring provides an opportunity to study occurrences of pesticides on a national scale.
 
-We compiled monitoring data focusing on small streams, resulting in a data set of 2,918,604 measurements from 42,236 samples in 3,049 sampling sites covering the years 2005-2014.
-A total of 484 different compounds that can be classified as pesticides were measured.
-We studied the relationships between pesticide exposure and agricultural land use, catchment size, as well as precipitation and seasonal dynamics.
+We compiled monitoring data focusing on small streams, resulting in a data set of 2,918,604 measurements from 42,236 samples in 3,049 sampling sites and 484 different pesticides. 
+We investigated the relationships between pesticide exposure and agricultural land use, catchment size, as well as precipitation and seasonal dynamics using new modeling techniques. 
 
-We found a threshold of 25\% agricultural land use, above pesticide exposure becomes apparent. 
-Precipitation increased pesticide concentrations and these showed pesticide specific temporal patterns.
-Especially neonicotinoid insecticides and Chlorpyrifos showed exceedances of regulatory acceptable concentrations (RACs) in small water bodies.
+We found that the influence of agriculture is detectable even if there is only a small proportion of agriculture with a catchment.
+Precipitation during and before sampling increased measured pesticide concentrations.
+Highest concentrations were found during the summer season, but with differences between compounds.
+Small waters are currently underrepresented in German pesticide monitoring.
+Nevertheless, we show that neonicotinoid and other insecticides frequently exceed regulatory acceptable concentrations.
 
 We conclude that pesticides from agricultural land use are a major treat to small water bodies, the biodiversity they host and services they provide. 
 
@@ -226,7 +227,7 @@ Changes on $\mu$ can be interpreted as changes in the absolute value of RQ, wher
 We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}.
 
 We fitted this model separately to each compound with a RAC, measured in least 1000 samples and more then 5\% of values above LOQ (n = 24 compounds, see Supplement, Table S3 for a list of compounds). 
-To summarise the coefficients across the modeled compounds we used a random effect meta-analysis
+To summarise the coefficients across the modeled compounds we used a random effect meta-analysis \citep{harrison_getting_2011}.
 
 
 
@@ -295,22 +296,24 @@ We also found no statistically significant interaction between catchment size an
 
 \subsection{Effect of precipitation on pesticide exposure}
 The spatio-temporal intersection revealed that 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day (Supplement, Figure S6).
-Precipitation at the day before ($log~precip_{-1}$) sampling increased $\mu$ and also $\nu$ for nearly all analysed compounds. 
-The effects were less pronounced ($\nu$) or not clearly directed ($\mu$) for precipitation at the day of sampling ($log~precip_{0}$)(Figure \ref{fig:fig5}, top).
+Precipitation at the day of sampling and the day before increased the probability of exceeding LOQ and value of RQ.
+Precipitation at day before sampling had a stronger effect, than at day of sampling. 
+This difference was less pronounced for the value RQ (Figure \ref{fig:fig5}, top).
 
-Q2, Q3 and Q4 showed generally higher $\mu$ than in Q1, with smallest differences for Q4.
-An exception was the herbicide Diflufenican, that showed througout all quarters lower RQ in Q2-Q4 compared to Q1 (Figure \ref{fig:fig5}, bottom and Supplement Table S4).
-We found similar effects of season on $\nu$, but with more compounds showing a reduction in $\nu$.
+The first quarter showed lowest RQ and probability of exceeding LOQ.
+Both increased during summer months and decreased towards the end of the year.
+The differences were more less pronounced for the value RQ (Figure \ref{fig:fig5}, bottom), with wider CI.
+
 
 \begin{figure}[ht]
-  \includegraphics[width=0.95\textwidth]{figure5.pdf}
-  \caption{Estimated coefficients and their 95\% CI for the model described in equations \ref{eqn:eqn3} and \ref{eqn:eqn4} for each of the 24 analysed compounds (see Supplement Tables S3 and S4 for a list of compounds from top to bottom and their respective coefficients). Left column: Effect on mean RQ ($\mu$); Right column: effect on the probability that RQ \textgreater 0 ($\nu$).
-  Coefficients where the CI encompasses zero are shown in gray colour.
+  \includegraphics[width=0.8\textwidth]{figure5.pdf}
+  \caption{Summarised coefficients (and their 95\% CI) for precipitation (top row) and quarter (bottom row) from a meta-anaylsis of the 24 modeled compounds. Left column: coefficients for $\mu$, right column: coefficients for $\nu$. 
+  Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$, see eqn. \ref{eqn:eqn4}).
+  Single compound coefficients are provided in the supplemental table S4 and figure S7).
   }
   \label{fig:fig5}
 \end{figure}
 
-\todo{rewrite + new figures to supplement}
 
 
 \subsection{Pesticides in small water bodies}
@@ -323,7 +326,7 @@ Highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Dimoxystrobin(max(RQ)
 Metabolites were most commonly detected in samples (Metazachlor sulfonic acid was in 82\% of all samples were it was analysed) (Supplement Figure S8).
 Glyphosate was the compound with highest detection rates, followed by Boscalid and Isoproturon. 
 However, only the latter showed RQ exceedances (Figure \ref{fig:fig6}).
-In 44.8\% of samples more then one compound was quantified, with a maximum of 54 different compounds in one samples (Supplement, Figure S7). 
+In 44.8\% of samples more then one compound was quantified, with a maximum of 54 different compounds in one sample (Supplement, Figure S7). 
 
 \begin{figure}[ht]
   \includegraphics[width=0.6\textwidth]{figure6.pdf}
@@ -375,16 +378,19 @@ Another reason might be the the unequal distribution of catchment sizes, with le
 
 \subsection{Effect of precipitation on pesticide exposure}
 Our results revealed that pesticide sampling for chemical monitoring in Germany is mainly performed when no precipitation occurs. 
-Nevertheless, we found higher pesticide exposure if samples where taken at the day after heavy rainfall events. 
-Interestingly, samples take at they day of the rainfall-event did not show such a strong relationship.
+Nevertheless, we found higher RQ if samples where taken after rainfall events. 
+Samples taken at they day of a rainfall-event showed less risk, than samples taken one day after a rainfall-event.
 This could be explained by a sampling just before the actual rainfall event.
-Pesticide concentration in agricultural SWB show short term peak concentrations \citep{wittmer_significance_2010}, therefore, a sampling at the day after the rain-fall-event might miss peak concentrations.
-Overall, our results indicate that current chemical monitoring strongly underestimates pesticide exposure. 
-Automatic event-drive samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for SWB \citep{lorenz_specifics_2016}.
+Pesticide concentration in agricultural SWB generally show short term peak concentrations \citep{wittmer_significance_2010}, therefore, a sampling at the day after a rainfall-event might miss peak concentrations.
+The effects were more pronounced for the probability to exceed LOQ, with smaller effect sizes for RQ.
+This could be attributed to a higher variability of absolute concentrations.
+Overall, our results indicate that current pesticide monitoring strongly underestimates pesticide exposure.
+Automatic event-drive samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for SWB \citep{lorenz_specifics_2016}. 
 
-We found pesticide specific patterns in the seasonality of exposure.
-Most pesticides showed an increase from April - September, which coincides with their main application season.
-Hence, we also found the hightest RQ for the herbicide Diflufenican during the winter/spring season, which is application period for which it is registered in Germany \citep{bvl_online_2016}. 
+We found highest the probability of exceeding LOQ during the summer season (9.9\% for Q2) and lowest in the first Quarter (2.8\%, Figure \ref{fig:fig5}, bottom right).
+This yearly pattern coincides with their main application season for pesticides.
+Nevertheless, there are compound specific differences in the yearly pattern, which explain the wide CI for the absolute RQ (Figure \ref{fig:fig5}, bottom left).
+For example, the herbicide Diflufenican showed highest RQ during the winter quarters (Supplement, Table S4) , which is application period for which it is registered in Germany \citep{bvl_online_2016}.
 Our study suggest that pesticide exposure shows compound specific spatio-temporal dynamics.
 Currently, little is known on these and further research on those might provide useful information for future ecological risk assessment. 
 
