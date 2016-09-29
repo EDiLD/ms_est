@@ -61,6 +61,11 @@ nrow(psm_sites) - sum(table(psm_sites_info$ezg_fin_source))
 
 table(psm_sites_info$agri_fin_source, useNA = 'always')
 # 573 (=18\%) from auhtorities
+# 528 from drain
+#! used for size preferably data from authorities
+#! for agriculture we use preferably derived catchments, 
+#! because of big differences how states calculate/define agriculture
+
 nrow(psm_sites) - sum(table(psm_sites_info$agri_fin_source))
 # 650 (=(without information)
 
