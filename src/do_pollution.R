@@ -88,6 +88,11 @@ length(unique(dd$sample_id))
 nrow(dd[rq >1]) / nrow(dd) * 100
 nrow(dd[rq >1]) / nrow(dd[rq>0]) * 100
 
+# number of SW wit RAC exceedances
+length(unique(dd[rq > 1, site_id]))
+length(unique(dd[, site_id]))
+length(unique(dd[rq > 1, site_id])) / length(unique(dd[, site_id])) * 100
+
 
 length(unique(dd[rq > 1.12, site_id])) / length(unique(dd[, site_id]))* 100
 

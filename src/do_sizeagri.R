@@ -134,14 +134,7 @@ plot(mod_nb_ti)
 vis.gam(mod_nb_ti, view = c('agri_fin', 'ezg_fin'))
 anova(mod_nb, mod_nb_ti, test = 'Chisq') 
 # smoothing interaction not of interest
-
-
-plot(mod_nb, pages = 1)
-plot(mod_nb, pages = 1, residuals = TRUE) 
-gam.check(mod_nb)
-# overdispersion
-r <- resid(mod_nb, type = "pearson")
-sum(r^2) / (mod_nb$df.res)
+
 # OK
 
 
@@ -237,4 +230,7 @@ ggsave(file.path(prj, "figure4.pdf"),
        p, width = 7, height = 7/1.6,
        units = 'in', dpi = 300, scale = 1)
 
+
+pdat[c(1, 26), ]
+0.436 / 0.126 # = ration risk at zero / risk at no significant
 
