@@ -45,7 +45,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title[Pesticides small streams]{Pesticides in small streams in Germany}
+\title[Pesticides small streams]{Large scale exposure and risk from pesticides in small streams}
 % \abbreviations{mo, neon, ra, tu, fw}
 \keywords{Monitoring, Neonicotinoid, Risk Assessment, Exposure, Freshwater}
 
@@ -69,20 +69,17 @@
 \begin{abstract}
 % 150-200 words
 Small streams are important refugia for biodiversity.
-In agricultural areas they may be at high risk from pesticides that enter streams during rainfall. 
-However, most related studies have been limited to a few streams on the regional level, hampering extrapolation to larger scales.
-Data from governmental water quality monitoring provides an opportunity to study occurrences of pesticides on a large scale.
-
-We compiled monitoring data focusing on small streams, resulting in a data set of 2,918,604 measurements from 42,236 samples in 3,049 sampling sites and 484 different pesticides. 
-We investigated the relationships between pesticide exposure and agricultural land use, catchment size, as well as precipitation and seasonal dynamics using new modeling techniques. 
-
-Our results show that the influence of agriculture is detectable even if there is only a small proportion of agriculture with a catchment.
-Precipitation during and before sampling increased measured pesticide concentrations.
-The highest concentrations were found during summer, but with differences between compounds.
-Small waters are currently underrepresented in German pesticide monitoring.
-Nevertheless, we show that neonicotinoid and other insecticides frequently exceed regulatory acceptable concentrations.
-
-We conclude that pesticides from agricultural land use are a major treat to small water bodies, the biodiversity they host and the services they provide. 
+In agricultural areas they may be at high risk from pesticide pollution. 
+However, most related studies have been limited to a few streams on the regional level, hampering extrapolation to larger scales. We used data from german governmental water quality monitoring to quantify the drivers of pesticide exposure and to assess pesticide risk in small streams on a large scale. The data set comprised of 2,918,604 measurements related to 42,236 samples in 3,049 sampling sites and of 484 pesticides. We investigated the influence of agricultural land use, catchment size, as well as precipitation and seasonal dynamics on pesticide exposure using new statistical modeling techniques that explicitly  consider the limit of quantification. 
+\newline
+\begin{itshape} die naechsten 2 Saetze sind noch schwach - hier muessen auch Zahlen hin - ausserdem sollten die Risiken klarer dargestellt werden inklusive der verantwortlichen Substanzen
+\end{itshape}
+\newline
+Agriculture land use lead to an xxx-fold increase in xxx once the proportion of agriculture in a catchment exceeded yyy.
+Precipitation during and before sampling increased measured pesticide concentrations xxx-fold. The highest concentrations were found during summer, though this varied with compound. Risk thresholds were exceeded in yyy percent of streams, with neonicotinoid and other insecticides exhibiting highest frequencies of exceedance. We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity, and that governmental pesticide sampling should be adapted to precipitation events in summer.
+\newline
+\begin{itshape} oder irgendsowas - auf jeden Fall irgendwas spektakulaerers als zu sagen dass pestizide ein risiko darstellen, dass ist nicht sonderlich neu
+\end{itshape}
 
 % Total words: 199
 \end{abstract}
@@ -93,24 +90,22 @@ We conclude that pesticides from agricultural land use are a major treat to smal
 More than 50\% of the total land area in Germany is used by agriculture \citep{statistisches_bundesamt_bodenflache_2014}.
 In the year 2014 more than 45,000 tonnes of 766 authorized pesticides were sold for application on this area \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
 The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage \citep{stehle_probabilistic_2013,schulz_comparison_2001,liess_determination_1999}.
-Especially run-off after heavy precipitation events has been shown to be one of the major input routes for pesticides \citep{schulz_field_2004}.
 Once entered the surface waters they may have adverse effects on biota and ecosystem functioning \citep{schafer_thresholds_2012}. 
-Although, it is known that pesticide pollution and its biological effects increase with agricultural land-use \citep{schulz_field_2004}, studies investigating the shape of these relationships are currently missing.
+Although it is known that pesticide pollution and its ecological effects increase with agricultural land-use \citep{schulz_field_2004}, the shape of the relationship is unknown and studies on potential thresholds are lacking.
 
-\citet{malaj_organic_2014} analyzed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that most European water bodies are at risk from pesticides.
+Two recent studies indicate that pesticides might threaten freshwater biodiversity in the European union. 
+\citet{malaj_organic_2014} analyzed data supplied to the European Union (EU) in the context of the Water Framework Directive (WFD) and showed that almost half of European water bodies are at risk from pesticides.
 \citet{stehle_pesticide_2015} compiled 1,566 measured concentrations of 23 insecticides in the EU from scientific publications. 
-They found that many of these measurements exceed regulatory acceptable concentrations (RAC).
-Both studies indicate that pesticides might be a threat to biodiversity in the European union. 
-However, theses studies reflect only a small amount of data and it is unclear how representative they are:
-For Germany the study of \citet{malaj_organic_2014} lists only 175 sites and \citet{stehle_pesticide_2015} only 138 measurements. %175 estimated from digitized figure C.3 in Malaj 2014, Stehle: Table 2.
-National monitoring programs are setup for the surveillance of water quality.
-In Germany these are setup independently by the federal states in compliance with the WFD \citep{quevauviller_water_2008} and additional state specific needs. 
-These programs may provide the most comprehensive data that is currently available for pesticide occurrences in German rivers.
-However, currently there is no curated nation-wide compilation of this monitoring data available.
+They found that many of these measurements exceed regulatory acceptable concentrations (RAC). 
+However, theses studies reflect only a small amount of potentially available data (173 sites in predominantly mid-sized and large rivers in \citet{malaj_organic_2014} and 138 measurements in \citet{stehle_pesticide_2015}), and it is unclear how representative they are for Germany. %173 see Schäfer et al. 2016, Stehle: Table 2. 
+Much more comprehensive data on thousands of sites are available from national monitoring programs that are setup for the surveillance of water quality, which is done independently by the federal states in Germany in compliance with the WFD \citep{quevauviller_water_2008} and additional state specific needs. 
+Despite these data providing the opportunity to study research questions that require large scale data with a high spatial density, to date these data have not been compiled and related analyses are lacking.
 
-Small water bodies (SWB) comprise a major fraction of streams \citep{nadeau_hydrological_2007}, accommodate a higher proportion of biodiversity compared to larger freshwater systems \citep{davies_comparison_2008, biggs_report_2014} and play an important role in recolonization of disturbed downstream reaches \citep{liess_analyzing_2005, orlinskiy_forested_2015}.
+Small water bodies (SWB) comprise a major fraction of streams \citep{nadeau_hydrological_2007}
+%needs a definition here!
+, accommodate a higher proportion of biodiversity compared to larger freshwater systems \citep{davies_comparison_2008, biggs_report_2014} and play an important role in recolonization of disturbed downstream reaches \citep{liess_analyzing_2005, orlinskiy_forested_2015}.
 However, SWB might be also at high risk of pesticide contamination from adjacent agricultural areas and lower dilution potential \citep{schulz_field_2004,liess_determination_1999}.
-It has been shown that SWB are more polluted than bigger streams \citep{stehle_pesticide_2015,schulz_field_2004}.
+Meta-analyses using data from studies with a few sites reported higher pesticide pollution in smaller streams compared to bigger streams \citep{stehle_pesticide_2015,schulz_field_2004}.
 Especially, compounds from agricultural use show seasonal rain-event-driven short term peak concentrations in SWB \citep{wittmer_significance_2010}.
 Despite their biological relevance and potential pesticide exposure, only a small fraction of studies were conducted on pesticide pollution of SWB, with only few large scale studies \citep{lorenz_specifics_2016}. 
 Moreover, it is currently unknown how precipitation might influence measured pesticide concentrations in national monitoring programs.
