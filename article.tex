@@ -150,7 +150,8 @@ Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure~\
 \subsection{Characterization of pesticide pollution}
 We characterised pesticide pollution using regulatory acceptable concentrations (RAC) \citep{brock_linking_2010}.
 RACs are derived during pesticide authorization as part of the ecological risk assessment.
-No unacceptable ecological effect are expected if the environmental concentration remains below this concentration.
+No unacceptable ecological effect are expected if the environmental concentration remains below this concentration. 
+%state here sth. like: that Stehle and Schulz showed that RAC exceedances reflect a decrease in biodiversity and from this perspective are ecologically relevant indicators. Otherwise regulatory values may not be "real" trhesholds because politically influenced and this potential criticism should be taken ahead
 The German Federal Environmental Agency (UBA) provided RACs for the 105 compounds with highest detection rates (Supplemental Table~S2). 
 We expressed RACs as Risk Quotient (RQ):
 
@@ -164,7 +165,7 @@ where $C_i$ is the concentration of a compound $i$ in a sample.
 \subsection{Statistical analyses}
 All data-processing and analyses were performed using R \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analyzed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with complete linkage hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
-We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \citep{fewster_analysis_2000}.
+We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
 We modeled the number of RAC exceedances (RQ \textgreater 1) as:
 
 \begin{align}
@@ -176,18 +177,24 @@ We modeled the number of RAC exceedances (RQ \textgreater 1) as:
 \end{align}
 
 where $No_i$ is the observed number of exceedances at site $i$. 
-We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
-The proportion of agriculture within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors. 
+% die normalen Leser werden SChwierigkeit haben, das zu verstehen, z.B. wo in der FOrmel überhaupt RQ > 1 auftaucht
+We modeled $No_i$ as resulting from a negative binomial distribution ($NB$) with .....
+The proportion of agriculture within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors of .... 
 $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
-The number of samples per site ($n_i$) was used as an offset to account different sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modeling the rate of exceedances. 
+The number of samples per site ($n_i$) was used as an offset to account for differences in sampling efforts (number of samplings and of analysed compounds) at a site and is equivalent to modeling the rate of exceedances. 
+%bleibt unklar, wie beides sampling and compound spectrum in n eingeht
+% beta 0 nicht erklärt - warum eigentlich 0 und nihct i, müssen alle den gleichen parameter haben - und macht es überhaupt sinn einen achsen-schnittpunkt ungleich 0 zu haben?
 We used point-wise 95\% Confidence Intervals (CI) of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
 While agricultural land use and catchment size vary only between sites, this is not the case for precipitation which changes also with time.
 Therefore, we modeled the effects of precipitation in a separate model.
+% begründung bleibt unklar - warum separates modell, denn im modell oben taucht weder raum noch hier zeit auf... Entscheidend ist doch auch, dass oben die Anzahl der RAC exdeendances und hier RQ Response variables sind
 RQ and concentrations show a skewed distribution with an excess of zeros (no pesticides detected and quantified). 
-Therefore, we modeled these as two processes (one generating values below the limit of quantification (LOQ) and one generating values above LOQ) using a Zero-Adjusted Gamma (ZAGA) distribution \cite{rigby_generalized_2005,stasinopoulos_gamlss.dist:_2016}:
+Therefore, we modeled these as two processes 
+% das gleiche hätte man oben auch shcon erklären können?
+(one generating values below the limit of quantification (LOQ) and one generating values above LOQ) using a Zero-Adjusted Gamma (ZAGA) distribution \cite{rigby_generalized_2005,stasinopoulos_gamlss.dist:_2016}:
 
 \begin{align}
 RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) = 
@@ -198,7 +205,8 @@ RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) =
   \label{eqn:eqn3}
 \end{align}
 
-$\nu_i$ denotes the probability of an observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
+$\nu_i$ denotes the probability of an observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values equal to or greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
+%weiß nicht, ob der normale leser kapiert, dass das mean und sd von RQ sind...
 We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($Q1-Q4$) as linear predictors for $\mu$ and $\nu$. 
 We used appropriate link functions for $\mu$ and $\nu$ and assumed $\sigma$ to be constant. 
 Equation~\ref{eqn:eqn4} summarises the deterministic part of the model.
