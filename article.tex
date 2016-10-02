@@ -163,7 +163,7 @@ where $C_i$ is the concentration of a compound $i$ in a sample.
 \subsection{Statistical analyses}
 All data-processing and analyses were performed using R \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analyzed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with complete linkage hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
-We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to identify relationships \citep{fewster_analysis_2000}.
+We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
 We modeled the number of RAC exceedances (RQ \textgreater 1) as:
 
 \begin{align}
@@ -174,12 +174,12 @@ We modeled the number of RAC exceedances (RQ \textgreater 1) as:
 \end{split}
 \end{align}
 
-where $No_i$ is the observed number of exceedances at site $i$. 
+where $No_i$ is the observed number of RAC exceedances at site $i$. 
 We modeled $No_i$ as resulting from a negative binomial distribution ($NB$).
 The proportion of agriculture within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors. 
 $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006}.
 The degree of smoothness was estimated using restricted maximum likelihood (REML) during model fitting process \citep{wood_fast_2011}.
-The number of samples per site ($n_i$) was used as an offset to account different sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modeling the rate of exceedances. 
+The number of samples per site ($n_i$) was used as an offset to account for differences in sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modeling the rate of exceedances. 
 We used point-wise 95\% Confidence Intervals (CI) of the first derivative of the fitted smooth to check if there are regions of statistically significant changes.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
 
@@ -197,7 +197,7 @@ RQ_i \sim ZAGA(\mu_i, \sigma, \nu_i) =
   \label{eqn:eqn3}
 \end{align}
 
-$\nu_i$ denotes the probability of an observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation.
+$\nu_i$ denotes the probability of an observation i being above LOQ and $f_{Gamma}$ denotes the gamma function and is used for values equal to or greater LOQ, with $\mu$ being the mean and $\sigma$ the standard deviation of RQ.
 We used the $log(x+0.05)$ transformed precipitation at sampling date ($log~prec_0$) and the day before ($log~prec_{-1}$), as well as quarters of the year ($Q1-Q4$) as linear predictors for $\mu$ and $\nu$. 
 We used appropriate link functions for $\mu$ and $\nu$ and assumed $\sigma$ to be constant. 
 Equation~\ref{eqn:eqn4} summarises the deterministic part of the model.
@@ -214,7 +214,7 @@ To account for temporal auto-correlation and differences between federal states 
 Changes on $\mu$ can be interpreted as changes in the mean value of RQ, whereas changes in $\nu$ can be interpreted as changes in the probability of exceeding LOQ and showing any risk. 
 We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}.
 
-We fitted this model separately to each compound with a RAC, measured in least 1000 samples and more than 5\% of values above LOQ (n = 24 compounds, see Supplemental Table~S3 for a list of compounds). 
+We fitted this model separately to each compound with a RAC, measured in least 1000 samples and with more than 5\% of values above LOQ (n = 24 compounds, see Supplemental Table~S3 for a list of compounds). 
 To summarise the coefficients across the modeled compounds we used a random effect meta-analysis \citep{harrison_getting_2011}.
 
 
@@ -224,10 +224,9 @@ To summarise the coefficients across the modeled compounds we used a random effe
 \section{Results}
 \subsection{Overview of the compiled data}
 
-The compiled dataset comprised only few standing waters (58 sites) and the majority of samples (91\%) where taken via grab sampling.  % see clean.R for numbers
-9\% of samples from 33 sites were taken as composite samples of different durations.
-Therefore, we restricted the analyses to grab samples from streams. 
-The analyzed dataset comprised 2,918,604 pesticide measurements of 42,236 samples in 3,049 sampling sites.  %see do_overview.R for numbers.
+The compiled dataset used in analysis comprised 2,918,604 pesticide measurements of 42,236 samples in 3,049 sampling sites.  %see do_overview.R for numbers.
+These samples were taken via grab sampling.  
+Composite samples of different durations that were taken in 33 sites were not considered in analysis, given a potential methodical bias and the low sample size.
 We found large differences in the number of sampling sites between federal states and their spatial distribution (Figure~\ref{fig:fig1} and Supplemental Table~S1).
 
 \begin{figure}[ht]
@@ -256,8 +255,11 @@ Hierarchical clustering revealed three groups (see also Supplemental Figure~ S4)
   \label{fig:fig2}
 \end{figure}
 
-The distribution of sampling sites across catchment area and agricultural area in the catchment revealed a sharp decline in the distribution of catchment-sizes below $10~km^2$, with most sampling sites with catchments between 10 and 25 $km^2$ (Figure~\ref{fig:fig3}).
-The proportion of agriculture in the catchments decreased with increasing catchment size.
+The distribution of sampling sites across catchment sizes indicated a disproportionally low number of sites in catchments below $10~km^2$, which deviated from the expected distribution \citep{nadeau_hydrological_2007}.
+%%%! check expected distribution (exponential distribution?)
+Most sampling sites had catchment sizes between 10 and 25 $km^2$ (Figure~\ref{fig:fig3}). 
+The proportion of agriculture in the catchments tended to decrease with increasing catchment size.
+
 
 \begin{figure}[ht]
   \includegraphics[width=.8\textwidth]{figure3.pdf}
@@ -269,14 +271,14 @@ The proportion of agriculture in the catchments decreased with increasing catchm
 
 
 \subsection{Influence of agricultural land use and catchment size}
-Modeling the number of RAC exceedances as function of agriculture within catchment and catchment size revealed that there is a strong and statistically significant increase up to 25\% agriculture.
-Above this threshold the exceedances level off followed by a increase above 75\% (Figure~\ref{fig:fig4}, left).
-We could no detect any effect of catchment size on the number of RAC exceedances (Figure~\ref{fig:fig4}, right).
+The number of RAC exceedances increased strongly and statistically significant up to 25\% agriculture within the catchment.
+Above this threshold the exceedances levelled followed by an increase above 75\% (Figure~\ref{fig:fig4}, left).
+Catchment size had no statistically significant effect on the number of RAC exceedances (Figure~\ref{fig:fig4}, right).
 We also found no statistically significant interaction between catchment size and agriculture.
 
 \begin{figure}[ht]
   \includegraphics[width=0.95\textwidth]{figure4.pdf}
-  \caption{Effect of agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% point-wise Confidence Intervals.
+  \caption{Effect of percent agriculture within the catchment (left) and catchment size (right) on the number of RAC exceedances. Red line marks statistically significant changes. Dashed lines denote 95\% point-wise Confidence Intervals.
   }
   \label{fig:fig4}
 \end{figure}
