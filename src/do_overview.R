@@ -18,6 +18,8 @@ psm_variables <- fread(file.path(cachedir, 'psm_variables.csv'))
 psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
 var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
+
+
 # some numbers
 # no. observations
 (tot <- nrow(psm_samples))
@@ -29,6 +31,8 @@ length(unique(psm_samples$variable_id))
 length(psm_samples[value_fin > 0, value_fin])
 length(psm_samples[value_fin > 0, value_fin]) / tot * 100 
 
+nrow(psm_sites_info[agri_fin > 0.75 & ezg_fin > 100]) 
+nrow(psm_sites_info[agri_fin > 0.75 & ezg_fin < 100]) 
 
 
 # Temporal overview of samples --------------------------------------------

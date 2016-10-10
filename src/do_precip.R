@@ -100,6 +100,10 @@ hist(props[tot < 1000, tot])
 keep <- props[prop > 0.05 & tot > 1000]
 # 25 compounds left
 
+
+
+
+
 # export overview for supplement
 keep
 setkey(psm_variables, variable_id)
@@ -379,7 +383,7 @@ plot(mmod)
 
 # fit top each term
 terms <- unique(resdf$term)
-terms <- terms[!(terms == 'sigma' | grepl('Intercept', terms))]
+# terms <- terms[!(terms == 'sigma' | grepl('Intercept', terms))]
 fit_meta <- function(tm){
   mmod <- rma(est, sei=stderr, data = resdf[term == tm], method = 'REML')
   out <- data.frame(term = tm, est = mmod$b[,1], upr = mmod$ci.ub, lwr = mmod$ci.lb)
@@ -389,6 +393,17 @@ fit_meta <- function(tm){
 resm <- lapply(terms, fit_meta)
 resm
 resmd <- rbindlist(resm)
+
+# log_precip1 multiplicator for mu
+exp(0.05582678) - 1
+# one <- exp(-3.41532436) * exp(0.05582678 * 1)
+# ten <- exp(-3.41532436) * exp(0.05582678 * 2)
+# ten_one = exp(-3.41532436) * (exp(0.05582678 * 2) - exp(0.05582678 * 1))
+# (ten-one) / one
+
+# nu 
+
+
 
 # coefplot
 resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)
