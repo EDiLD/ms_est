@@ -402,8 +402,24 @@ exp(0.05582678) - 1
 # (ten-one) / one
 
 # nu 
+int <- -2.21435302
+a <- exp(int + 0.27717549)
+a / (1+a) # prob at 1mm)
+(one <- plogis(int + 0.27717549))
+(ten <- plogis(int + 0.27717549*2))
+(hun <- plogis(int + 0.27717549*3))
+(ten-one) 
+(hun-ten)
+(ten-one) / one 
+(hun-ten) / ten
 
-
+# Q1 mu
+exp(-3.80443384)
+# Q3 mu
+exp(-3.40903988)
+# Q1 nu
+plogis(-3.15180443)
+plogis(-2.21435302)
 
 # coefplot
 resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)

@@ -72,14 +72,16 @@ Small streams are important refugia for biodiversity.
 In agricultural areas they may be at high risk from pesticide pollution. 
 However, most related studies have been limited to a few streams on the regional level, hampering extrapolation to larger scales. 
 We used data from German governmental water quality monitoring to quantify the drivers of pesticide risk and to assess pesticide risk in small streams on a large scale. 
-The data set comprised of 2,918,604 measurements related to 42,236 samples in 3,049 sampling sites and of 484 pesticides. 
+The data set comprised of 1,766,104 measurements related to 24,743 samples in 2,301 sampling sites and of 478 pesticides.  %see do_overview.R
 We investigated the influence of agricultural land use, catchment size, as well as precipitation and seasonal dynamics on pesticide risk using new statistical modeling techniques that explicitly consider the limit of quantification. 
-Agriculture land use lead to an 3.5-fold increase in exceedance of risk thresholds once the proportion of agriculture in a catchment exceeded 25 percent.
-Precipitation increased measured pesticide concentrations xxx-fold. 
+Agriculture land use lead to an 3.4-fold increase in exceedance of risk thresholds once the proportion of agriculture in a catchment exceeded 25 percent.
+Precipitation increased measured pesticide risk xxx-fold. 
 The highest concentrations were found during summer.
 %%%! Add these numbers also to results section!
 Risk thresholds were exceeded in 27 percent of small streams, with neonicotinoid and other insecticides exhibiting highest frequencies of exceedance. 
 We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity, and that governmental pesticide sampling should be adapted to precipitation events in summer. 
+
+%%% Check all numbers
 
 % Total words: 199
 \end{abstract}
@@ -103,7 +105,9 @@ which is done independently by the federal states in Germany in compliance with 
 Despite these data providing the opportunity to study pesticide risks and other research questions on a large scale with high spatial density, to date these data have not been compiled and related analyses are lacking. 
 
 Small water bodies (SWB) comprise a major fraction of streams \citep{nadeau_hydrological_2007}, accommodate a higher proportion of biodiversity compared to larger freshwater systems \citep{davies_comparison_2008, biggs_report_2014} and play an important role in recolonization of disturbed downstream reaches \citep{liess_analyzing_2005, orlinskiy_forested_2015}.
-% needs definition of SWB
+Nevertheless, a clear definition of SWB in terms of catchment or stream size is currently lacking \citep{lorenz_specifics_2016}. 
+For example, the WFD defines SWB with a catchment size between 10 and 100 km\textsuperscript{2}, without further categorisation of streams \textless 10km\textsuperscript{2} and \citet{lorenz_specifics_2016} defines SWB with catchment size \textless 10km\textsuperscript{2} as SWB. 
+
 However, SWB might be also at high risk of pesticide contamination from adjacent agricultural areas and lower dilution potential \citep{schulz_field_2004,liess_determination_1999}.
 Indeed, meta-analyses using data from studies with a few sites reported higher pesticide pollution in smaller streams compared to bigger streams \citep{stehle_pesticide_2015,schulz_field_2004}.
 Despite their ecological relevance and potentially higher pesticide exposure, a recent analysis of pesticide studies showed that a disproportionally small fraction of studies were conducted in SWB, and these were largely limited to a few sites \citep{lorenz_specifics_2016}. 
@@ -119,39 +123,35 @@ Finally, we quantified the current risks from pesticides in SWB in Germany.
 %% -------------------------------------------------------------------------
 \section{Methods}
 \subsection{Data compilation}
-We requested pesticide monitoring data from sampling sites with catchment sizes $\mathrm{< 100km^2}$ for the years 2005 to 2015 from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names). 
-Additionally, we used data available from previous projects with bigger catchment sizes. 
+We requested pesticide monitoring data from sampling sites that can be classified as SWB (catchment sizes $\mathrm{< 100km^2}$ according to the WFD) from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names). 
+The request encompassed only the years 2005 to 2015.
 We homogenized and unified all data provided by the federal states into a database and implemented a robust data cleaning workflow (see Supplemental Figure~S1 for details) \citep{poisot_best_2015}.
 
-We identified chemical samples taken during heavy rainfall events by spatio-temporal intersection of sampling events with gridded daily precipitation data available from the German Weather service (DWD).
-%%% add resolution 
-%%% Weg von events -> precipitation als Wert nur.
+We identified precipitation at sampling sites by spatio-temporal intersection of sampling events with gridded daily precipitation data (60$\times$30 arcsec resolution) available from the German Weather service (DWD).
 This data spatially interpolates daily precipitation values from local weather stations \citep{rauthe_central_2013}. 
 We performed the intersection for the actual sampling date and the day before, an extracted precipitation during and up to 48 hours before sampling. 
-%%%! One question with such data is from which precipitation value increases in concentrations are detectable. Also interesting
+
 
 \subsection{Characterization of catchments}
-We compiled a total of 3,049 sampling sites with pesticide measurements.
-We delineated catchments upstream for each of the sampling sites using a digital elevation model (DEM) \citep{eea_digital_2013} and the multiple flow direction algorithm \citep{holmgren_multiple_1994} as implemented in GRASS GIS 7 \citep{neteler_grass_2012}.
-Catchment delineation was manually checked for accuracy by comparison with state stream networks.
-Given that the delineated catchments were accurate only for 30\% of the sites, we compiled complementary catchment size data from authorities that provided catchments for an additional (60\% of sites). 
-Ten percent of sites lacked catchment size data and were omitted from the operations outlined below. 
+We compiled a total of 2,369 sampling sites in SWB with pesticide measurements. %see do_overview.R
+Alongside, we also requested catchment sizes (available for 59\% of sites) and percentage agricultural land use within the catchment (available for 24\% of sites) for the sampling sites from the federal states. %see do_overview.R
+Additionally, we delineated upstream catchments for each of the sampling sites using (i) a digital elevation model (DEM) \citep{eea_digital_2013} and the multiple flow direction algorithm \citep{holmgren_multiple_1994} as implemented in GRASS GIS 7 \citep{neteler_grass_2012} and (ii) from drainage basins provided by the Federal Institute of Hydrology (BfG).
+Delineated catchments were visually checked for accuracy by comparison with state stream networks and combined (with priorisation: authorities~\textgreater~DEM~\textgreater drainage basins).
+Thus, catchment size information was available for 99\% of all sites (59\% from authorities, 24\% from DEM and 16\% from drainage basins). 
 
-For each derived catchment (either from DEM or drainage basins) we calculated the relative cover (in \%) with agricultural area based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
-Additionally, we used agricultural cover data provided by authorities (19\% of sites). 
-For 78\% of the sites both, the proportion of agricultural land use and catchment size were available.
-% see do_overview.R for numbers
+For each derived catchment (either from DEM or drainage basins) we calculated the percentage agricultural land-use within the catchment based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
+Thus, agricultural land use information was available for 98\% of all sites (24\% from authorities, 52\% from DEM and 22\% from drainage basins). 
+In total, for 97\% of the sites both, the proportion of agricultural land use and catchment size were available. 
+Sites lacking these two informations were om 
+%see do_overview.R 
 
-A clear definition of SWB in terms of catchment or stream size is currently lacking \citep{lorenz_specifics_2016}. 
-The WFD defines SWB with a catchment size between 10 and 100 km\textsuperscript{2}, without further categorisation of streams \textless 10km\textsuperscript{2}. 
-\citet{lorenz_specifics_2016} defines SWB with catchment size \textless 10km\textsuperscript{2} as SWB.
-Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure~\ref{fig:fig3}) we define in this study all streams below 25~km\textsuperscript{2} as SWB. This catchment size corresponds to a stream width of approximately 2~meters (see Supplemental Figure~S2).
 
 
 \subsection{Characterization of pesticide pollution}
 We characterised pesticide pollution using regulatory acceptable concentrations (RAC) \citep{brock_linking_2010}.
 RACs are derived during pesticide authorization as part of the ecological risk assessment.
 No unacceptable ecological effect are expected if the environmental concentration remains below this concentration.
+\citet{stehle_pesticide_2015} showed that RAC exceedances reflect a decrease in biodiversity and from this perspective are ecologically relevant indicators. 
 The German Federal Environmental Agency (UBA) provided RACs for the 105 compounds with highest detection rates (Supplemental Table~S2). 
 We expressed RACs as Risk Quotient (RQ):
 
@@ -165,6 +165,8 @@ where $C_i$ is the concentration of a compound $i$ in a sample.
 \subsection{Statistical analyses}
 All data-processing and analyses were performed using R \citep{r_core_team_r:_2016}.
 To display differences in the spectra of analyzed compounds between federal states we used Multidimensional Scaling (MDS) based on Jaccard dissimilarity in conjunction with complete linkage hierarchical clustering using the vegan package \citep{oksanen_vegan:_2016}.
+We determined the optimum number of clusters using the average silhouette width \citep{rousseeuw1987silhouettes}. 
+
 We expected non-linear responses to agriculture and catchment size and therefore, used generalized additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
 We modeled the number of RAC exceedances as:
 
@@ -225,32 +227,26 @@ The meta-analysis was performed using the metafor package \citep{Viechtbauer_201
 \section{Results}
 \subsection{Overview of the compiled data}
 
-The compiled dataset used in analysis comprised 2,918,604 pesticide measurements of 42,236 samples in 3,049 sampling sites.  %see do_overview.R for numbers.
-These samples were taken via grab sampling.  
-Composite samples of different durations that were taken in 33 sites were not considered in analysis, given a potential methodical bias and the low sample size.
+The compiled dataset used in analysis comprised 1,766,104 pesticide measurements of 24,743 samples in 2,301 SWB sampling sites.  %see do_overview.R for numbers.
+These samples were all taken via grab sampling.  
 We found large differences in the number of sampling sites between federal states and their spatial distribution (Figure~\ref{fig:fig1} and Supplemental Table~S1). 
-The number of sampling sites per state ranged from 3 (Lower Saxonia, NI) to 1320 (North Rhine-Westphalia, NW). % Lower Saxony (NI) provided 
-
+The number of sampling sites per state ranged from 1 (Lower Saxonia, NI) to 1139 (North Rhine-Westphalia, NW). 
 
 \begin{figure}[ht]
   \includegraphics[width=0.6\textwidth]{figure1.pdf}
-  \caption{Spatial distribution of the 3109 sampling sites. Colour codes different federal states, see Supplemental Table~S1 for abbreviations.}
+  \caption{Spatial distribution of the 2,301 SWB sampling sites. Colour codes different federal states, see Supplemental Table~S1 for abbreviations.}
   \label{fig:fig1}
 \end{figure}
 
-In total 484 different compounds used as pesticides and their metabolites were measured at least once (Supplemental Table~S2). 
-Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109).
+In total 478 different compounds used as pesticides and their metabolites were measured at least once (Supplemental Table~S2). 
+Most of the compounds were herbicides (179), followed by insecticides (117) and fungicides (109). % see overview.R
 Most samples were taken in the months April till October, with fewer samples during winter (see Supplemental Figure~S3).
-Only 5.5\% (160,800) of all measurements were detects above the limit of quantification (LOQ).
+Only 4\% (71,113) of all measurements were detects above the limit of quantification (LOQ).
 We found substantial differences in the spectra of analyzed pesticides between federal states (Figure~\ref{fig:fig2}).
-The number of different pesticides per state ranged from 57 (Saarland, SL) to 278 (Rhineland-Palatinate, RP). 
-Hierarchical clustering revealed three groups (see also Supplemental Figure~ S4):
-
-\begin{enumerate}[i)]
-	\item SL, ST and TH with a small (less than 100 compounds) compound spectra.
-	\item RP and NI with a big (278 and 226 compounds) and distinct compound spectra
-  \item the other states showed a similar spectra of medium to big size (between 127 and 227 compounds)
-\end{enumerate}
+The number of different pesticides per state ranged from 57 (Saarland, SL) to 236 (Rhineland-Palatinate, RP) (Supplemental Table~S1).
+Hierarchical clustering revealed that RP and NI analysed a distinct compound spectra compared to the cluster of other states.
+Although, there was high variation within the remaining states these could not be separated (Figure~\ref{fig:fig2}, also Supplemental Figures~S4 and S5).
+%%% unschöner satz: bearbeiten!
 
 \begin{figure}[ht]
   \includegraphics[width=\textwidth]{figure2.pdf}
@@ -259,15 +255,15 @@ Hierarchical clustering revealed three groups (see also Supplemental Figure~ S4)
   \label{fig:fig2}
 \end{figure}
 
+%%%! Use a black only plot!?
+
 The distribution of sampling sites across catchment sizes indicated a disproportionally low number of sites of catchments below $10~km^2$, with
 most sampling sites having catchment sizes between 10 and 25 $km^2$ (Figure~\ref{fig:fig3}). 
-The proportion of agriculture in the catchments tended to decrease with increasing catchment size.
-For example, only 3 sites had more than 75\% agriculture in catchments larger 100 $km^2$, whereas in catchments below 100 km2, 245 sites had more than 75\% agriculture in their catchment. 
+
 
 \begin{figure}[ht]
   \includegraphics[width=.8\textwidth]{figure3.pdf}
   \caption{Distribution of catchment area and agriculture within the catchment area across the sampling sites.
-  Only sampling sites with catchment area < 150 km\textsuperscript{2} are displayed. 
   Colour codes the 2-dimensional density of points.}
   \label{fig:fig3}
 \end{figure}
@@ -275,7 +271,7 @@ For example, only 3 sites had more than 75\% agriculture in catchments larger 10
 
 \subsection{Influence of agricultural land use and catchment size}
 The number of RAC exceedances increased strongly and statistically significant up to 25\% agriculture within the catchment.
-Above this threshold the exceedances levelled followed by an increase above 75\% (Figure~\ref{fig:fig4}, left).
+Above this threshold the exceedances levelled followed by an increase above 70\% (Figure~\ref{fig:fig4}, left).
 Catchment size had no statistically significant effect on the number of RAC exceedances (Figure~\ref{fig:fig4}, right).
 We also found no statistically significant interaction between catchment size and agriculture.
 
@@ -315,7 +311,10 @@ The differences were less pronounced for the value of RQ and with higher variati
 
 
 \subsection{Pesticides in small water bodies}
-The dataset comprised 12,710 samples from 1,295 small water bodies.
+Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure~\ref{fig:fig3}) and the low influence of catchment size on RAC exceedances (Figure~\ref{fig:fig4}) we define in this study all streams below 25~km\textsuperscript{2} as SWB. 
+This catchment size corresponds to a stream width of approximately 2~meters (see Supplemental Figure~S2).
+
+The dataset comprised 12,710 samples from 1,295 SWB.
 In 346 (26.7\%) of these streams RQ were exceeded.
 In total 1,173 samples (0.3\% of all and 5.6\% of samples with detects) showed RQ higher than 1 were observed.
 Neonicotinoid insecticides and Chlorpyrifos showed the highest RQ exceedances (Figure~\ref{fig:fig6}).

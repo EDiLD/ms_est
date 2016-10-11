@@ -64,6 +64,7 @@ library(xtable)
 
 # modelling
 library(vegan)
+library(cluster)
 library(mgcv)
 library(gamlss)
 library(gamlss.cens)
@@ -96,7 +97,7 @@ ld <- TRUE
 
 # keep these objects
 load_obj <- ls()
-load_obj <- c(load_obj, 'load_obj')
+load_obj <- c(load_obj, 'load_obj', 'take_site_id')
 
 # use utf8 encoding
 options(encoding = 'utf8')

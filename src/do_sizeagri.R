@@ -19,11 +19,12 @@ psm_variables <- fread(file.path(cachedir, 'psm_variables.csv'))
 psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
 var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
+# restrict to sites < 100km² (or unknown)  and both data available (see do_overview.R)
+take_site_id <- readRDS(file = file.path(cachedir, 'take_site_id.rds'))
+psm_sites_info <- psm_sites_info[site_id %in% take_site_id]
+psm_sites <- psm_sites[site_id %in% take_site_id]
+psm_samples <- psm_samples[site_id %in% take_site_id]
 
-nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
-# 2376 with both data
-# 265 completely missing
-# 408 with either ezg or agri info missing
 
 # join sites with info
 setkey(psm_sites, site_id)
@@ -60,35 +61,32 @@ setkey(samples_exceed, site_id)
 setkey(psm_sites, site_id)
 rak_exceed <- psm_sites_wi[samples_exceed]
 rak_exceed
-# 2970 sites
+# 2270 sites
 rm(samples_raks, samples_exceed)
 # exclude NA (=sites wihtout ezg & agri info)
 rak_exceed <- rak_exceed[!(is.na(agri_fin) | is.na(ezg_fin)), ]
 # 2343 sites with ezg and agri data
-
-# exclude sites > 150km2
-rak_exceed <- rak_exceed[ezg_fin < 150]
 
 
 # logn used as offset
 rak_exceed$logn <- log(rak_exceed$n)
 
 
-ggplot(rak_exceed, aes(x = ezg_fin, y = p_exceed)) +
-  geom_point() +
-  geom_smooth()
-
-ggplot(rak_exceed, aes(x = agri_fin, y = p_exceed)) +
-  geom_point() +
-  geom_smooth()
-
-ggplot(rak_exceed, aes(x = ezg_fin, y = n_exceed)) +
-  geom_point() +
-  geom_smooth()
-
-ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed)) +
-  geom_point() +
-  geom_smooth()
+# ggplot(rak_exceed, aes(x = ezg_fin, y = p_exceed)) +
+#   geom_point() +
+#   geom_smooth()
+# 
+# ggplot(rak_exceed, aes(x = agri_fin, y = p_exceed)) +
+#   geom_point() +
+#   geom_smooth()
+# 
+# ggplot(rak_exceed, aes(x = ezg_fin, y = n_exceed)) +
+#   geom_point() +
+#   geom_smooth()
+# 
+# ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed)) +
+#   geom_point() +
+#   geom_smooth()
 
 
 
@@ -123,6 +121,7 @@ mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset
               data = rak_exceed,
               family = nb(),
               method = 'REML')
+plot(mod_nb, pages = 1)
 
 # model with interaction
 mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') +  
@@ -134,7 +133,7 @@ plot(mod_nb_ti)
 vis.gam(mod_nb_ti, view = c('agri_fin', 'ezg_fin'))
 anova(mod_nb, mod_nb_ti, test = 'Chisq') 
 # smoothing interaction not of interest
-
+
 # OK
 
 
@@ -230,7 +229,7 @@ ggsave(file.path(prj, "figure4.pdf"),
        p, width = 7, height = 7/1.6,
        units = 'in', dpi = 300, scale = 1)
 
-
-pdat[c(1, 26), ]
-0.436 / 0.126 # = ration risk at zero / risk at no significant
+pdat
+pdat[c(1, 29), ]
+0.436 / 0.128 # = ration risk at zero / risk at no significant
 

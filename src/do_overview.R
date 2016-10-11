@@ -19,25 +19,80 @@ psm_maxtu <- fread(file.path(cachedir, 'psm_maxtu.csv'))
 var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
 
+# restrict to sites < 100km² (or unknown) and > 2005
+range(psm_samples$date)
+take_sites <- psm_sites_info[ezg_fin <= 100 | is.na(ezg_fin), site_id]
+psm_sites_info <- psm_sites_info[site_id %in% take_sites]
+psm_sites <- psm_sites[site_id %in% take_sites]
+psm_samples<-psm_samples[site_id %in% take_sites]
 
-# some numbers
+
+
+# overview on Catchment derivation ----------------------------------------
+table(psm_sites_info$ezg_fin_source, useNA = 'always')
+# NA = no information available
+# auth = from authorities direct
+# drain = from river segments
+# TRUE = from DEM
+table(psm_sites_info$ezg_fin_source, useNA = 'always') / nrow(psm_sites_info) * 100
+# 1401 (=59%) with data from authorities
+# 372 (=16%) with data from stream segments
+# 568 (=24%) with data from dem
+# 28 (=1%) without any information
+
+# sites with data from auth
+nrow(psm_sites_info[!is.na(ezg_auth)]) / nrow(psm_sites_info)
+# sites with good delienation
+nrow(psm_sites_info[!is.na(ezg_gis) & use == TRUE]) / nrow(psm_sites_info)
+# use == TRUE: catchment from DEM good
+# use == drain: catchment from DEM bad, but river segment good
+# use == NA: no good shapes available
+nrow(psm_sites_info[!is.na(ezg_gis) & (use == 'drain')]) / nrow(psm_sites_info) * 100
+
+
+table(psm_sites_info$agri_fin_source, useNA = 'always')
+table(psm_sites_info$agri_fin_source, useNA = 'always') / nrow(psm_sites_info) * 100
+# 571 (=24%) from authorities
+# 522 (=22%) from drain
+# 1231 (=52%) from DEM
+# 45 (=2%) missing
+
+
+nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
+nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))]) / nrow(psm_sites_info)
+# 2301 (=97%) with both informations
+
+
+# restrict to sites < 100km² (or unknown)  and both data available
+take_site_id <- psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin)), site_id]
+saveRDS(take_site_id, file = file.path(cachedir, 'take_site_id.rds'))
+# removed sites
+psm_sites_info[!site_id %in% take_site_id]
+psm_sites_info <- psm_sites_info[site_id %in% take_site_id]
+psm_sites <- psm_sites[site_id %in% take_site_id]
+psm_samples <- psm_samples[site_id %in% take_site_id]
+
+
+
+
+# some numbers 
 # no. observations
 (tot <- nrow(psm_samples))
+# no.of samples
+length(unique(psm_samples$sample_id))
 # no. sites
 length(unique(psm_samples$site_id))
 # no. compounds
 length(unique(psm_samples$variable_id))
 # values > loq
 length(psm_samples[value_fin > 0, value_fin])
-length(psm_samples[value_fin > 0, value_fin]) / tot * 100 
+length(psm_samples[value_fin > 0, value_fin]) / nrow(psm_samples) * 100 
 
-nrow(psm_sites_info[agri_fin > 0.75 & ezg_fin > 100]) 
-nrow(psm_sites_info[agri_fin > 0.75 & ezg_fin < 100]) 
+
 
 
 # Temporal overview of samples --------------------------------------------
-
-month(psm_samples[2, date])
+# For Supplement
 monthly <- psm_samples[ , length(unique(sample_id)), by = month(date)]
 ggplot(monthly, aes(x = factor(month), y = V1)) + 
   geom_bar(stat = 'identity')
@@ -46,35 +101,9 @@ p <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) +
   geom_bar(stat = 'identity') +
   facet_grid(~year) +
   labs(x = 'Month', y = 'No. samples')
+# p
 ggsave(file.path(prj, 'supplement/temporal.pdf'), p, width = 20, height = 7)
 
-
-# overview on Catchment derivation ----------------------------------------
-table(psm_sites_info$ezg_fin_source, useNA = 'always')
-# NA = no inforamtion available
-# auth = from authorities direct
-# drain = from river segments
-# TRUE = from DEM
-psm_sites_info[is.na(ezg_fin_source)]
-nrow(psm_sites) # 3049 sites in total
-nrow(psm_sites) - sum(table(psm_sites_info$ezg_fin_source))
-# 293 (=10%) without any information
-# 1452 (=47%) with data from authorities
-# 909 (=30%) with data from dem
-# 395 (=13%) with data from stream segments
-
-table(psm_sites_info$agri_fin_source, useNA = 'always')
-# 573 (=18\%) from auhtorities
-# 528 from drain
-#! used for size preferably data from authorities
-#! for agriculture we use preferably derived catchments, 
-#! because of big differences how states calculate/define agriculture
-
-nrow(psm_sites) - sum(table(psm_sites_info$agri_fin_source))
-# 650 (=(without information)
-
-nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
-# 2376 (=77%) with both informations
 
 
 # Spatial distribution ----------------------------------------------------
@@ -90,7 +119,7 @@ setDT(psm_sites)
 # get administrative borders
 adm1 <- raster::getData('GADM', country = 'DE', level = 1)
 adm1 <- fortify(adm1)
-p <- ggplot() +
+p_map <- ggplot() +
   geom_polygon(data = adm1, aes(x = long, y = lat, group = group), fill = "grey90") +
   geom_path(data = adm1, aes(x = long, y = lat, group = group), size = .3) +
   geom_point(data = psm_sites, aes(x = easting, y = northing, col = state_ab), 
@@ -101,9 +130,9 @@ p <- ggplot() +
   scale_color_hue(name = 'state', l = 50) +
   mytheme +
   coord_equal()
-p
+# p_map
 ggsave(file.path(prj, "figure1.pdf"),
-       p, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
+       p_map, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
 
 
 
@@ -115,9 +144,8 @@ psm_samples_tab <- psm_samples[, list(begin = min(date),
                                       end = max(date),
                                       no.sites = length(unique(site_id)),
                                       no.samples = length(unique(sample_id)),
-                                      no.compounds = length(unique(variable_id))
-),
-by = state]
+                                      no.compounds = length(unique(variable_id))),
+                               by = state]
 tot <- c('Total',
          as.character(min(psm_samples_tab$begin)),
          as.character(max(psm_samples_tab$end)),
@@ -137,7 +165,7 @@ sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:D
       \\textsuperscript{b}: Including metabolites',
       align = 'llllrrr'
 )
-print(xtab, 
+print(xtab,
       file = file.path(prj, 'supplement/phchoverview.tex'),
       caption.placement = 'top',
       include.rownames = FALSE,
@@ -152,13 +180,18 @@ print(xtab,
 #  Variables (= Tab. xx in Supplement)
 var_tab <- psm_variables[ , list(variable_id, name, cas, pgroup, wrrl_zhkuqn, rak_uba, 
                                  ger_auth_2015, eu_auth_2015)]
-
-# join with tu-data
+# join with properties-data
 setkey(var_tab, variable_id)
 setkey(var_props, variable_id)
 var_tab <- var_props[var_tab] 
-var_tab[ , variable_id := NULL]
+# restrict to variable found in psm_samples
+take_var_id <- unique(psm_samples$variable_id)
+var_tab <- var_tab[variable_id %in% take_var_id, ]
+var_tab[!is.na(rak_uba)]
+# 105 RAC values available
 
+# prettify
+var_tab[ , variable_id := NULL]
 setcolorder(var_tab, c(names(var_tab)[3:5], names(var_tab)[8:9], names(var_tab)[1:2], names(var_tab)[6:7]))
 var_tab <- var_tab[ , c(1,2,3,4, 5, 9), with = FALSE]
 
@@ -190,7 +223,7 @@ var_tab_x <- xtable(var_tab,
                     \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
                     align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1cm}')
                     
-print(var_tab_x, 
+print(var_tab_x,
       file = file.path(prj, 'supplement/phchvar.tex'),
       tabular.environment="longtable",
       floating = FALSE,
@@ -200,7 +233,7 @@ print(var_tab_x,
       hline.after = c(-1, 0),
       sanitize.text.function = identity,
       size="\\fontsize{8pt}{10pt}\\selectfont"
-)   
+)
 
 
 
@@ -208,17 +241,14 @@ print(var_tab_x,
 
 psm_variables[!is.na(rak_uba)]
 # 105 compunds with RAKS
-psm_variables[!is.na(wrrl_zhkuqn)]
-# 29 compounds with MAC-EQS
-sum(!is.na(var_tab[ , 6, with = FALSE]))
-# 394 compounds with LC50 DM
-
 
 
 ### Measured Spectra
 ## total number of substances
 length(unique(psm_samples[ , variable_id]))
+# no. of compounds per group
 table(psm_variables$pgroup, useNA = 'always')
+
 
 var_bl <- psm_samples[ , list(length(unique(variable_id))) , by = substr(site_id, 1, 2)]
 var_bl[substr %chin% c('ST', 'SL', 'TH')]
@@ -244,26 +274,59 @@ dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
 hc <- hclust(dp, method = 'complete')
 plot(hc, labels = vw$site_id)
 
-# fit <- cascadeKM(scale(d, center = TRUE,  scale = TRUE), 1, 10, iter = 1000)
-
 # # fusion level plot
 plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
 text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
-#  #silhoutte
-# library(cluster)
-# nr <- nrow(vw[ , -1, with = FALSE])
-# asw <- numeric(nr)
-# for(k in 2:(nr-1)) {
-#   sil <- silhouette(cutree(hc, k = k), dp)
-# }
-# #! continue here
+# not easy to spot
 
-# 3 distinct groups: NI+RP; ST+SL+TH; Rest
-bl_groups <- cutree(hc, k = 3)
+#  #average silhoutte with to choose be number of clusters
+nr <- nrow(vw[ , -1, with = FALSE])
+
+# number of clusters to check
+ks <- 2:(nr-1)
+asw <- numeric(length(ks))
+for(i in seq_along(ks)) {
+  sil <- silhouette(cutree(hc, k = ks[i]), dp)
+  asw[i] <- summary(sil)$avg.width
+}
+ks[which.max(asw)]
+
+pdf(file = file.path(prj, 'supplement/silhouette.pdf'))
+  plot(ks, asw, type = 'h', ylab = 'Average Silhoutte Width', 
+       xlab = 'Number of clusters')
+  segments(ks[which.max(asw)], 0, ks[which.max(asw)], max(asw), col = 'red')
+  points(ks[which.max(asw)], max(asw), pch = 16, col = 'red')
+dev.off()
+
+sil <- silhouette(cutree(hc, k = 2), dp)
+plot(sil)
+
+
+# two groups best
+
+# # or maximise the correlation
+# grpdist <- function(x) {
+#   gr <- data.frame(factor(x))
+#   distgr <- daisy(gr, "gower")
+#   distgr
+# }
+# kt <- data.frame(k = 2:(nr-1), r = NA)
+# for(i in seq_len(nrow(kt))) {
+#   gr <- cutree(hc, k = kt$k[i])
+#   distgr <- grpdist(gr)
+#   kt$r[i] <- cor(dp, distgr, method = 'pearson')
+# }
+# kt
+# plot(kt)
+
+
+# 3 distinct groups: NI+RP; ST+SL+TH+BW; Rest
+bl_groups <- cutree(hc, k = 2)
 
 ## nicer plot
 # colors (red, blue or green)
-colo <- c("#E41A1C", "#4DAF4A", "#377EB8")
+# colo <- c("#E41A1C", "#4DAF4A", "#377EB8")
+colo <- c("#E41A1C", "#4DAF4A")
 hcd <- as.dendrogram(hc)
 
 # function to get color labels
@@ -279,8 +342,8 @@ color_label <- function(n) {
 # using dendrapply
 clus = dendrapply(as.dendrogram(hc), color_label)
 
-pdf(file = file.path(prj, 'supplement/varclus.pdf'))
 # make plot
+pdf(file = file.path(prj, 'supplement/varclus.pdf'))
   plot(clus, ylab = 'Jaccard Distance')
 dev.off()
 
@@ -296,13 +359,12 @@ ylab <- paste0('Axis 2 (', evar[2], '%)')
 
 p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   mytheme +
-  scale_colour_discrete(guide = FALSE) +
+  scale_colour_manual(guide = FALSE, values = colo) +
   xlab(xlab)+
   ylab(ylab) +
   geom_vline(xintercept = 0, linetype = 'dotted') +
   geom_hline(yintercept = 0, linetype = 'dotted') +
-  geom_text(aes(label = state, col = as.factor(group)), size = 6) #+
-  # coord_equal()
+  geom_text(aes(label = state, col = as.factor(group)), size = 6) 
 # p_mds
 
 
@@ -314,9 +376,8 @@ vwm <- melt(vw, id.vars = 'site_id')
 # chaneg for colors
 vwm$value <- ifelse(vwm$value == 1, 'ja', 'nein')
 vwm$cols <- factor(paste0(vwm$value, vwm$site_id))
-vwm$site_id <- factor(vwm$site_id, levels = c('SL', 'TH', 'ST', 'BY', 'SN', 'BW', 'HE', 'SH',
-                                              'NW', 'MV', 'NI', 'RP'))
-
+vwm$site_id <- factor(vwm$site_id, levels = c('TH', 'ST', 'SN', 'SL', 'SH',
+                                              'NW', 'MV', 'HE', 'BW', 'BY', 'RP', 'NI'))
 
 # plot
 p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
@@ -327,17 +388,13 @@ p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
         axis.ticks.x = element_blank()) +
   labs(x = 'Compound', y = 'State') +
   guides(fill = FALSE) 
-
+# p_bar
 p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
 # plot(p)
 
-# h <- c(7, 9)
-# h <- h/sum(h)
-# p <- arrangeGrob(p_bar, p_mds, ncol = 2, respect = TRUE, heights = h)
-
 ggsave(file.path(prj, "figure2.pdf"),
        p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
-#  Need to be manually cropped in inkscape
+
 
 
 
@@ -354,7 +411,7 @@ ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fi
   labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
   # scale_fill_gradient(low = "yellow", high = "red") +
   scale_fill_viridis()+
-  scale_x_continuous(breaks = c(0, 10, 25, 50, 100, 150))
+  scale_x_continuous(breaks = c(0, 10, 25, 50, 100))
 # ezg_lu
 ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
 # ezg_lu
@@ -469,8 +526,14 @@ if (run_precip) {
   precip_dates1 <- readRDS(file.path(cachedir, 'precip_dates1.rds'))
 }
 
+# retrict to actual samples (were computedt for all)
 precip_dates <- precip_dates[!is.na(val)]
 precip_dates1 <- precip_dates1[!is.na(val)]
+precip_dates <- precip_dates[sample_id %chin% psm_samples$sample_id]
+precip_dates1 <- precip_dates1[sample_id %chin% psm_samples$sample_id]
+precip_dates1 <- precip_dates1[sample_id %chin% precip_dates$sample_id]
+
+
 precp <- ggplot() +
   geom_histogram(data = precip_dates[val < 10], aes(x = val), fill = 'grey30', 
                  col = 'grey50', breaks = seq(0,50,2)) +
@@ -478,7 +541,7 @@ precp <- ggplot() +
                  col = 'grey50', breaks = seq(0,50,2)) +
   mytheme +
   labs(x = 'Daily Precipitation [mm]', y = 'No. of samples') +
-  ggtitle('At day of sampling (n = 41428)') +
+  ggtitle('At day of sampling') +
   annotate('text', x = 4, y = 10000,
            label =  paste0(nrow(precip_dates[val < 10]), ' - ', 
                            round(nrow(precip_dates[val < 10]) / 
@@ -491,7 +554,7 @@ precp <- ggplot() +
                                   nrow(precip_dates) * 100, 2), '%'
                           ),
            hjust = 0, size = 5, col = 'grey30')
-precp
+# precp
 
 precp1 <- ggplot() +
   geom_histogram(data = precip_dates1[val < 10], aes(x = val), fill = 'grey30', 
@@ -500,7 +563,7 @@ precp1 <- ggplot() +
                  col = 'grey50', breaks = seq(0,50,2)) +
   mytheme +
   labs(x = 'Daily Precipitation [mm]', y = 'No. of samples') +
-  ggtitle('At day before of sampling (n = 42009)') +
+  ggtitle('At day before of sampling') +
   annotate('text', x = 4, y = 10000,
            label =  paste0(nrow(precip_dates1[val < 10]), ' - ', 
                            round(nrow(precip_dates1[val < 10]) / 
@@ -513,47 +576,12 @@ precp1 <- ggplot() +
                                   nrow(precip_dates1) * 100, 2), '%'
            ),
            hjust = 0, size = 5, col = 'grey30')
-precp1
+# precp1
 pp <- arrangeGrob(precp, precp1, nrow = 2)
 
-ggsave(file.path(prj, 'supplement/precip.pdf'), 
+ggsave(file.path(prj, 'supplement/precip.pdf'),
        plot = pp, height = 12, width = 7)
 
 
 
-# Catchment and Agriculture: Method statistics ----------------------------
-nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
-# 2376 sites with both ezg and agriculture
-nrow(psm_sites) - nrow(psm_sites_info)
-# 265 sites without any correspondence in psm_sites_info
-#! Why???
-
-# spatial distribution of missings
-
-sites <- psm_sites
-setkey(sites, 'site_id')
-setkey(psm_sites_info, 'site_id')
-ss <- psm_sites_info[sites]
-ss[ , all := ifelse(!(is.na(ezg_fin) | is.na(agri_fin)), TRUE, FALSE)]
-
-
-ggplot() +
-  # geom_polygon(data = adm1, aes(x = long, y = lat, group = group), fill = "grey90") +
-  # geom_path(data = adm1, aes(x = long, y = lat, group = group), size = .3) +
-  geom_point(data = ss, aes(x = easting, y = northing, col = all), 
-             size = 1) +
-  theme(legend.key = element_rect(fill = 'white')) +
-  labs(x = 'Lon.', y = 'Lat.') +
-  mytheme +
-  coord_equal()
-
-table(ss[all == FALSE, substr(site_id, 1, 2)], useNA = 'always')
-#! Missing a lot in BW, NW, RP, SN and TH
-#! Check!
-
-psm_sites[!site_id %in% psm_sites_info$site_id]
-# 265 sites missing in sites_info... why?
-table(psm_sites[!site_id %in% psm_sites_info$site_id, substr(site_id, 1, 2)], useNA = 'always')
-# BW, NW, RP & SN
-#! Why check!
 
