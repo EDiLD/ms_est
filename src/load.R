@@ -22,7 +22,7 @@ cachedir <- file.path(prj, "cache")	# intermediate data
 #! use developmental version of data.table
 #! CRAN version should also work...
 # install.packages('devtools')
-library(devtools)
+# library(devtools)
 # install_github("Rdatatable/data.table")
 library(data.table)
 library(xlsx)    # to read .xls files

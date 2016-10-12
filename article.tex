@@ -78,13 +78,17 @@ Agriculture land use lead to an 3.4-fold increase in exceedance of risk threshol
 Precipitation increased measured pesticide risk xxx-fold. 
 The highest concentrations were found during summer.
 %%%! Add these numbers also to results section!
-Risk thresholds were exceeded in 27 percent of small streams, with neonicotinoid and other insecticides exhibiting highest frequencies of exceedance. 
+Risk thresholds were exceeded in 26 percent of small streams, with neonicotinoid and other insecticides exhibiting highest frequencies of exceedance. 
+%%%! Add these numbers also to results section!
 We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity, and that governmental pesticide sampling should be adapted to precipitation events in summer. 
 
 %%% Check all numbers
 
 % Total words: 199
 \end{abstract}
+
+%%%! Check all numbers
+%%%! Check all references to supplement
 
 
 %% -------------------------------------------------------------------------
@@ -124,6 +128,7 @@ Finally, we quantified the current risks from pesticides in SWB in Germany.
 \section{Methods}
 \subsection{Data compilation}
 We requested pesticide monitoring data from sampling sites that can be classified as SWB (catchment sizes $\mathrm{< 100km^2}$ according to the WFD) from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names). 
+%%%! Hier vielleicht noch auf ganz kleine Gewässer eingehen?
 The request encompassed only the years 2005 to 2015.
 We homogenized and unified all data provided by the federal states into a database and implemented a robust data cleaning workflow (see Supplemental Figure~S1 for details) \citep{poisot_best_2015}.
 
@@ -214,9 +219,9 @@ logit(\nu_{i}) = log~prec_{0 i} + log~prec_{-1 i} + Q1_{i} + Q2_{i}+Q3_{i}+Q4_{i
 \end{align}
 
 To account for temporal auto-correlation and differences between federal states we used $site$ nested within $state$ as random intercepts.
-We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}.
+We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}. 
 
-We fitted this model separately to each compound with a RAC, measured in least 1000 samples and with more than 5\% of values above LOQ (n = 24 compounds, see Supplemental Table~S3 for a list of compounds). 
+We fitted this model separately to each compound with a RAC, measured in least 1000 samples and with more than 5\% of values above LOQ (n = 23 compounds, see Supplemental Table~S3 for a list of compounds). 
 To summarise the coefficients across the 24 modeled compounds we used a random effect meta-analysis for each model coefficient separately \citep{harrison_getting_2011}. 
 The results of individual compounds are provided in the Supplemental Table~S4 and Figure~S7.
 The meta-analysis was performed using the metafor package \citep{Viechtbauer_2010}. 
@@ -245,17 +250,14 @@ Only 4\% (71,113) of all measurements were detects above the limit of quantifica
 We found substantial differences in the spectra of analyzed pesticides between federal states (Figure~\ref{fig:fig2}).
 The number of different pesticides per state ranged from 57 (Saarland, SL) to 236 (Rhineland-Palatinate, RP) (Supplemental Table~S1).
 Hierarchical clustering revealed that RP and NI analysed a distinct compound spectra compared to the cluster of other states.
-Although, there was high variation within the remaining states these could not be separated (Figure~\ref{fig:fig2}, also Supplemental Figures~S4 and S5).
-%%% unschöner satz: bearbeiten!
+Although, there was high variation within the remaining cluster this could not be further split (Figure~\ref{fig:fig2}, also Supplemental Figures~S4 and S5).
 
 \begin{figure}[ht]
   \includegraphics[width=\textwidth]{figure2.pdf}
   \caption{Compound spectra of the different federal states. Left: Barcode plot - each vertical line is an analysed compound. Right: MDS ordination. 
-  Colors according to three groups determined by hierarchical clustering (see Supplemental Figure~S4).}
+  Colors according to two clusters determined by hierarchical clustering (see Supplemental Figure~S4).}
   \label{fig:fig2}
 \end{figure}
-
-%%%! Use a black only plot!?
 
 The distribution of sampling sites across catchment sizes indicated a disproportionally low number of sites of catchments below $10~km^2$, with
 most sampling sites having catchment sizes between 10 and 25 $km^2$ (Figure~\ref{fig:fig3}). 
@@ -310,21 +312,16 @@ The differences were less pronounced for the value of RQ and with higher variati
 
 
 
-\subsection{Pesticides in small water bodies}
-Because of data scarcity of streams \textless 10~km\textsuperscript{2} (Figure~\ref{fig:fig3}) and the low influence of catchment size on RAC exceedances (Figure~\ref{fig:fig4}) we define in this study all streams below 25~km\textsuperscript{2} as SWB. 
-This catchment size corresponds to a stream width of approximately 2~meters (see Supplemental Figure~S2).
-
-The dataset comprised 12,710 samples from 1,295 SWB.
-In 346 (26.7\%) of these streams RQ were exceeded.
-In total 1,173 samples (0.3\% of all and 5.6\% of samples with detects) showed RQ higher than 1 were observed.
-Neonicotinoid insecticides and Chlorpyrifos showed the highest RQ exceedances (Figure~\ref{fig:fig6}).
-For Thiacloprid, Imidacloprid and Chlorpyrifos the RAC was less than LOQ, therefore, all detections have a RQ~\textgreater~1. 
-The herbicides Nicosulfuron and Diflufenican, as well as the fungicide Dimoxystrobin also showed high exceedances of RQ (29.5, 14.2 and 21.4 \% of all samples with detects).
-The highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
-Where analysed, metabolites exhibited the highest detection rates (for example, Metazachlor sulfonic acid was detected in 82\% of all samples were it was analysed, see also Supplemental Figure~S9).
-Glyphosate was the compound with the highest detection rates, followed by Boscalid and Isoproturon. 
+\subsection{Pesticide risk in small water bodies}
+We found RAC exceedances in 26\% of sampling sites. 
+Neonicotinoid insecticides and Chlorpyrifos showed the highest RQ (Figure~\ref{fig:fig6}).
+For Thiacloprid and Chlorpyrifos the RAC was less than LOQ, therefore, all detections have a RQ~\textgreater~1. 
+The herbicides Nicosulfuron and Diflufenican, as well as the fungicide Dimoxystrobin also showed high exceedances of RQ (26.7, 14.1 and 21.1 \% of all samples~\textgreater~LOQ).
+The highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Clothianidin (max(RQ) = 157), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
+Where analysed, metabolites exhibited the highest detection rates (for example, Metazachlor sulfonic acid was detected in 84\% of all samples were it was analysed (n = 3038, see also Supplemental Figure~S9).
+Glyphosate was the compound with the highest detection rates (41\%, n = 3557 samples), followed by Boscalid (23\%, n = 9886) and Isoproturon (22\%, n = 19112). 
 However, only the latter showed RQ exceedances (Figure~\ref{fig:fig6}).
-In 44.8\% of samples more than one compound was quantified, with a maximum of 54 different compounds in one sample (Supplemental Figure~S8). 
+In 45.9\% of samples more than one compound was quantified, with a maximum of 54 different compounds in one sample (Supplemental Figure~S8). 
 
 \begin{figure}[ht]
   \includegraphics[width=0.6\textwidth]{figure6.pdf}

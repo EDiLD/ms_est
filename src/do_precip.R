@@ -19,11 +19,19 @@ precip_dates <- readRDS(file.path(cachedir, 'precip_dates.rds'))
 precip_dates1 <- readRDS(file.path(cachedir, 'precip_dates1.rds'))
 
 
+# restrict to sites < 100km² (or unknown)  and both data available (see do_overview.R)
+take_site_id <- readRDS(file = file.path(cachedir, 'take_site_id.rds'))
+psm_sites_info <- psm_sites_info[site_id %in% take_site_id]
+psm_sites <- psm_sites[site_id %in% take_site_id]
+psm_samples <- psm_samples[site_id %in% take_site_id]
+
+
+
 
 # Risk Quotients ----------------------------------------------------------
 # restrict samples to variables with rac
 rac <- psm_variables[!is.na(rak_uba), list(variable_id, name, cas, pgroup, rak_uba)]
-# join eqs
+# join with racs
 setkey(psm_samples, variable_id)
 setkey(rac, variable_id)
 samples_rac <- psm_samples[rac]
@@ -74,10 +82,6 @@ with(take, cor(log_precip_1, log_precip0))
 #! use them separetely in modelling
 
 
-# split data into two groups (below and above 10mm)
-take$precip_1_g <- factor(ifelse(take$precip_1 <= 15, 'low', 'high'), levels = c('low', 'high'))
-take$precip0_g <- factor(ifelse(take$precip0 <= 15, 'low', 'high'), levels = c('low', 'high'))
-
 # set season / quarters
 take[ , season := cut(month(date), breaks = c(0.5, 3.5, 6.5, 9.5, 12.5), 
                       labels = c('Q1', 'Q2', 'Q3', 'Q4'))]
@@ -97,7 +101,7 @@ hist(props[prop < 0.2 , prop])
 # and with at least 500 observations
 hist(props[tot < 1000, tot])
 
-keep <- props[prop > 0.05 & tot > 1000]
+(keep <- props[prop > 0.05 & tot > 1000])
 # 25 compounds left
 
 
@@ -120,17 +124,17 @@ keep_tab_x <- xtable(keep_tab,
                     Order is the same as in Figure 5 of the articles. See Table \\ref{tab:var_model_coef} for model coefficients.',
                     align = 'lp{2.5cm}rlp{1.5cm}p{2cm}p{2cm}')
 
-# print(keep_tab_x, 
-#       file = file.path(prj, 'supplement/keeptab.tex'),
-#       tabular.environment="longtable",
-#       floating = FALSE,
-#       caption.placement = 'top',
-#       comment = FALSE,
-#       booktabs = TRUE,
-#       hline.after = c(-1, 0, nrow(keep_tab)),
-#       sanitize.text.function = identity,
-#       size="\\fontsize{8pt}{10pt}\\selectfont"
-# )
+print(keep_tab_x,
+      file = file.path(prj, 'supplement/keeptab.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0, nrow(keep_tab)),
+      sanitize.text.function = identity,
+      size="\\fontsize{8pt}{10pt}\\selectfont"
+)
 
 
 
@@ -141,26 +145,39 @@ rm(samples_rac, psm_sites, psm_sites_info, take_si, rac, keep_tab, keep_tab_x)
 
 
 # Model -------------------------------------------------------------------
-take_c <- take[variable_id == 457]
+# one single compouns
+take_c <- take[variable_id == 153]
+
+
+gco <- glim.control(glm.trace = TRUE, bf.trace = FALSE)
+# decrease number of inner cycles to speed up computations
+glco <- gamlss.control(c.crit = 0.01, mu.step = 0.5) 
+# increacse c.crit from 0.001 to speed up convergence for large data
+# decrease step length, to omit improper parameters (slower convergence).
+
+
 
 # gamma hurdle model with precipitation as groups, season and psm_type as predictors
-# site within state as random effect
-mod_l_m <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
+# state as random effect
+mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
                     re(random=~1|state_fac/s_id_fac),
-                  # model also pi with same predictors 
-                  nu.formula =~precip_1 + precip0 + season + 
+                  nu.formula =~ 0 + precip_1 + precip0 + season + 
                     re(random=~1|state_fac/s_id_fac),
-                  # sigma is constant
                   data = take_c,
-                  family = ZAGA)
+                  family = ZAGA,
+                  control = glco,
+                  i.control = gco)
+
+take_c[season == 'Q4', rq]
+
+
 plot(mod_l_m)
 summary(mod_l_m)
 term.plot(mod_l_m)
 res <- residuals(mod_l_m)
 hist(res)
 
-# random slope model, does not converge?
-# gco <- glim.control(glm.trace = TRUE, bf.trace = TRUE)
+# random slope model, does not converge!
 # mod_l_m_ra <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
 #                     re(random=~1|state_fac/s_id_fac) +
 #                       # random slope
@@ -180,21 +197,22 @@ model_foo <- function(var){
   message('Running model on compound: ', var)
   take_c <<- take[variable_id == var]
   mod <- gamlss(rq ~ 0+log_precip_1 + log_precip0 + season +
-                      re(random=~1|state_fac/s_id_fac),
-                    # model also pi with same predictors 
+                      re(random = ~1|state_fac/s_id_fac),
                     nu.formula =~0+log_precip_1 + log_precip0 + season + 
-                      re(random=~1|state_fac/s_id_fac),
-                    # sigma is constant
+                      re(random = ~1|state_fac/s_id_fac),
                     data = take_c,
-                    family = ZAGA)
-  # save model to cache
-  # since would be to big to hold in RAM
+                    family = ZAGA,
+                    control = glco,
+                    i.control = gco)
   saveRDS(mod, file.path(cachedir, 'lmodels', paste0('mod_', var, '.rds')))
 }
 
 # model_foo(727)
-# run model compounds
-lapply(keep$variable_id, model_foo)
+# run model on compounds
+run_model <- FALSE
+if (run_model){
+  lapply(keep$variable_id, model_foo)
+}
 
 
 # function to extract the needed model components,
@@ -213,6 +231,12 @@ model_extr <- function(file){
   smod$var <- gsub('mod_(.*)\\.rds', '\\1', basename(file))
   # CI
   mult <- qnorm(0.975)
+  # invert estimate for nu 
+  # (so that a increase corresponds to a increase in p(x>LOQ))
+  # standard is that a increase corresponse to p(x<LOQ)
+  # nu = b * x  | nu = 1-pi
+  # 1-pi = b*x
+  # p = -b*x - 1
   smod$Estimate[grepl('nu\\.', smod$terms)] <- -smod$Estimate[grepl('nu\\.', smod$terms)]
   smod$upci <- smod$Estimate + smod$Std..Error * mult
   smod$lowci <- smod$Estimate - smod$Std..Error * mult
@@ -234,6 +258,7 @@ resdf$estsig <- ifelse(resdf$pval < 0.05, resdf$est, NA)
 resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci), 'cisig', 'nocisig')
 
 resdf$termind <- substr(resdf$term, 1, 2)
+
 
 # export other table
 keep_tab2 <- resdf[!grepl('Intercept', term) & term_type != 'sigma', 
@@ -282,7 +307,7 @@ print(keep_tab2_x,
       caption.placement = 'top',
       comment = FALSE,
       booktabs = TRUE,
-      hline.after = c(-1, 0, 24, 48),
+      hline.after = c(-1, 0, 23, 46),
       sanitize.text.function = identity,
       size="\\fontsize{8pt}{10pt}\\selectfont"
 )
@@ -326,7 +351,7 @@ p_season <- ggplot(data = pdata2) +
   theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1)
-plot(p)
+# plot(p)
 ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 
 
@@ -356,6 +381,7 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 ### ------------------------------------------------------------------------
 # metaanalysis of coefficients
 
+# test on one coef
 unique(resdf$term)
 # fixed effect meta analysis
 mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'FE')
@@ -421,9 +447,13 @@ exp(-3.40903988)
 plogis(-3.15180443)
 plogis(-2.21435302)
 
+
+
 # coefplot
 resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)
 resmd$coeftype <- ifelse(grepl('season', resmd$term), 'season', 'precip')
+# remove sigma
+resmd <- resmd[!term == 'sigma']
 p_season <- ggplot(resmd[resmd$coeftype == 'season', ]) +
   geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
   coord_flip() +
@@ -451,26 +481,25 @@ p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 ggsave("figure5.pdf", p, width = 7, height = 5.5)
 
 
-# extract random effect variances
-
-# function to extract the needed model components, 
-ra_extr <- function(file){
-  message('Working on file: ', file)
-  mod <- readRDS(file)
-  lme_out <- mod$mu.coefSmo[[1]]
-  vc <- VarCorr(lme_out)
-  suppressWarnings(storage.mode(vc) <- 'numeric')
-  vc <- vc[c(2, 4), 'StdDev']
-  names(vc) <- c('state/site', 'state')
-  vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
-  # generalized rsq
-  vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
-  # calculate CIs
-  return(vc)
-}
-
-ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
-ra_res <- do.call(rbind, ra_res)
-ra_res <- apply(ra_res, 2, as.numeric)
-# range of rsq values
-range(ra_res[,4])
+# # extract random effect variances
+# # function to extract the needed model components, 
+# ra_extr <- function(file){
+#   message('Working on file: ', file)
+#   mod <- readRDS(file)
+#   lme_out <- mod$mu.coefSmo[[1]]
+#   vc <- VarCorr(lme_out)
+#   suppressWarnings(storage.mode(vc) <- 'numeric')
+#   vc <- vc[c(2, 4), 'StdDev']
+#   names(vc) <- c('state/site', 'state')
+#   vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
+#   # generalized rsq
+#   vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
+#   # calculate CIs
+#   return(vc)
+# }
+# 
+# ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
+# ra_res <- do.call(rbind, ra_res)
+# ra_res <- apply(ra_res, 2, as.numeric)
+# # range of rsq values
+# range(ra_res[,4])

@@ -97,12 +97,12 @@ monthly <- psm_samples[ , length(unique(sample_id)), by = month(date)]
 ggplot(monthly, aes(x = factor(month), y = V1)) + 
   geom_bar(stat = 'identity')
 yearlymonthly <- psm_samples[ , length(unique(sample_id)), by = list(year(date), month(date))]
-p <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
+p_temp <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
   geom_bar(stat = 'identity') +
   facet_grid(~year) +
   labs(x = 'Month', y = 'No. samples')
 # p
-ggsave(file.path(prj, 'supplement/temporal.pdf'), p, width = 20, height = 7)
+ggsave(file.path(prj, 'supplement/temporal.pdf'), p_temp, width = 20, height = 7)
 
 
 
@@ -326,7 +326,7 @@ bl_groups <- cutree(hc, k = 2)
 ## nicer plot
 # colors (red, blue or green)
 # colo <- c("#E41A1C", "#4DAF4A", "#377EB8")
-colo <- c("#E41A1C", "#4DAF4A")
+colo <- c("#E41A1C", "#377EB8")
 hcd <- as.dendrogram(hc)
 
 # function to get color labels
