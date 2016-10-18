@@ -122,7 +122,7 @@ We homogenized and unified all data provided by the federal states into a databa
 We identified chemical samples taken during heavy rainfall events by spatio-temporal intersection of sampling events with gridded daily precipitation data available from the German Weather service (DWD).
 This data spatially interpolates daily precipitation values from local weather stations \citep{rauthe_central_2013}. 
 We performed the intersection for the actual sampling date and the day before, to identify rain events during and up to 48 hours before sampling.
-%details required - what is a heavy rainfall event, resolution of data. One question with such data is from which precipitation value increases in concentrations are detectable. Also interesting and may be added as question in the introduction
+
 
 \subsection{Characterization of catchments}
 We compiled a total of 3,049 sampling sites with pesticide measurements.
@@ -137,7 +137,7 @@ For each catchment we calculated the relative cover (in \%) with agricultural ar
 Additionally, we used agricultural cover data provided by authorities (19\% of sites). 
 For 78\% of the sites both, the proportion of agricultural land use and catchment size were available.
 % see do_overview.R for numbers
-% this section is puzzling - if you have 90% catchments, why is it only 78% in the end? It is also unclear what is the ATKIS coverage and why additional state-wide??? cover data was used...
+
 
 A clear definition of SWB in terms of catchment or stream size is currently lacking \citep{lorenz_specifics_2016}. 
 The WFD defines SWB with a catchment size between 10 and 100 km\textsuperscript{2}, without further categorisation of streams \textless 10km\textsuperscript{2}. 
@@ -383,49 +383,38 @@ Another reason might be the unequal distribution of catchment sizes, with fewer 
 
 \subsection{Effect of precipitation on pesticide exposure}
 Our results revealed that most samples for pesticide monitoring in Germany are taken in the absence of prior precipitation events. Given that we found higher risk from pesticides (RQ) for samples taken after rainfall events.
-%would be good to be more quantitative here - was meint higher
 Interestingly, samples taken at the day of a rainfall-event showed a slightly lower risk, than samples taken one day after a rainfall-event. This can may be explained on the one hand by the sampling preceding the actual rainfall event on the sampling day, which could not be accounted for in analysis due to a lack of data on the hour of sampling and rain event.
 On the other hand, the delay between the start of the precipitation and the peak concentrations in streams varies with context variables such as geology, riparian land cover and slope. Thus, even a sampling after the initiation of a precipitation event may not capture the short term peak concentrations \citep{wittmer_significance_2010}.
 The effects of precipitation were more pronounced for the probability to exceed LOQ, with smaller effect sizes for RQ.
 This could be attributed to a higher variability of absolute concentrations.
 Overall, our results indicate that current pesticide monitoring relying on grab sampling, largely disconnected from precipitation events, underestimates pesticide risks.
 Automatic event-drive samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for SWB \citep{lorenz_specifics_2016}. 
-% ist auch die frage, wie häufig du wirklich SWB, was auch stehende gewässer inkludiert, meinst - unsere ergebnisse sind ja nur für streams - macht eigentlich mehr sinn dann auch small streams zu schreiben oder sowas, da gerade für standgewässer die sache wesentlich komplizierter ist
 
 We found highest the probability of exceeding LOQ during summer (9.9\% for Q2) and lowest in the first Quarter (2.8\%, Figure~\ref{fig:fig5}, bottom right).
 This yearly pattern coincides with their main application season for pesticides in Central Europe.
 Nevertheless, the annual pattern differed between compounds, which explains the wide CI for the absolute RQ (Figure~\ref{fig:fig5}, bottom left).
-%etwas seltsam in den sätzen davor bezug auf LOQ und erklärung für RQ
 For example, the herbicide Diflufenican showed highest RQ during the winter quarters (Supplemental Table~S4), which is the application period it is registered for in Germany \citep{bvl_online_2016}.
 Our study suggests that pesticide risks display compound specific spatio-temporal dynamics.
 Currently, little is known on these, but would provide useful information for pesticide monitoring and risk assessment, given that the sensitivity of organisms is often life stage dependent
-%ref needed
 and temporal dynamics would inform on concurrent exposure to multiple pesticides as well as to parameterise toxikokinetik and toxikodynamic models.
-% (1) Ashauer, R.; Albert, C.; Augustine, S.; Cedergreen, N.; Charles, S.; Ducrot, V.; Focks, A.; Gabsi, F.; Gergs, A.; Goussen, B.; et al. Modelling survival: exposure pattern, species sensitivity and uncertainty. Scientific Reports 2016, 6, 29178.
+
 
 
 \subsection{Pesticides in small water bodies}
 Our results suggest that SWB are frequently exposed to ecologically relevant pesticide concentrations.
-%siehe bemerkung oben bzgl SWB
 \citet{stehle_pesticide_2015} found the highest percentage of RAC exceedances for organophosphate insecticides. 
 By contrast, our results that neonicotinoid insecticides showed highest exceedances of RACs, followed by the organophosphate chlorpyrifos. 
 This difference can be attributed to the low sample size for neonicotinoid insecticides in their study (n = 33) compared to the dataset presented here (between 1,290 and 2,113 samples in SWB, Figure~\ref{fig:fig6}). 
-%unklar warum between - und SWB
 Overall, our results suggest that neonicotonoids may currently pose a high risk to freshwater ecosystems.
-% hier könnte man zumindest auch kurz andere Studien erwähnen, gab ja sehr viel zu neoniks in den letzten Jahren. Z.b. OUr results add to the growing literature on risks from neonicotinoids in ecosystems such as ...
 Compared to \citet{stehle_pesticide_2015} we found much lower rates of RAC exceedances (0.3\% of 372,304 samples with RAC vs 44\% of 1,566 samples). 
 This may be attributed to two differences: 1) Different objectives of governmental monitoring and scientific studies. Scientific studies may be slightly biased towards streams with high pollution to detect effects, whereas monitoring aims mainly at spatially representative surveillance of water quality, also during periods with lower pesticide usage and at natural sites. 2) DIfferent sampling 
-% ich meine dass bei Stehle und Schulz das meiste event driven war - hier diesen zweiten punkt nennen
 
 By contrast, \citet{knauer_pesticides_2016} analysed Suisse pesticide monitoring data and found exceedances mainly for herbicides and fungicides and for only one insecticide, Chlorpyrifos.
 % hier auch unterschiede in % der samples?
 This might reflect differences in pesticide use between countries and, albeit to a smaller extent, in the RAC values.
-%dieses argument torpediert die generelle nutzung von RACs als indikator für Risiko! Wenn er variiert würde es bedeutetn, dass es keinen festen Bezug zum ökoloigischen Risiko gibt...
 
 From the definition of RAC it follows that if the concentration of a compound exceeds its RAC ecological effects are expected.
-% wie gesagt widerspricht der aussage davor - vielleicht das als grund für unterschied einfach weglassen?
 Indeed, \citet{stehle_agricultural_2015} found that biological diversity of stream invertebrates was significantly reduced at a RQ of 1.12.
-%give number - how much reduced
 We found RQ values greater than 1.12 at 25\% of all SWB sites. 
 %kannst du nicht einfach oben dann RQ 1 in den resultaten angeben? Zudem sie auch schon abnahme bei 1/10 RAC fanden! das könnte man hier besser darstellen und vielleicht hier zusätzlich geben, a RAC exceedance of 1/10 was observed at xx5 of sites.
 Consequently, we conclude that agricultural pesticides are a major threat to small streams, the biodiversity they host and the services they provide. 
