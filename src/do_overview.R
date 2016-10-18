@@ -20,11 +20,11 @@ var_props <- fread(file.path(cachedir, 'var_props.csv'))
 
 
 # restrict to sites < 100km² (or unknown) and > 2005
-range(psm_samples$date)
 take_sites <- psm_sites_info[ezg_fin <= 100 | is.na(ezg_fin), site_id]
+
 psm_sites_info <- psm_sites_info[site_id %in% take_sites]
 psm_sites <- psm_sites[site_id %in% take_sites]
-psm_samples<-psm_samples[site_id %in% take_sites]
+psm_samples <- psm_samples[site_id %in% take_sites]
 
 
 
