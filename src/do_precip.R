@@ -60,7 +60,8 @@ rm(precip_dates1, precip_dates, psm_samples)
 
 
 # join catchment size
-take_si <- psm_sites_info[!is.na(ezg_fin) | is.na(agri_fin) , list(site_id, agri_fin, ezg_fin)]
+take_si <- psm_sites_info[!is.na(ezg_fin) | is.na(agri_fin) , 
+                          list(site_id, agri_fin, ezg_fin)]
 setkey(take_si, 'site_id')
 setkey(samples_rac, 'site_id')
 take <- take_si[samples_rac][!is.na(agri_fin)]
@@ -95,7 +96,8 @@ take <- psm_variables[ , list(variable_id, psm_type)][take]
 # remove compounds with no risk
 props <- take[  , list(prop = sum(rq>0) / length(rq),
               abs = sum(rq>0),
-              tot = length(rq)), by = variable_id][order(prop, decreasing = TRUE)]
+              tot = length(rq)), by = variable_id][order(prop, 
+                                                         decreasing = TRUE)]
 hist(props[prop < 0.2 , prop])
 # keep compounds that were found in at least 5% of samples
 # and with at least 500 observations
@@ -114,7 +116,8 @@ setkey(psm_variables, variable_id)
 setkey(keep, variable_id)
 keep_tab <- psm_variables[ , list(variable_id, name, cas, psm_type)][keep]
 keep_tab[ , prop := round(prop*100, 2)]
-setnames(keep_tab, c('id', 'Compound', 'CAS', 'Group', '\\%>LOQ', 'no. > LOQ', 'total no.'))
+setnames(keep_tab, c('id', 'Compound', 'CAS', 'Group', '\\%>LOQ', 
+                     'no. > LOQ', 'total no.'))
 keep_tab$id <- NULL
 keep_tab
 
@@ -139,14 +142,15 @@ print(keep_tab_x,
 
 
 take <- take[variable_id %in% keep$variable_id]
-psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, psm_type)]
+psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, 
+                                                      psm_type)]
 
 rm(samples_rac, psm_sites, psm_sites_info, take_si, rac, keep_tab, keep_tab_x)
 
 
 # Model -------------------------------------------------------------------
 # one single compouns
-take_c <- take[variable_id == 153]
+take_c <- take[variable_id == 191]
 
 
 gco <- glim.control(glm.trace = TRUE, bf.trace = FALSE)
@@ -157,7 +161,7 @@ glco <- gamlss.control(c.crit = 0.01, mu.step = 0.5)
 
 
 
-# gamma hurdle model with precipitation as groups, season and psm_type as predictors
+# gamma hurdle model with precipitation as groups, season and psm_type as preds
 # state as random effect
 mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
                     re(random=~1|state_fac/s_id_fac),
@@ -167,15 +171,19 @@ mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
                   family = ZAGA,
                   control = glco,
                   i.control = gco)
-
-take_c[season == 'Q4', rq]
-
-
 plot(mod_l_m)
 summary(mod_l_m)
 term.plot(mod_l_m)
+term.plot(mod_l_m, what = 'nu')
 res <- residuals(mod_l_m)
 hist(res)
+
+# plot marginal data
+plot(log(rq) ~ log_precip_1 , data= take_c[take_c$rq > 0, ])
+plot(I(ifelse(rq > 0, 1, 0)) ~ log_precip_1 , data= take_c, 
+     col = rgb(0, 0, 0, 0.1), pch = 16)
+plot(log(rq) ~ season , data= take_c[take_c$rq > 0, ])
+
 
 # random slope model, does not converge!
 # mod_l_m_ra <- gamlss(rq ~ log_precip_1 + log_precip0 + season +
@@ -184,7 +192,8 @@ hist(res)
 #                       re(random=~precip_1 + precip0 + season|v_id_fac),
 #                   # model also pi with same predictors
 #                   nu.formula =~precip_1 + precip0 + season +
-#                     re(random=~1|state_fac/s_id_fac) + re(random=~precip_1 + precip0 + season|v_id_fac),
+#                     re(random=~1|state_fac/s_id_fac) + re(random=~precip_1 + 
+#                                                   precip0 + season|v_id_fac),
 #                   # sigma is constant
 #                   data = take,
 #                   family = ZAGA,
@@ -243,11 +252,16 @@ model_extr <- function(file){
   return(smod)
 }
 
-res <- lapply(file.path(cachedir, 'lmodels', paste0('mod_', keep$variable_id, '.rds')), model_extr)
+# extract coefs from each model
+res <- lapply(file.path(cachedir, 'lmodels', 
+                        paste0('mod_', keep$variable_id, '.rds')), 
+              model_extr)
 
 
 resdf <- rbindlist(res)
-names(resdf) <- c('est', 'stderr', 'tval', 'pval', 'term', 'variable', 'upci', 'lowci')
+# nice formatting
+names(resdf) <- c('est', 'stderr', 'tval', 'pval', 'term', 'variable', 
+                  'upci', 'lowci')
 resdf$term_type <- gsub('^(.*)\\..*', '\\1', resdf$term)
 resdf$term2 <- gsub('^.*\\.(.*)$', '\\1', resdf$term)
 resdf$pval <- round(resdf$pval, 4)
@@ -255,8 +269,10 @@ resdf$pval <- round(resdf$pval, 4)
 # indicator for significant based on p
 resdf$estsig <- ifelse(resdf$pval < 0.05, resdf$est, NA)
 # indicatopr for significant based on ci
-resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci), 'cisig', 'nocisig')
-
+resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci), 
+                      'cisig', 
+                      'nocisig')
+# parameter indictor
 resdf$termind <- substr(resdf$term, 1, 2)
 
 
@@ -275,9 +291,11 @@ make_bold <- function(string) {
   paste0("\\textbf{", string, "}")
 }
 keep_tab2[ , est := as.character(est)]
-keep_tab2[ sign(upci)  == sign(lowci) & !grepl('season', term2), est := make_bold(est)]
+keep_tab2[ sign(upci)  == sign(lowci) & !grepl('season', term2), 
+           est := make_bold(est)]
 keep_tab2[ , estci := paste0(est, '\\newline (', lowci, ' - ', upci, ')')]
-keep_tab2[ , term2_p := mapvalues(term2, c("log_precip0", "log_precip_1", "seasonQ1", "seasonQ2", 
+keep_tab2[ , term2_p := mapvalues(term2, c("log_precip0", "log_precip_1", 
+                                           "seasonQ1", "seasonQ2", 
                                            "seasonQ3", "seasonQ4"),
                        c("$log~precip_0$", "$log~precip_{-1}$", "Quarter 1", 
                          "Quarter 2", "Quarter 3", "Quarter 4"))]
@@ -297,7 +315,7 @@ keep_tab2_x <- xtable(keep_tab2_w,
                      label = 'tab:var_model_coef',
                      caption = 'Coefficients and CI from per compound models. 
                      Bold values denote coefficients where the CI for precipitation encompasses zero.
-                     Coefficients are on the link scale (log for $mu$ and logit for $\nu$).',
+                     Coefficients are on the link scale (log for $\\mu$ and logit for $\\nu$).',
                      align = 'lp{2cm}p{0.6cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}')
 
 print(keep_tab2_x, 
@@ -316,10 +334,13 @@ print(keep_tab2_x,
 
 
 # display estimates and errors
-pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & term2 %in% c('log_precip0', 'log_precip_1')]
-pdata[ , variable := factor(variable, levels = rev(sort(unique(pdata[ , variable]))))]
+pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') &
+                 term2 %in% c('log_precip0', 'log_precip_1')]
+pdata[ , variable := factor(variable, levels = rev(sort(
+                                                unique(pdata[ , variable]))))]
 p_precip <- ggplot(data = pdata) +
-  geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
+  geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, 
+                      fill = variable,
                       col = cisig),
                   position=position_dodge(width = .6)) +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
@@ -330,13 +351,17 @@ p_precip <- ggplot(data = pdata) +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = '') +
   scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'),
-                   labels = c(expression('log'~prec[-1]), expression('log'~prec[0]))) +
+                   labels = c(expression('log'~prec[-1]), 
+                              expression('log'~prec[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
-pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & !term2 %in% c('log_precip0', 'log_precip_1')]
-pdata2[ , variable := factor(variable, levels = rev(sort(unique(pdata2[ , variable]))))]
+pdata2 <- resdf[!term2 %chin% c('(Intercept)', 'sigma') & 
+                  !term2 %in% c('log_precip0', 'log_precip_1')]
+pdata2[ , variable := factor(variable, levels = rev(sort(
+                                                unique(pdata2[ , variable]))))]
 p_season <- ggplot(data = pdata2) +
-  geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, fill = variable,
+  geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, 
+                      fill = variable,
                       col = cisig),
                   position=position_dodge(width = .6)) +
   coord_flip() +
@@ -347,7 +372,8 @@ p_season <- ggplot(data = pdata2) +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
   scale_x_discrete(breaks = c('seasonQ4', 'seasonQ3', 'seasonQ2', 'seasonQ1'),
-                   labels = c(' Quarter Q4', ' Quarter Q3', ' Quarter Q2', ' Quarter Q1')) +
+                   labels = c(' Quarter Q4', ' Quarter Q3', 
+                              ' Quarter Q2', ' Quarter Q1')) +
   theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1)
@@ -365,7 +391,8 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 # take_df <- psm_samples[sample_id %chin% df$sample_id & variable_id == 349]
 # p <- ggplot(take_df, aes(x = as.Date(date), y = value_fin)) + 
 #   geom_point() +
-#   geom_hline(aes(yintercept = 0.05), linetype = 'dashed', col = 'darkorange', size = 1) +
+#   geom_hline(aes(yintercept = 0.05), linetype = 'dashed', 
+#                     col = 'darkorange', size = 1) +
 #   mytheme +
 #   labs(y = 'Glyphosate [ug/L]', x = 'Date') +
 #   scale_x_date(date_breaks = '1 year', date_labels = '%Y') +
@@ -373,7 +400,8 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 # 
 # require(ggExtra)
 # pout <- ggMarginal(p, type = 'histogram', margins = 'y')
-# ggsave('/home/user/Documents/projects_git/talk_work2/fig/glyph.pdf', pout, width = 7, height = 5)
+# ggsave('/home/user/Documents/projects_git/talk_work2/fig/glyph.pdf', pout, 
+#             width = 7, height = 5)
 
 
 
@@ -384,7 +412,8 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 # test on one coef
 unique(resdf$term)
 # fixed effect meta analysis
-mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'FE')
+mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], 
+            method = 'FE')
 mmod
 plot(mmod)
 
@@ -401,7 +430,8 @@ sum(wi*dat$est) / sum(wi) - sqrt(1/sum(wi)) * qnorm(0.975)
 
 
 # random effect meta analysis
-mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], method = 'REML')
+mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], 
+            method = 'REML')
 mmod
 plot(mmod)
 
@@ -412,7 +442,8 @@ terms <- unique(resdf$term)
 # terms <- terms[!(terms == 'sigma' | grepl('Intercept', terms))]
 fit_meta <- function(tm){
   mmod <- rma(est, sei=stderr, data = resdf[term == tm], method = 'REML')
-  out <- data.frame(term = tm, est = mmod$b[,1], upr = mmod$ci.ub, lwr = mmod$ci.lb)
+  out <- data.frame(term = tm, est = mmod$b[,1], upr = mmod$ci.ub, 
+                    lwr = mmod$ci.lb)
   return(out)
 }
 
@@ -420,32 +451,38 @@ resm <- lapply(terms, fit_meta)
 resm
 resmd <- rbindlist(resm)
 
-# log_precip1 multiplicator for mu
-exp(0.05582678) - 1
-# one <- exp(-3.41532436) * exp(0.05582678 * 1)
-# ten <- exp(-3.41532436) * exp(0.05582678 * 2)
-# ten_one = exp(-3.41532436) * (exp(0.05582678 * 2) - exp(0.05582678 * 1))
+# log_precip1 multiplicator for mu if precip_1 increases by 10mm
+(exp(resmd$est[resmd$term ==  'mu.log_precip_1']) - 1) * 100
+# or by hand
+# one <- exp(resmd$est[resmd$term ==  'mu.seasonQ2']) * exp(resmd$est[resmd$term ==  'mu.log_precip_1'] * 1)
+# ten <- exp(resmd$est[resmd$term ==  'mu.seasonQ2'])  * exp(resmd$est[resmd$term ==  'mu.log_precip_1'] * 2)
 # (ten-one) / one
 
-# nu 
-int <- -2.21435302
-a <- exp(int + 0.27717549)
-a / (1+a) # prob at 1mm)
-(one <- plogis(int + 0.27717549))
-(ten <- plogis(int + 0.27717549*2))
-(hun <- plogis(int + 0.27717549*3))
+# log_preciü,p_1: nu 
+# intercept
+int <- resmd$est[resmd$term ==  'mu.seasonQ2']
+# by hand:
+# p <- 1
+# a <- exp(int + p*resmd$est[resmd$term ==  'nu.log_precip_1'])
+# a / (1+a) # prob at 1mm)
+
+(one <- plogis(int + resmd$est[resmd$term ==  'nu.log_precip_1']))
+(ten <- plogis(int + 2*resmd$est[resmd$term ==  'nu.log_precip_1']))
+(hun <- plogis(int + 3*resmd$est[resmd$term ==  'nu.log_precip_1']))
 (ten-one) 
 (hun-ten)
 (ten-one) / one 
 (hun-ten) / ten
 
 # Q1 mu
-exp(-3.80443384)
-# Q3 mu
-exp(-3.40903988)
+exp(resmd$est[resmd$term ==  'mu.seasonQ1'])
+# Q2 mu
+exp(resmd$est[resmd$term ==  'mu.seasonQ2'])
+
 # Q1 nu
-plogis(-3.15180443)
-plogis(-2.21435302)
+plogis(resmd$est[resmd$term ==  'nu.seasonQ1'])
+# Q2 nu
+plogis(resmd$est[resmd$term ==  'nu.seasonQ2'])
 
 
 
@@ -460,8 +497,10 @@ p_season <- ggplot(resmd[resmd$coeftype == 'season', ]) +
   facet_grid(.~type , scales ='free_x', labeller = label_parsed) +
   mytheme +
   labs(x = '', y = 'Coefficient') +
-  scale_x_discrete(breaks = c('mu.seasonQ4', 'mu.seasonQ3', 'mu.seasonQ2', 'mu.seasonQ1'),
-                   labels = c(' Quarter Q4', ' Quarter Q3', ' Quarter Q2', ' Quarter Q1')) +
+  scale_x_discrete(breaks = c('mu.seasonQ4', 'mu.seasonQ3', 
+                              'mu.seasonQ2', 'mu.seasonQ1'),
+                   labels = c(' Quarter Q4', ' Quarter Q3', 
+                              ' Quarter Q2', ' Quarter Q1')) +
   theme(strip.text.x = element_blank())
 
 
@@ -473,33 +512,10 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
   mytheme +
   labs(x = '', y = '') +
   scale_x_discrete(breaks = c('mu.log_precip_1', 'mu.log_precip0'),
-                   labels = c(expression('log'~precip[-1]), expression('log'~precip[0]))) +
+                   labels = c(expression('log'~precip[-1]), 
+                              expression('log'~precip[0]))) +
   theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 # plot(p)
 ggsave("figure5.pdf", p, width = 7, height = 5.5)
-
-
-# # extract random effect variances
-# # function to extract the needed model components, 
-# ra_extr <- function(file){
-#   message('Working on file: ', file)
-#   mod <- readRDS(file)
-#   lme_out <- mod$mu.coefSmo[[1]]
-#   vc <- VarCorr(lme_out)
-#   suppressWarnings(storage.mode(vc) <- 'numeric')
-#   vc <- vc[c(2, 4), 'StdDev']
-#   names(vc) <- c('state/site', 'state')
-#   vc <- c(vc, var = gsub('mod_(.*)\\.rds', '\\1', basename(file)))
-#   # generalized rsq
-#   vc <- c(vc, rsq = Rsq(mod, type = "Cox Snell"))
-#   # calculate CIs
-#   return(vc)
-# }
-# 
-# ra_res <- lapply(file.path(cachedir, 'models', paste0('mod_', keep$variable_id, '.rds')), ra_extr)
-# ra_res <- do.call(rbind, ra_res)
-# ra_res <- apply(ra_res, 2, as.numeric)
-# # range of rsq values
-# range(ra_res[,4])

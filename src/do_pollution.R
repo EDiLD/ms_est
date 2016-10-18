@@ -70,57 +70,111 @@ take_rac[ , rq := value_fin / rak_uba]
 # join variable name and type
 setkey(take_rac, variable_id)
 setkey(psm_variables, variable_id)
-dd <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
+meas <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 
 # remove variable with less then 1000 samples
-dd <- dd[variable_id %in% dd[ , list(n = length(value)), by = variable_id][n > 1000, variable_id]]
+meas <- meas[variable_id %in% meas[ , list(n = length(value)), 
+                                  by = variable_id][n > 1000, variable_id]]
+
+
 
 # calculate max per variable and take only first 15 hits
-take_var <- dd[ , list(media = max(rq)) , by = variable_id][order(media, decreasing = TRUE)][1:15, variable_id]
-take_dd <- dd[variable_id %in% take_var]
+take_var <- meas[ , list(media = max(rq)) , 
+                  by = variable_id][order(media, 
+                                          decreasing = TRUE)][1:15, variable_id]
+take_meas <- meas[variable_id %in% take_var]
 
-# highest RQs
-take_dd[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)][1:15]
+# highest RQs (15 subs, all samples)
+take_meas[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)]
 
-# percentage of RQ > 1
-nrow(dd[rq > 1]) / nrow(dd) * 100
 
-# take max per sample
-rak_samples <- length(unique(dd$sample_id))
-# percentake of samples with RQ > 1In 
-nrow(dd[ ,list(rq_max = max(rq)) , by = sample_id][rq_max > 1]) / rak_samples * 100
 
-# number of SWB sites
-length(unique(dd$site_id))
+## % of samples
+# for each sample, take maximum RQ (from different compounds) and check exceedance
+nrow(meas[ ,list(rq_max = max(rq)) , 
+           by = sample_id][rq_max > 1]) /  length(unique(meas$sample_id)) * 100
+# in 7.7\% of samples taken there was was RQ > 1 found
+nrow(meas[ ,list(rq_max = max(rq)) , 
+           by = sample_id][rq_max > 1]) /  length(unique(meas$sample_id[meas$rq > 0])) * 100
+# in 14.6\% of samples with detecs was was RQ > 1 found
+
+
+## % of measurements
+mean(meas[ , rq >1])*100
+mean(meas[rq > 0 , rq >1])* 100
+
+
+## % number of sites
+# number of SWB wit RAC exceedances
+length(unique(meas[rq > 1, site_id]))
+# 594 sites
+length(unique(meas[, site_id]))
+# form 2270
+length(unique(meas[rq > 1, site_id])) / length(unique(meas[, site_id])) * 100
+# = 26\%
+
+length(unique(meas[rq > 1.12, site_id])) / length(unique(meas[, site_id]))* 100
+# 25\% exceedance that are ecologically relevant (biodiversity 
+#  reduciton of 30% at RQ= 1.12)
+length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id]))* 100
+# 1/10 RQ == 11% reduction
+length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id]))* 100
+# 77% of sites showed detects
+100- length(unique(meas[rq  > 0, site_id])) / length(unique(meas[, site_id]))* 100
+
+
+#show cummulative distribution
+rqs <- c(0.1, 1, 1.12, logspace(log10(0.001), log10(100), length.out = 100))
+prec <- numeric(length(rqs))
+for (i in seq_along(rqs)) {
+  message(i, '\n')
+  prec[i] <- length(unique(meas[rq >= rqs[i], site_id])) 
+}
+prec <- prec/ length(unique(meas[, site_id]))* 100
+
+pdf(file.path(prj, "supplement/prac_ex.pdf"))
+  plot(rqs[3:length(rqs)], prec[3:length(prec)], 
+       log = 'x', 
+       pch = 16,
+       ylim = c(0, 100), 
+       cex = 0.8,
+       ylab = 'Fraction of sites',
+       xlab = 'max(RQ)') 
+  abline(v = 1, lty = 'dotted')
+  abline(v = 0.1, lty = 'dotted')
+  abline(h = prec[1], lty = 'dotted')
+  abline(h = prec[2], lty = 'dotted')
+dev.off()
+
+
+# number of SWB sites with RAC 
+length(unique(meas$site_id))   # 2270 (from 2301 in total)
 # number of SWB samples
-length(unique(dd$sample_id))
-# number of RAC exceedances
-nrow(dd[rq >1]) / nrow(dd) * 100
-nrow(dd[rq >1]) / nrow(dd[rq>0]) * 100
-
-# number of SW wit RAC exceedances
-length(unique(dd[rq > 1, site_id]))
-length(unique(dd[, site_id]))
-length(unique(dd[rq > 1, site_id])) / length(unique(dd[, site_id])) * 100
+length(unique(meas$sample_id)) # 24344 samples with rac (from 24743 in total)
 
 
-length(unique(dd[rq > 1.12, site_id])) / length(unique(dd[, site_id]))* 100
+
+
+
+
+
 
 
 
 # calculate percentage of non-detects
-loqd <- take_dd[ , list(tot = length(rq),
-                n_n0 = sum(rq > 0),
-                n_0 = sum(rq == 0),
-                p_n0 = round(sum(rq > 0) / length(rq) * 100, 1),
-                p_0 = round(sum(rq == 0) / length(rq) * 100, 1)), by = list(variable_id, name)]
+loqd <- take_meas[ , list(tot = length(rq),
+                n_n0 = sum(rq > 0), # number of > LOQ
+                n_0 = sum(rq == 0), # number of < LOQ
+                p_n0 = round(sum(rq > 0) / length(rq) * 100, 1), # % 
+                p_0 = round(sum(rq == 0) / length(rq) * 100, 1)), #%
+                by = list(variable_id, name)]
 # same order as in plot
-levs <- levels(reorder(take_dd[rq > 0, name], take_dd[rq > 0, rq], median))
+levs <- levels(reorder(take_meas[rq > 0, name], take_meas[rq > 0, rq], median))
 loqd[ , name := factor(name, levels = levs)]
 loqd
 
 prac <- ggplot() +
-  geom_violin(data = take_dd[rq > 0],
+  geom_violin(data = take_meas[rq > 0],
               aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
   geom_hline(yintercept = 1, linetype = 'dotted') +
   coord_flip() +
@@ -133,20 +187,21 @@ prac <- ggplot() +
                       labels = c('Fungicide', 'Herbicide', 'Insecticide')) +
   mytheme +
   theme(legend.position = 'bottom') +
-  geom_text(data = loqd, aes(x = name, y = max(take_dd[rq > 0, rq]) + 2500, 
+  geom_text(data = loqd, aes(x = name, y = max(take_meas[rq > 0, rq]) + 2500, 
                              label = paste0(p_n0, '% (n=', tot, ')')),
             hjust = 'right', vjust = -0.3) 
 # prac
 ggsave(file.path(prj, "figure6.pdf"), prac, width = 7, height = 6.5)
 
 
-# RQ exceedances for others
+# RQ exceedances for other compounds
 take_samples[value_fin > 0, length(value_fin), by = variable_id]
 
 psm_variables[name %like% c('Nicosu') | name %like% c('Diflufe') | name %like% c('Dimox')]
-nrow(take_dd[variable_id %in% c(457) & rq > 1]) / nrow( take_dd[variable_id %in% c(457) & rq > 0]) * 100
-nrow(take_dd[variable_id %in% c(272) & rq > 1]) / nrow( take_dd[variable_id %in% c(272) & rq > 0]) * 100
-nrow(take_dd[variable_id %in% c(282) & rq > 1]) / nrow( take_dd[variable_id %in% c(282) & rq > 0]) * 100
+nrow(take_meas[variable_id %in% c(457) & rq > 1]) / nrow( take_meas[variable_id %in% c(457) & rq > 0]) * 100
+nrow(take_meas[variable_id %in% c(272) & rq > 1]) / nrow( take_meas[variable_id %in% c(272) & rq > 0]) * 100
+nrow(take_meas[variable_id %in% c(282) & rq > 1]) / nrow( take_meas[variable_id %in% c(282) & rq > 0]) * 100
+
 
 
 # number of samples for Thiaclorpid
@@ -164,6 +219,7 @@ setkey(dt, variable_id)
 pdt <- psm_variables[ , list(variable_id, psm_type, name)][dt][order(p_d, decreasing = TRUE)]
 
 
+# numbers for detection rates
 pdt[order(p_d, decreasing = TRUE)][tot > 100]
 pdt[order(p_d, decreasing = TRUE)][tot > 100 & psm_type != 'metabolite']
 

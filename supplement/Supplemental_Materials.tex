@@ -57,7 +57,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\item Validity Checks: Simple rules for validity checks have been implemented (e.g. no negative concentrations).
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
 	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning data has been stored in a relational spatial PostgreSQL database.}
@@ -72,25 +72,25 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 % table generated in do_overview.R
 \input{phchoverview}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = \textwidth]{temporal}
 	\caption{Number of sampling occasions per year and month.}
 	\label{fig:temporal}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{varclus}
 	\caption[Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states.]{Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states. Abbreviations of state names according to ISO 3166-2:DE.}
 	\label{fig:varclus}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{silhouette}
 	\caption[Average silhouette width for different cluster sizes.]{Average silhouette width for different cluster sizes. Two clusters showed maximum silhouette width.}
-	\label{fig:varclus}
+	\label{fig:silhouette}
 \end{figure}
 
 % Overview variables
@@ -102,7 +102,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 %% -------------------------------------------------------------------------
 \chapter{Thresholds for agricultural land use and catchment size}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{ezgagrirac}
 	\caption[Raw data used for the model in equation 2 and Figure 3 of the main article.]{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
@@ -113,7 +113,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 %% -------------------------------------------------------------------------
 \chapter{Effect of precipitation and season on RQ}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{precip}
 	\caption[Distribution of precipitation at sampling occasions.]{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
@@ -123,7 +123,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \input{keeptab}
 \input{keeptab2}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{coefs}
 	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at day before sampling and at day of sampling. Bottom row: estimates for the four Quarters. Each dot represent one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
@@ -133,19 +133,27 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 
 %% -------------------------------------------------------------------------
-\chapter{Pesticides in small water bodies}
+\chapter{Pesticides in small streams}
 
-\begin{figure}[h]
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{prac_ex}
+	\caption[Cumulative distribution of the number sites exceeding RAC.]{Cumulative distribution of sites exceeding RAC. Dotted lines indicate fraction of sites exceeding a RQ of 1 and 0.1. 23\% of sites showed no detection of compounds with RAC and are not shown due to logarithmic x-axis.}
+	\label{fig:pdetects}
+\end{figure}
+
+
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{pmix}
-	\caption{Distribution the number of quantified compounds in the samples from small water bodies.}
+	\caption{Distribution the number of quantified compounds in the samples from small streams.}
 	\label{fig:pmix}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{pdetects}
-	\caption[Proportion of samples with detects in SWB.]{Proportion of samples with detects in SWB. Only Compounds with more than 100 samples and 15\% of detects are show.}
+	\caption[Proportion of samples with detects in small streams.]{Proportion of samples with detects in small streams. Only Compounds with more than 100 samples and 15\% of detects are show.}
 	\label{fig:pdetects}
 \end{figure}
 

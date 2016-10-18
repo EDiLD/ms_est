@@ -29,6 +29,9 @@ psm_samples<-psm_samples[site_id %in% take_sites]
 
 
 # overview on Catchment derivation ----------------------------------------
+# total number of sites
+nrow(psm_sites_info)
+
 table(psm_sites_info$ezg_fin_source, useNA = 'always')
 # NA = no information available
 # auth = from authorities direct
@@ -50,6 +53,7 @@ nrow(psm_sites_info[!is.na(ezg_gis) & use == TRUE]) / nrow(psm_sites_info)
 nrow(psm_sites_info[!is.na(ezg_gis) & (use == 'drain')]) / nrow(psm_sites_info) * 100
 
 
+
 table(psm_sites_info$agri_fin_source, useNA = 'always')
 table(psm_sites_info$agri_fin_source, useNA = 'always') / nrow(psm_sites_info) * 100
 # 571 (=24%) from authorities
@@ -58,7 +62,9 @@ table(psm_sites_info$agri_fin_source, useNA = 'always') / nrow(psm_sites_info) *
 # 45 (=2%) missing
 
 
+
 nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))])
+
 nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))]) / nrow(psm_sites_info)
 # 2301 (=97%) with both informations
 
@@ -66,6 +72,7 @@ nrow(psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin))]) / nrow(psm_sites_info)
 # restrict to sites < 100km² (or unknown)  and both data available
 take_site_id <- psm_sites_info[!(is.na(ezg_fin) | is.na(agri_fin)), site_id]
 saveRDS(take_site_id, file = file.path(cachedir, 'take_site_id.rds'))
+
 # removed sites
 psm_sites_info[!site_id %in% take_site_id]
 psm_sites_info <- psm_sites_info[site_id %in% take_site_id]
@@ -247,7 +254,15 @@ psm_variables[!is.na(rak_uba)]
 ## total number of substances
 length(unique(psm_samples[ , variable_id]))
 # no. of compounds per group
-table(psm_variables$pgroup, useNA = 'always')
+sort(table(psm_variables$pgroup, useNA = 'always'), decreasing = TRUE)
+# 179 herbicides
+# 117 insecticides
+# 109 fungicides
+
+# values > loq
+length(psm_samples[value_fin > 0, value_fin])
+length(psm_samples[value_fin > 0, value_fin]) / nrow(psm_samples) * 100 
+# 4% above LOQ
 
 
 var_bl <- psm_samples[ , list(length(unique(variable_id))) , by = substr(site_id, 1, 2)]

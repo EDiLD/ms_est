@@ -461,3 +461,10 @@ read_regnie <- function(file, crs = NULL){
 # fix for ggsave [error: " plot should be a ggplot2 plot"]
 ggsave_fix <- ggplot2::ggsave; body(ggsave_fix) <- body(ggplot2::ggsave)[-2]
 
+#' log spaced sequence
+#' @source http://grokbase.com/t/r/r-help/099nykfnnf/r-logarithmic-seq
+#' 
+logspace <- function( d1, d2, length.out) {
+  exp(log(10)*seq(d1, d2, length.out=length.out))
+}
+
