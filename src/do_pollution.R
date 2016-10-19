@@ -153,10 +153,41 @@ length(unique(meas$site_id))   # 2270 (from 2301 in total)
 length(unique(meas$sample_id)) # 24344 samples with rac (from 24743 in total)
 
 
+### table for comppunds with more the 1000 measurements
+rac_dat <- psm_variables[ , list(variable_id, psm_type, name)][  # join with variable_names
+  meas[ ,list(n_meas = .N,      # number of measurements
+            n_detects = sum(value_fin > 0),    # number of detects
+            p_detects = round(sum(value_fin > 0) / .N * 100, 1), # proportion of detects
+            n_racex = sum(value_fin > rak_uba),  # number of exceedances
+            p_racex = round(sum(value_fin > rak_uba) / .N * 100, 1), # prop of exceedances
+            p_racex_d = round(sum(value_fin > rak_uba) / sum(value_fin > 0) * 100, 1) # prop of exceedances of detects
+            ) , by = variable_id]
+  ]
+rac_dat[ , variable_id := NULL]
+rac_dat[ , psm_type := NULL]
+rac_dat <- rac_dat[order(Name)]
+setnames(rac_dat, c('Name', 'No. ', 'No. \\textgreater LOQ', 
+                    '\\% \\textgreater LOQ', 'No. RQ \\textgreater 1', 
+                    '\\% RQ \\textgreater 1', '\\% RQ \\textgreater 1 | \\textgreater LOQ'))
 
-
-
-
+rac_dat_x <- xtable(rac_dat, 
+               label = 'tab:rac_dat',
+               caption = c('Overview on RAC exceedances of the 76 compounds with more the 1000 measurements. No. = number of measurements;  \\% RQ \\textgreater 1 = RAC exceedances; \\% RQ \\textgreater 1 | \\textgreater LOQ= RAC exceedances as fraction of detects.',
+                           'Overview on RAC exceedances of the 76 compounds with more the 1000 measurements.'),
+               align = 'lp{3cm}rR{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}',
+               digits = 1
+)
+print(rac_dat_x,
+      file = file.path(prj, 'supplement/racdat.tex'),
+      tabular.environment="longtable",
+      floating = FALSE,
+      caption.placement = 'top',
+      include.rownames = FALSE,
+      comment = FALSE,
+      booktabs = TRUE,
+      hline.after = c(-1, 0, nrow(rac_dat)),
+      sanitize.text.function = identity
+)
 
 
 

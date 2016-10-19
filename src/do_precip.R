@@ -116,15 +116,16 @@ setkey(psm_variables, variable_id)
 setkey(keep, variable_id)
 keep_tab <- psm_variables[ , list(variable_id, name, cas, psm_type)][keep]
 keep_tab[ , prop := round(prop*100, 2)]
-setnames(keep_tab, c('id', 'Compound', 'CAS', 'Group', '\\%>LOQ', 
+setnames(keep_tab, c('id', 'Name', 'CAS', 'Group', '\\%>LOQ', 
                      'no. > LOQ', 'total no.'))
 keep_tab$id <- NULL
 keep_tab
 
 keep_tab_x <- xtable(keep_tab, 
                     label = 'tab:var_model',
-                    caption = '24 pesticides for which we modelled the relationship with precipitation and seasonality.
+                    caption = c('24 pesticides for which we modelled the relationship with precipitation and seasonality.
                     Order is the same as in Figure 5 of the articles. See Table \\ref{tab:var_model_coef} for model coefficients.',
+                                '24 pesticides for which we modelled the relationship with precipitation and seasonality.'),
                     align = 'lp{2.5cm}rlp{1.5cm}p{2cm}p{2cm}')
 
 print(keep_tab_x,
@@ -313,9 +314,10 @@ rownames(keep_tab2_w)<-NULL
 
 keep_tab2_x <- xtable(keep_tab2_w, 
                      label = 'tab:var_model_coef',
-                     caption = 'Coefficients and CI from per compound models. 
+                     caption = c('Coefficients and CI from per compound models. 
                      Bold values denote coefficients where the CI for precipitation encompasses zero.
                      Coefficients are on the link scale (log for $\\mu$ and logit for $\\nu$).',
+                     'Coefficients and CI from per compound models.'),
                      align = 'lp{2cm}p{0.6cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}p{1.8cm}')
 
 print(keep_tab2_x, 
@@ -461,6 +463,7 @@ resmd <- rbindlist(resm)
 # log_preciü,p_1: nu 
 # intercept
 int <- resmd$est[resmd$term ==  'mu.seasonQ2']
+# int<-0
 # by hand:
 # p <- 1
 # a <- exp(int + p*resmd$est[resmd$term ==  'nu.log_precip_1'])
@@ -468,10 +471,11 @@ int <- resmd$est[resmd$term ==  'mu.seasonQ2']
 
 (one <- plogis(int + resmd$est[resmd$term ==  'nu.log_precip_1']))
 (ten <- plogis(int + 2*resmd$est[resmd$term ==  'nu.log_precip_1']))
-(hun <- plogis(int + 3*resmd$est[resmd$term ==  'nu.log_precip_1']))
 (ten-one) 
-(hun-ten)
 (ten-one) / one 
+ten
+(hun <- plogis(int + 3*resmd$est[resmd$term ==  'nu.log_precip_1']))
+(hun-ten)
 (hun-ten) / ten
 
 # Q1 mu

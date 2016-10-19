@@ -8,6 +8,8 @@
 \usepackage{todonotes}
 \usepackage{amsmath}
 \usepackage{float} % for [H]
+\usepackage{array, ragged2e}
+\newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}} % right aling column with fixed width
 
 % Continuous figure counting (instead of per cahpter)
 \usepackage{chngcntr}
@@ -49,7 +51,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \begin{enumerate}
 	\item Structure: Structure has been adjusted to the database structure.
 	\item Coordinates: Coordinates have been transformed to a common Coordinate Reference System (DHDN / 3-Grad Gauss-Krüger Zone 3 (EPSG:31467)) and duplicates merged.
-	\item Chemicals: Chemical names and identifiers have been unified using the webchem package \citep{szocs_webchem:_2016}.
+	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (\url{https://github.com/ropensci/webchem}).
 	\item  Identifiers: Unique identifiers have been assigned.
 	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification have be set to zero.
 	\item Other meta-data: meta-data has been standardised.
@@ -135,11 +137,13 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 %% -------------------------------------------------------------------------
 \chapter{Pesticides in small streams}
 
+\input{racdat}
+
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{prac_ex}
 	\caption[Cumulative distribution of the number sites exceeding RAC.]{Cumulative distribution of sites exceeding RAC. Dotted lines indicate fraction of sites exceeding a RQ of 1 and 0.1. 23\% of sites showed no detection of compounds with RAC and are not shown due to logarithmic x-axis.}
-	\label{fig:pdetects}
+	\label{fig:prac_ex}
 \end{figure}
 
 
@@ -157,10 +161,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\label{fig:pdetects}
 \end{figure}
 
-
-
-
-\bibliographystyle{apalike}      % basic style, author-year citations
-\bibliography{references}
+% \bibliographystyle{apalike}      % basic style, author-year citations
+% \bibliography{references}
 
 \end{document}

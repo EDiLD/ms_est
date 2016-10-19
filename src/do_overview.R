@@ -167,9 +167,10 @@ names(psm_samples_tab)[6] <- 'no.compounds \\textsuperscript{b}'
 
 xtab <- xtable(psm_samples_tab, 
        label = 'tab:phch_overview',
-      caption = 'Overview on chemical samples. Only data from running waters and grab
+      caption = c('Overview on chemical samples. Only data from running waters and grab
 sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
       \\textsuperscript{b}: Including metabolites',
+                  'Overview on chemical samples.'),
       align = 'llllrrr'
 )
 print(xtab,
@@ -224,10 +225,11 @@ var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
 
 var_tab_x <- xtable(var_tab, 
                     label = 'tab:phch_var',
-                    caption = 'Overview on pesticides in the database. \\
+                    caption = c('Overview on pesticides in the database. \\
                     \\textsuperscript{a} Authorized in Germany (Source: BVL, 2015). 
                     \\textsuperscript{b} Authorized in the EU (Source: EU).
                     \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
+                    'Overview on pesticides in the database.'),
                     align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1cm}')
                     
 print(var_tab_x,
