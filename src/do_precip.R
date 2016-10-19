@@ -123,9 +123,9 @@ keep_tab
 
 keep_tab_x <- xtable(keep_tab, 
                     label = 'tab:var_model',
-                    caption = c('24 pesticides for which we modelled the relationship with precipitation and seasonality.
+                    caption = c('23 pesticides for which we modelled the relationship with precipitation and seasonality.
                     Order is the same as in Figure 5 of the articles. See Table \\ref{tab:var_model_coef} for model coefficients.',
-                                '24 pesticides for which we modelled the relationship with precipitation and seasonality.'),
+                                '23 pesticides for which we modelled the relationship with precipitation and seasonality.'),
                     align = 'lp{2.5cm}rlp{1.5cm}p{2cm}p{2cm}')
 
 print(keep_tab_x,

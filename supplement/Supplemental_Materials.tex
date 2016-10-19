@@ -51,7 +51,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \begin{enumerate}
 	\item Structure: Structure has been adjusted to the database structure.
 	\item Coordinates: Coordinates have been transformed to a common Coordinate Reference System (DHDN / 3-Grad Gauss-Krüger Zone 3 (EPSG:31467)) and duplicates merged.
-	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (\url{https://github.com/ropensci/webchem}).
+	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (https://github.com/ropensci/webchem).
 	\item  Identifiers: Unique identifiers have been assigned.
 	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification have be set to zero.
 	\item Other meta-data: meta-data has been standardised.
@@ -149,17 +149,18 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 \begin{figure}[ht]
 	\centering
+	\includegraphics[width = 0.8\textwidth]{pdetects}
+	\caption[Proportion of samples with detects in small streams.]{Proportion of samples with detects in small streams. Only Compounds with more than 100 samples and 15\% of detects are show.}
+	\label{fig:pdetects}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
 	\includegraphics[width = 0.8\textwidth]{pmix}
 	\caption{Distribution the number of quantified compounds in the samples from small streams.}
 	\label{fig:pmix}
 \end{figure}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width = 0.8\textwidth]{pdetects}
-	\caption[Proportion of samples with detects in small streams.]{Proportion of samples with detects in small streams. Only Compounds with more than 100 samples and 15\% of detects are show.}
-	\label{fig:pdetects}
-\end{figure}
 
 % \bibliographystyle{apalike}      % basic style, author-year citations
 % \bibliography{references}

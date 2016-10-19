@@ -161,8 +161,15 @@ tot <- c('Total',
          length(unique(psm_samples$variable_id)))
 psm_samples_tab <- rbind(data.frame(psm_samples_tab), tot)
 psm_samples_tab <- psm_samples_tab[order(psm_samples_tab$state), ]
-names(psm_samples_tab)[1] <- 'state \\textsuperscript{a}'
-names(psm_samples_tab)[6] <- 'no.compounds \\textsuperscript{b}'
+psm_samples_tab$name <- c('Baden-Württemberg', 'Bavaria', 'Hesse', 
+                          'Mecklenburg Western Pomerania', 'Lower Saxony',
+                          'Northrhine-Westphalia', 'Rhineland Palatinate',
+                          'Schleswig Holstein', 'Saarland', 'Saxony', 
+                          'Saxony-Anhalt', 'Thuringia', ''
+                          )
+setcolorder(psm_samples_tab, c(7, 1:6))
+names(psm_samples_tab)[2] <- 'state \\textsuperscript{a}'
+names(psm_samples_tab)[7] <- 'no.compounds \\textsuperscript{b}'
 
 
 xtab <- xtable(psm_samples_tab, 
@@ -171,7 +178,7 @@ xtab <- xtable(psm_samples_tab,
 sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
       \\textsuperscript{b}: Including metabolites',
                   'Overview on chemical samples.'),
-      align = 'llllrrr'
+      align = 'lp{3cm}lllrrr'
 )
 print(xtab,
       file = file.path(prj, 'supplement/phchoverview.tex'),
