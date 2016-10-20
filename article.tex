@@ -76,9 +76,9 @@ We investigated the influence of agricultural land use, catchment size, as well 
 Agricultural land use lead to a 3.4-fold increase in exceedance of risk thresholds when the proportion of agriculture in a catchment exceeded 25 percent. 
 Precipitation increased measured pesticide risk by 5\% and was the highest during summer months. 
 Risk thresholds were exceeded in 26 \% of streams, with the highest risk related to neonicotinoid insecticides. 
-We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity and that a realistic pesticide sampling would be driven by q1Qprecipitation events. 
+We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity and that a realistic pesticide sampling would be driven by precipitation events. 
 
-% Total words: 197
+% Total words: 195
 \end{abstract}
 
 %%%! Check all numbers
@@ -106,7 +106,7 @@ Small streams comprise a major fraction of streams \citep{nadeau_hydrological_20
 Nevertheless, a clear definition of small streams in terms of catchment or stream size is currently lacking \citep{lorenz_specifics_2016}. 
 For example, the WFD defines small streams with a catchment size between 10 and 100 km\textsuperscript{2}, without further categorisation of streams \textless 10km\textsuperscript{2} and \citet{lorenz_specifics_2016} defines small streams with catchment size \textless 10km\textsuperscript{2}. 
 
-However, small streams might also be at high risk of pesticide contamination in case of adjacent agricultural areas given their dilution potential \citep{schulz_field_2004,liess_determination_1999}.
+However, small streams might also be at high risk of pesticide contamination in case of adjacent agricultural areas given their low dilution potential \citep{schulz_field_2004,liess_determination_1999}.
 Indeed, meta-analyses using data from studies with a few sites reported higher pesticide pollution in smaller streams compared to bigger streams \citep{stehle_pesticide_2015,schulz_field_2004}. 
 Despite their ecological relevance and potentially higher pesticide exposure, a recent analysis of pesticide studies showed that a disproportionally small fraction of studies was conducted in small water bodies, and these were largely limited to a few sites \citep{lorenz_specifics_2016}. 
 Consequently, knowledge on the pesticide pollution of small streams on larger scales is scant.
@@ -121,8 +121,7 @@ Finally, we quantified the current risks from pesticides in small streams in Ger
 %% -------------------------------------------------------------------------
 \section{Methods}
 \subsection{Data compilation}
-We requested pesticide monitoring data from sampling sites that can be classified as small streams (catchment sizes $\mathrm{< 100km^2}$ according to the WFD) from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names). 
-The request encompassed only the years 2005 to 2015.
+We queried pesticide monitoring data from sampling sites that can be classified as small streams (catchment sizes $\mathrm{< 100~km^2}$ according to the WFD) from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names) for 2005 to 2015.
 We homogenized and unified all data provided by the federal states into a database and implemented a robust data-cleaning workflow (see Supplemental Figure~S1 for details) \citep{poisot_best_2015}.
 
 We identified precipitation at sampling sites by a spatio-temporal intersection of sampling events with gridded daily precipitation data (60$\times$30 arcsec resolution) available from the German Weather service (DWD).
@@ -132,16 +131,15 @@ We performed the intersection for the actual sampling date and the day before an
 
 \subsection{Characterization of catchments}
 We compiled a total of 2,369 sampling sites in small streams with pesticide measurements. %see do_overview.R
-Alongside, we also requested catchment sizes and percentage agricultural land use within the catchment for the sampling sites from the federal states. %see do_overview.R
-Catchment size was available for 59\% of sites from authorities. 
+Alongside, we also queried catchment sizes and agricultural land use within the catchment for the sampling sites from the federal states. %see do_overview.R
+Catchment size was provided for 59\% of sites. 
 Additionally, we delineated upstream catchments for each of the sampling sites using (i) a digital elevation model (DEM) \citep{eea_digital_2013} and the multiple flow direction algorithm \citep{holmgren_multiple_1994} as implemented in GRASS GIS 7 \citep{neteler_grass_2012} and (ii) from drainage basins provided by the Federal Institute of Hydrology (BfG).
 Delineated catchments were visually checked for accuracy by comparison with state stream networks and derived information amalgamated with existing data.
 Thus, catchment size information was available for 99\% of all sites (59\% from authorities, 24\% from DEM and 16\% from drainage basins). 
 
-For each derived catchment (either from DEM or drainage basins) we calculated the percentage agricultural land-use within the catchment based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
+For each derived catchment (either from DEM or drainage basins) we calculated the \% agricultural land-use within the catchment based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
 Thus, agricultural land use information was available for 98\% of all sites (24\% from authorities, 52\% from DEM and 22\% from drainage basins). 
-For 97\% of the sites both, the proportion of agricultural land use and catchment size were available. 
-68 sites (3\%) lacking these two pieces of information were omitted from the operations outlined below.
+68 sites (3\%) that lacked catchment size or land use information were omitted from the analysis.
 %see do_overview.R 
 
 
