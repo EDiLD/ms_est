@@ -168,8 +168,9 @@ psm_samples_tab$name <- c('Baden-Württemberg', 'Bavaria', 'Hesse',
                           'Saxony-Anhalt', 'Thuringia', ''
                           )
 setcolorder(psm_samples_tab, c(7, 1:6))
-names(psm_samples_tab)[2] <- 'state \\textsuperscript{a}'
-names(psm_samples_tab)[7] <- 'no.compounds \\textsuperscript{b}'
+setnames(psm_samples_tab, c('name', 'abbrv.\\textsuperscript{a}',
+                            'Begin', 'End', 'No. sites', 'No.samples',
+                            'No. pesticides\\textsuperscript{b}'))
 
 
 xtab <- xtable(psm_samples_tab, 
@@ -178,7 +179,7 @@ xtab <- xtable(psm_samples_tab,
 sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
       \\textsuperscript{b}: Including metabolites',
                   'Overview on chemical samples.'),
-      align = 'lp{3cm}lllrrr'
+      align = 'lp{2.7cm}lllR{2cm}R{2cm}R{2cm}'
 )
 print(xtab,
       file = file.path(prj, 'supplement/phchoverview.tex'),
@@ -247,8 +248,8 @@ print(var_tab_x,
       comment = FALSE,
       booktabs = TRUE,
       hline.after = c(-1, 0),
-      sanitize.text.function = identity,
-      size="\\fontsize{8pt}{10pt}\\selectfont"
+      sanitize.text.function = identity#,
+      # size="\\fontsize{8pt}{10pt}\\selectfont"
 )
 
 

@@ -31,7 +31,7 @@
 %% -------------------------------------------------------------------------
 \title{Supplemental Materials for the paper: \\ Pesticide exposure in small streams in Germany}
 \author{Eduard Szöcs, Marvin Brinke, Bilgin Karaoglan, Ralf B. Schäfer}
-
+\date{}
 
 %% -------------------------------------------------------------------------
 \begin{document}
@@ -53,7 +53,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\item Coordinates: Coordinates have been transformed to a common Coordinate Reference System (DHDN / 3-Grad Gauss-Krüger Zone 3 (EPSG:31467)) and duplicates merged.
 	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (https://github.com/ropensci/webchem).
 	\item  Identifiers: Unique identifiers have been assigned.
-	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification have be set to zero.
+	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification were set to zero (and can be used to identity non-detects).
 	\item Other meta-data: meta-data has been standardised.
 	\item Temporal resolution: The temporal resolution of the database is 1 day. Date below this resolution has been aggregated by maximum.
 	\item Validity Checks: Simple rules for validity checks have been implemented (e.g. no negative concentrations).
@@ -157,7 +157,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{pmix}
-	\caption{Distribution the number of quantified compounds in the samples from small streams.}
+	\caption{Distribution of the number of quantified compounds in the samples.}
 	\label{fig:pmix}
 \end{figure}
 
