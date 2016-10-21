@@ -238,7 +238,8 @@ var_tab_x <- xtable(var_tab,
                     \\textsuperscript{b} Authorized in the EU (Source: EU).
                     \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
                     'Overview on pesticides in the database.'),
-                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1cm}')
+                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}',
+                    digits = 4)
                     
 print(var_tab_x,
       file = file.path(prj, 'supplement/phchvar.tex'),
