@@ -45,24 +45,24 @@
 
 %% -------------------------------------------------------------------------
 \chapter{Data Cleaning}
-More then 30 datasets have been cleaned and homogenized separately, before combing into a common database.
-Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overview).
+Before combining into a common database, more then 30 datasets have been cleaned and homogenized separately.
+Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} gives a graphical overview):
 
 \begin{enumerate}
-	\item Structure: Structure has been adjusted to the database structure.
+	\item Structure: Datasets have been adjusted to the database structure.
 	\item Coordinates: Coordinates have been transformed to a common Coordinate Reference System (DHDN / 3-Grad Gauss-Krüger Zone 3 (EPSG:31467)) and duplicates merged.
 	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (https://github.com/ropensci/webchem).
 	\item  Identifiers: Unique identifiers have been assigned.
 	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification were set to zero (and can be used to identity non-detects).
 	\item Other meta-data: meta-data has been standardised.
-	\item Temporal resolution: The temporal resolution of the database is 1 day. Date below this resolution has been aggregated by maximum.
-	\item Validity Checks: Simple rules for validity checks have been implemented (e.g. no negative concentrations).
+	\item Temporal resolution: The temporal resolution of the database is 1 day. Samplings below this resolution have been aggregated by the maximum daily value.
+	\item Validity Checks: Simple rules for validity checks have been implemented.
 \end{enumerate}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
-	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning data has been stored in a relational spatial PostgreSQL database.}
+	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning, data has been stored in a relational spatial PostgreSQL database.}
 	\label{fig:data_cleaning}
 \end{figure}
 
@@ -84,19 +84,20 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{varclus}
-	\caption[Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states.]{Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states. Abbreviations of state names according to ISO 3166-2:DE.}
+	\caption[Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states.]{Complete Linkage Cluster Dendrogram of Jaccard Similarity of analysed compound spectra between federal states. Abbreviations of state names according to ISO 3166-2:DE (see also Table~\ref{tab:phch_overview}).}
 	\label{fig:varclus}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{silhouette}
-	\caption[Average silhouette width for different cluster sizes.]{Average silhouette width for different cluster sizes. Two clusters showed maximum silhouette width.}
+	\caption[Average silhouette width for different cluster sizes.]{Average silhouette width for different cluster sizes of complete linkage clustering of jaccard similarity of analysed compound spectra between federal states. Two clusters showed maximum silhouette width.}
 	\label{fig:silhouette}
 \end{figure}
 
 % Overview variables
 % table generated in do_overview.R
+\newpage
 \input{phchvar}
 
 
@@ -122,13 +123,14 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 	\label{fig:precip}
 \end{figure}
 
+%%% from do_precip.R
 \input{keeptab}
 \input{keeptab2}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{coefs}
-	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at day before sampling and at day of sampling. Bottom row: estimates for the four Quarters. Each dot represent one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
+	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at day before sampling and at day of sampling. Bottom row: estimates for the four Quarters. Each dot represents one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
 	\label{fig:coefs}
 \end{figure}
 
@@ -136,13 +138,13 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 
 %% -------------------------------------------------------------------------
 \chapter{Pesticides in small streams}
-
+%% from do_pollution.R
 \input{racdat}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{prac_ex}
-	\caption[Cumulative distribution of the number sites exceeding RAC.]{Cumulative distribution of sites exceeding RAC. Dotted lines indicate fraction of sites exceeding a RQ of 1 and 0.1. 23\% of sites showed no detection of compounds with RAC and are not shown due to logarithmic x-axis.}
+	\caption[Cumulative distribution of the number sites exceeding RAC.]{Cumulative distribution of sites exceeding RAC. Dotted lines indicate fraction of sites exceeding a RQ of 1 and 0.1. 23\% of the sites showed no detection of compounds with available RAC values and are not shown due to logarithmic x-axis.}
 	\label{fig:prac_ex}
 \end{figure}
 
@@ -150,7 +152,7 @@ Cleaning steps comprised (Figure~\ref{fig:data_cleaning} gives a graphical overv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{pdetects}
-	\caption[Proportion of samples with detects in small streams.]{Proportion of samples with detects in small streams. Only Compounds with more than 100 samples and 15\% of detects are show.}
+	\caption[Proportion of samples with detects in small streams.]{Proportion of samples with detects in small streams. Only Compounds with more than 100 samples and 15\% of detects are shown.}
 	\label{fig:pdetects}
 \end{figure}
 

@@ -25,6 +25,7 @@ credentials.R
 *.rds
 ms_est.Rproj
 *.Rproj  
+src/*.Rproj
 
 # Project specific
 acs-article.bib

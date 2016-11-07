@@ -165,21 +165,21 @@ rac_dat <- psm_variables[ , list(variable_id, psm_type, name)][  # join with var
   ]
 rac_dat[ , variable_id := NULL]
 rac_dat[ , psm_type := NULL]
-rac_dat <- rac_dat[order(Name)]
+rac_dat <- rac_dat[order(name)]
 setnames(rac_dat, c('Name', 'No. ', 'No. \\textgreater LOQ', 
                     '\\% \\textgreater LOQ', 'No. RQ \\textgreater 1', 
                     '\\% RQ \\textgreater 1', '\\% RQ \\textgreater 1 | \\textgreater LOQ'))
 
 rac_dat_x <- xtable(rac_dat, 
                label = 'tab:rac_dat',
-               caption = c('Overview on RAC exceedances of the 76 compounds with more the 1000 measurements. No. = number of measurements;  \\% RQ \\textgreater 1 = RAC exceedances; \\% RQ \\textgreater 1 | \\textgreater LOQ= RAC exceedances as fraction of detects.',
-                           'Overview on RAC exceedances of the 76 compounds with more the 1000 measurements.'),
+               caption = c('Overview on RAC exceedances of the 76 compounds with more than 1000 measurements. No. = number of measurements;  \\% RQ \\textgreater 1 = RAC exceedances; \\% RQ \\textgreater 1 | \\textgreater LOQ= RAC exceedances as fraction of detects.',
+                           'Overview on RAC exceedances of the 76 compounds with more than 1000 measurements.'),
                align = 'lp{3cm}rR{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}',
                digits = 1
 )
 print(rac_dat_x,
       file = file.path(prj, 'supplement/racdat.tex'),
-      tabular.environment="longtable",
+      tabular.environment = "longtable",
       floating = FALSE,
       caption.placement = 'top',
       include.rownames = FALSE,

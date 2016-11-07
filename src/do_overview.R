@@ -162,9 +162,9 @@ tot <- c('Total',
 psm_samples_tab <- rbind(data.frame(psm_samples_tab), tot)
 psm_samples_tab <- psm_samples_tab[order(psm_samples_tab$state), ]
 psm_samples_tab$name <- c('Baden-Württemberg', 'Bavaria', 'Hesse', 
-                          'Mecklenburg Western Pomerania', 'Lower Saxony',
-                          'Northrhine-Westphalia', 'Rhineland Palatinate',
-                          'Schleswig Holstein', 'Saarland', 'Saxony', 
+                          'Mecklenburg-Western Pomerania', 'Lower Saxony',
+                          'North Rhine-Westphalia', 'Rhineland-Palatinate',
+                          'Schleswig-Holstein', 'Saarland', 'Saxony', 
                           'Saxony-Anhalt', 'Thuringia', ''
                           )
 setcolorder(psm_samples_tab, c(7, 1:6))
@@ -228,22 +228,25 @@ var_tab$Group <- gsub('organics, psm, ', '', var_tab$Group)
 # fix bug with encoding (extra space or so....)
 var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
 
+# order by name
+var_tab <- var_tab[order(Name)]
+
 
 
 
 var_tab_x <- xtable(var_tab, 
                     label = 'tab:phch_var',
-                    caption = c('Overview on pesticides in the database. \\
-                    \\textsuperscript{a} Authorized in Germany (Source: BVL, 2015). 
-                    \\textsuperscript{b} Authorized in the EU (Source: EU).
-                    \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German EPA).',
+                    caption = c('Overview on pesticides (and metabolites) in the database. \\
+                    \\textsuperscript{a} Authorized in Germany (Source: German Federal Office of Consumer Protection and Food Safety (BVL) as at March 2015). 
+                    \\textsuperscript{b} Authorized in the European union (Source: EU Pesticides database as at March 2015).
+                    \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German Federal Environment Agency (UBA) as at November 2015).',
                     'Overview on pesticides in the database.'),
-                    align = 'lp{3cm}rlp{0.5cm}p{0.5cm}p{1.5cm}',
+                    align = 'lp{4cm}rlp{1.3cm}p{1.3cm}p{1.5cm}',
                     digits = 4)
                     
 print(var_tab_x,
       file = file.path(prj, 'supplement/phchvar.tex'),
-      tabular.environment="longtable",
+      tabular.environment = "longtable",
       floating = FALSE,
       caption.placement = 'top',
       comment = FALSE,
