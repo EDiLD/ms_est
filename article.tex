@@ -37,7 +37,7 @@
 \affiliation[German Federal Institute of Hydrology]{German Federal Institute of Hydrology (BfG), Koblenz, Germany}
 
 \author{Bilgin Karaoglan}
-\affiliation[German Federal Environment Agency]{German Federal Environment Agency (UBA), Dessau-Roßlau, Germany}
+\affiliation[German Environment Agency]{German Environment Agency (UBA), Dessau-Roßlau, Germany}
 
 \author{Ralf B. Schäfer}
 \affiliation[University Koblenz-Landau]{Institute for Environmental Sciences, University of Koblenz-Landau, Germany}
@@ -73,7 +73,7 @@ However, most related studies have been limited to a few streams on the regional
 We used data from German governmental water quality monitoring to quantify the drivers of pesticide risk and to assess pesticide risk in small streams on a large scale. 
 The data set comprised of 1,766,104 measurements of 478 pesticides (including metabolites) related to 24,743 samples from 2,301 sampling sites. 
 We investigated the influence of agricultural land use, catchment size, as well as precipitation and seasonal dynamics on pesticide risk using new statistical modeling techniques that explicitly consider the limit of quantification. 
-Agricultural land use lead to a 3.4-fold increase in exceedance of risk thresholds when the proportion of agriculture in a catchment exceeded 25 percent. 
+Agricultural land use lead to a 3.7-fold increase in exceedance of risk thresholds when the proportion of agriculture in a catchment exceeded 28 percent. 
 Precipitation increased measured pesticide risk by 5\% and risk was the highest during summer months. 
 Risk thresholds were exceeded in 26 \% of streams, with the highest risk related to neonicotinoid insecticides. 
 We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity and that a realistic pesticide sampling would be driven by precipitation events. 
@@ -88,8 +88,8 @@ We conclude that pesticides from agricultural land use are a major threat to sma
 %% -------------------------------------------------------------------------
 \section{Introduction}
 More than 50\% of the total land area in Germany is used by agriculture \citep{statistisches_bundesamt_bodenflache_2014}.
-In the year 2014 more than 45,000 tonnes of 766 authorized plant protection products were sold for application on this area \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
-The applied pesticides may enter surface waters via spray-drift, edge-off-field run-off or drainage \citep{stehle_probabilistic_2013,schulz_comparison_2001,liess_determination_1999}.
+In the year 2014 more than 45,000 tonnes of 776 authorized plant protection products were sold for application on this area \citep{bundesamt_fur_verbraucherschutz_und_lebensmittelsicherheit_absatz_2015}.
+The applied pesticides may enter surface waters via spray-drift, edge-of-field run-off or drainage \citep{stehle_probabilistic_2013,schulz_comparison_2001,liess_determination_1999}.
 Once entered the surface waters they may have adverse effects on biota and ecosystem functioning \citep{schafer_thresholds_2012}. 
 Although it is known that pesticide pollution and its ecological effects increase with the fraction of agricultural land use in the catchment \citep{schulz_field_2004}, the shape of the relationship is unknown and studies on potential thresholds are lacking.
 
@@ -112,7 +112,7 @@ Consequently, knowledge on the pesticide pollution of small streams on larger sc
 In European law, the Directive 2009/128/EC \citep{European_Union_2009} places an obligation on the EU Member States to adopt National Action Plans (NAP) for the Sustainable Use of Plant Protection Products and the German NAP also addresses the knowledge gap concerning pesticide impact on small steams, specifically including those with catchment size \textless 10km\textsuperscript{2}.
 
 
-In this study we compiled and analyzed large-scale chemical monitoring data from small streams in Germany. 
+In this study, we compiled and analysed large-scale chemical monitoring data from small streams in Germany. 
 First, we analysed the shape of the relationship between pesticide risk, agricultural land use, and catchment size and examined whether related thresholds for pesticide risks can be derived. 
 Second, we investigated the influence of precipitation and seasonal dynamics on pesticide detections, given that precipitation proved an important driver of pesticide exposure in several small-scale studies \citep{wittmer_significance_2010,schulz_field_2004}, but it is unknown whether a precipitation signal prevails on large scales. 
 Finally, we quantified the current risks from pesticides in small streams in Germany and the compounds accountable for the risk.
@@ -125,7 +125,7 @@ Finally, we quantified the current risks from pesticides in small streams in Ger
 We queried pesticide monitoring data from sampling sites that can be classified as small streams (catchment sizes $\mathrm{< 100~km^2}$ according to the WFD) from all 13 non-city federal states of Germany (see Supplemental Table~S1 for the abbreviations of federal state names) for 2005 to 2015.
 We homogenized and unified all data provided by the federal states into a database and implemented a robust data-cleaning workflow (see Supplemental Figure~S1 for details) \citep{poisot_best_2015}.
 
-We identified precipitation at sampling sites by a spatio-temporal intersection of sampling events with gridded daily precipitation data (60$\times$30 arcsec resolution) available from the German Weather service (DWD).
+We identified precipitation at sampling sites by a spatio-temporal intersection of sampling events with gridded daily precipitation data (60$\times$30 arcsec resolution) available from the German Meteorological Service (DWD).
 This data spatially interpolates daily precipitation values from local weather stations \citep{rauthe_central_2013}. 
 We performed the intersection for the actual sampling date and the day before and extracted precipitation during and up to 48 hours before sampling. 
 
@@ -138,9 +138,9 @@ Additionally, we delineated upstream catchments for each of the sampling sites u
 Delineated catchments were visually checked for accuracy by comparison with state stream networks and derived information amalgamated with existing data.
 Thus, catchment size information was available for 99\% of all sites (59\% from authorities, 24\% from DEM and 16\% from drainage basins). 
 
-For each derived catchment (either from DEM or drainage basins) we calculated the \% agricultural land-use within the catchment based on Official Topographical Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
+For each derived catchment (either from DEM or drainage basins) we calculated the \% agricultural land-use within the catchment based on the Authoritative Topographic-Cartographic Information System (ATKIS) of the land survey authorities \citep{adv_atkis_2016}. 
 Thus, agricultural land use information was available for 98\% of all sites (24\% from authorities, 52\% from DEM and 22\% from drainage basins). 
-68 sites (3\%) that lacked catchment size or land use information were omitted from the analysis. 
+68 sites (3\%) that lacked catchment size or land use information were omitted from the analysis, resulting in 2301 sites used in the analyses outlined below.
 %see do_overview.R 
 
 
@@ -150,7 +150,7 @@ We characterised pesticide pollution using regulatory acceptable concentrations 
 RACs are derived during pesticide authorization as part of the ecological risk assessment.
 No unacceptable ecological effects are expected if the environmental concentration remains below this concentration.
 \citet{stehle_pesticide_2015} showed that RAC exceedances reflect a decrease in biodiversity and from this perspective are ecologically relevant indicators. 
-The German Federal Environment Agency (UBA) provided RACs for the 105 compounds with highest detection rates (Supplemental Table~S2). 
+The German Environment Agency (UBA) provided RACs for 107 compounds including those with highest detection rates (Supplemental Table~S2). 
 Based on theses RACs, we calculated Risk Quotients (RQ):
 
 \begin{equation}
@@ -214,8 +214,8 @@ logit(\nu_{i}) = log~prec_{0 i} + log~prec_{-1 i} + Q1_{i} + Q2_{i}+Q3_{i}+Q4_{i
 To account for temporal autocorrelation and differences between federal states we used $site$ nested within $state$ as random intercepts.
 We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}. 
 
-We fitted this model separately to each compound with a RAC, measured in at least 1000 samples and with more than 5\% of values above LOQ (n = 23 compounds, see Supplemental Table~S3 for a list of compounds). 
-To summarise the coefficients across the 23 modeled compounds we used a random effect meta-analysis for each model coefficient separately \citep{harrison_getting_2011}, resulting in an averaged effect of the 23 compounds.
+We fitted this model separately to each compound with a RAC, measured in at least 1000 samples and with more than 5\% of values above LOQ (n = 22 compounds, see Supplemental Table~S3 for a list of compounds). 
+To summarise the coefficients across the 22 modeled compounds we used a random effect meta-analysis for each model coefficient separately \citep{harrison_getting_2011}, resulting in an averaged effect of the 22 compounds.
 The results of individual compounds are provided in the Supplemental Table~S4 and Figure~S7.
 The meta-analysis was performed using the metafor package \citep{Viechtbauer_2010}. 
 
@@ -267,8 +267,8 @@ most sampling sites having catchment sizes between 10 and 25~$km^2$ (Figure~\ref
 
 
 \subsection{Influence of agricultural land use and catchment size}
-The number of RAC exceedances increased strongly and statistically significant up to 25\% agriculture within the catchment.
-The mean number of RAC exceedances per site increased 3.4-fold from 0.13 (no agriculture) to 0.44 (25\% agriculture within the catchment). 
+The number of RAC exceedances increased strongly and statistically significant up to 28\% agriculture within the catchment.
+The mean number of RAC exceedances per site increased 3.7-fold from 0.10 (no agriculture) to 0.39 (28\% agriculture within the catchment). 
 Above this threshold the exceedances leveled.
 Above 75\% agriculture within the catchment the number of exceedances further increased, but the increase was not statistically significant (Figure~\ref{fig:fig4}, left). 
 Catchment size had no statistically significant effect on the number of RAC exceedances (Figure~\ref{fig:fig4}, right).
@@ -311,14 +311,14 @@ Individual compounds showed different temporal patterns (see Supplemental Table~
 
 
 \subsection{Pesticide risk in small streams}
-We found RAC exceedances in 26\% of sampling sites and RQ > 0.1 in 54\% of sites. 
+We found RAC exceedances in 25.5\% of sampling sites and RQ > 0.1 in 54\% of sites. 
 In 23\% of sites none of the chemicals, for which RAC were available, were detected (see also Supplemental Figure~S8).
 Neonicotinoid insecticides and Chlorpyrifos showed the highest RQ (Figure~\ref{fig:fig6}). %do_pollution.R
-For Thiacloprid and Chlorpyrifos the RAC was less than LOQ, therefore, all detections have a RQ~\textgreater~1. 
+For Thiacloprid and Chlorpyrifos the RAC was equal or less than LOQ, therefore, all detections have a $RQ \ge 1$. 
 The herbicides Nicosulfuron and Diflufenican, as well as the fungicide Dimoxystrobin also showed high exceedances of RQ (26.7, 14.1 and 21.1 \% of measurements~\textgreater~LOQ), see also Supplemental Table~S5).
-RAC exceedances were found in 15\% of samples with concentrations \textgreater LOQ (and 7.7\% of all samples).
+RAC exceedances were found in 14\% of samples with concentrations \textgreater LOQ (and 7.3\% of all samples).
 
-The highest RQ were observed for Chlorpyrifos (max(RQ) = 244), Clothianidin (max(RQ) = 157), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
+The highest RQ were observed for Chlorpyrifos (max(RQ) = 220), Clothianidin (max(RQ) = 157), Dimoxystrobin(max(RQ) = 117) and Isoproturon (max(RQ) = 80). 
 Where analysed, metabolites exhibited the highest detection rates (for example, Metazachlor sulfonic acid was detected in 84\% of all samples where it was analysed (n = 3038, see also Supplemental Figure~S9).
 Glyphosate was the compound with the highest detection rates (41\%, n = 3557 samples), followed by Boscalid (23\%, n = 9886) and Isoproturon (22\%, n = 19112). 
 However, only the latter showed RAC exceedances (Figure~\ref{fig:fig6}).
@@ -366,7 +366,7 @@ Similarly, \citet{waite_agricultural_2014} found a threshold for aquatic diatoms
 Our results coincide with these thresholds and suggest that pesticides might contribute to the observed biological changes. 
 
 % size
-We did not find a relationship between pesticide pollution and catchment size.
+We did not find a statistically significant relationship between pesticide pollution and catchment size.
 However, previous studies showed that small streams are more polluted than bigger streams \citep{schulz_field_2004,stehle_pesticide_2015,knauer_pesticides_2016}.
 This can be explained by the relatively short gradient of catchment sizes in our dataset, with most of the streams with catchments above $10~km^2$ and below $100~km^2$ (Figure~\ref{fig:fig3}, top).
 For example, the gradient of \citet{schulz_field_2004} covered 6 orders of magnitude.
@@ -380,7 +380,7 @@ This could be explained by the sampling preceding the rainfall event and the del
 The effects of precipitation were more pronounced for the probability to exceed LOQ, with smaller effect sizes for the absolute value of RQ. 
 This could be attributed to a higher variability of absolute concentrations.
 Overall, our results indicate that current pesticide monitoring relying on grab sampling, largely disconnected from precipitation events, underestimates pesticide risks.
-Automatic event-drive samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for small water bodies \citep{lorenz_specifics_2016}. 
+Automatic event-driven samplers \citep{stehle_probabilistic_2013} and passive samplers \citep{fernandez_calibration_2014,moschet_evaluation_2015} may help overcome these shortcomings and provide a better representation, especially for small water bodies \citep{lorenz_specifics_2016}. 
 
 We found the highest the probability of exceeding LOQ during summer (10\% for Q2) and lowest in the first quarter of the year (4\%, Figure~\ref{fig:fig5}, bottom right).
 This annual pattern coincides with the main application season for pesticides in Central Europe.
@@ -400,15 +400,17 @@ This difference can be attributed to the low sample size for neonicotinoid insec
 Overall, our results suggest that neonicotinoids may currently pose a high risk to freshwater ecosystems. 
 Moreover, our results add further evidence to the growing literature on risks arising from neonicotinoids for aquatic \citep{morrissey2015neonicotinoid} and terrestrial \citep{pisa2015effects} ecosystems. 
 
-Compared to \citet{stehle_pesticide_2015} we found lower rates of RAC exceedances (15\% (n = 12,615) vs 44\% (n = 1,566) of samples with measurements above LOQ). 
-This may be attributed to two differences: i) Different objectives of governmental monitoring and scientific studies. Scientific studies may be slightly biased towards streams with high pollution to detect effects, whereas monitoring aims mainly at spatially representative surveillance of water quality, also during periods of lower pesticide usage and at natural sites. ii) Different sampling strategies. The dataset compiled here comprised only samples from grab sampling, which may considerably underestimate pesticide exposure \citep{stehle_probabilistic_2013}. 
+%%%! den absatz hier nochmal überarbeiten
+Compared to \citet{stehle_pesticide_2015} we found lower rates of RAC exceedances (5\% (n = 39,609) vs 37.1\% (n = 1,352) of measurements above LOQ). 
+This may be attributed to several differences: i) Different compound spectra. \citet{stehle_pesticide_2015} analysed 23 insectices, we 107 pesticides of different groups. ii) Different objectives of governmental monitoring and scientific studies. Scientific studies may be slightly biased towards streams with high pollution to detect effects, whereas monitoring aims mainly at spatially representative surveillance of water quality, also during periods of lower pesticide usage and at natural sites. iii) Different sampling strategies. The dataset compiled here comprised only samples from grab sampling, which may considerably underestimate pesticide exposure \citep{stehle_probabilistic_2013}. 
+%%%! den absatz hier nochmal überarbeiten
 
 By contrast, \citet{knauer_pesticides_2016} found exceedances from monitoring data mainly for herbicides and fungicides and only one insecticide Chlorpyrifos-methyl.
 Moreover, RAC exceedances in Switzerland were generally lower and less abundant (for example 6 exceedances (=0.2\%) for Isoproturon with a maximum RQ of 2) compared to our results for Germany. 
 This might reflect differences in pesticide use between countries, ecoregions and RACs used. 
 From the definition of RAC it follows that if the concentration of a compound exceeds its RAC ecological effects are expected.
 Indeed, \citet{stehle_agricultural_2015} found that biological diversity of stream invertebrates was significantly reduced by 30\% at RQ = 1.12 and by 10\% at 1/10 of RAC.
-We found RQ values greater than 1.12 in one-quarter of small streams and RQ at 1/10 of RAC in more then half of small streams. 
+We found RQ values greater than 1.12 in 25\% of small streams and RQ at 1/10 of RAC in 54\% of small streams. 
 Consequently, we conclude that agricultural pesticides are on a large scale a major threat to small streams, the biodiversity they host and the services they provide. 
 This threat may exacerbate because pesticides often occur in mixtures \cite{schreiner_pesticide_2016} and may co-occur with other stressors \citep{schafer_contribution_2016}. 
 
@@ -418,7 +420,8 @@ Furthermore, such nationwide compilations, may not only be used for governmental
 However, the sampling design needs to account for precipitation events to provide robust data. 
 Our results suggest that exceedances of RACs are landscape dependent % = Zusammenhang RAC<->Agriculture
 and therefore, pesticide regulation should account for landscape features. 
-Moreover, the high exceedances of RAC indicate that the authorisation process for pesticides may require further development. 
+Moreover, the high exceedances of RACs indicate that greater efforts are needed to describe causal links, which may lead to further developments of the current authorisation procedure.
+
 
 
 
@@ -426,8 +429,8 @@ Moreover, the high exceedances of RAC indicate that the authorisation process fo
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{acknowledgement}
-The authors thank the federal state authorities and the German Working Group on water issues of the Federal States (LAWA) for providing chemical monitoring data and the German Federal Environment Agency (UBA) for funding a related project (FKZ 3714 67 4040 / 1). 
-We thank Alexandra Müller, Wolfram König and Volker Mohaupt (German Federal Environment Agency (UBA)), Martin Keller and Beate Bänsch-Baltruschat (German Federal Institute of Hydrology (BfG)), Matthias Liess and Kaarina Foit (Center for Environmental Research (UFZ)) for their valuable contributions to this project. 
+The authors thank the federal state authorities and the German Working Group on water issues of the Federal States (LAWA) for providing chemical monitoring data and the German Environment Agency (UBA) for funding a related project (FKZ 3714 67 4040 / 1). 
+We thank Alexandra Müller, Wolfram König and Volker Mohaupt (German Environment Agency (UBA)), Martin Keller and Beate Bänsch-Baltruschat (German Federal Institute of Hydrology (BfG)), Matthias Liess and Kaarina Foit (Center for Environmental Research (UFZ)) for their valuable contributions to this project. 
 \end{acknowledgement}
 
 

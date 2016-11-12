@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -115,13 +115,14 @@ ggsave(file.path(prj, 'supplement/temporal.pdf'), p_temp, width = 20, height = 7
 
 # Spatial distribution ----------------------------------------------------
 # (=Figure 1)
-coordinates(psm_sites) <- ~easting + northing
-proj4string(psm_sites) <- CRS("+init=epsg:31467")
-psm_sites <- spTransform(psm_sites, CRS('+init=epsg:4326'))
-psm_sites_bb <- psm_sites@bbox
-psm_sites <- cbind(coordinates(psm_sites), psm_sites@data)
-psm_sites$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites$site_id)
-setDT(psm_sites)
+psm_sites_p <- as.data.frame(psm_sites)
+coordinates(psm_sites_p) <- ~easting + northing
+proj4string(psm_sites_p) <- CRS("+init=epsg:31467")
+psm_sites_p <- spTransform(psm_sites_p, CRS('+init=epsg:4326'))
+psm_sites_bb <- psm_sites_p@bbox
+psm_sites_p <- cbind(coordinates(psm_sites_p), psm_sites_p@data)
+psm_sites_p$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites_p$site_id)
+setDT(psm_sites_p)
 
 # get administrative borders
 adm1 <- raster::getData('GADM', country = 'DE', level = 1)
@@ -129,7 +130,7 @@ adm1 <- fortify(adm1)
 p_map <- ggplot() +
   geom_polygon(data = adm1, aes(x = long, y = lat, group = group), fill = "grey90") +
   geom_path(data = adm1, aes(x = long, y = lat, group = group), size = .3) +
-  geom_point(data = psm_sites, aes(x = easting, y = northing, col = state_ab), 
+  geom_point(data = psm_sites_p, aes(x = easting, y = northing, col = state_ab), 
              size = 1) +
   theme(legend.key = element_rect(fill = 'white')) +
   # guides(colour = FALSE) +
@@ -204,7 +205,7 @@ var_tab <- var_props[var_tab]
 take_var_id <- unique(psm_samples$variable_id)
 var_tab <- var_tab[variable_id %in% take_var_id, ]
 var_tab[!is.na(rak_uba)]
-# 105 RAC values available
+# 107 RAC values available
 
 # prettify
 var_tab[ , variable_id := NULL]
@@ -231,7 +232,7 @@ var_tab[Name == 'Benzoesäure', CAS := '65-85-0']
 # order by name
 var_tab <- var_tab[order(Name)]
 
-
+# round to four digits
 
 
 var_tab_x <- xtable(var_tab, 
@@ -239,10 +240,10 @@ var_tab_x <- xtable(var_tab,
                     caption = c('Overview on pesticides (and metabolites) in the database. \\
                     \\textsuperscript{a} Authorized in Germany (Source: German Federal Office of Consumer Protection and Food Safety (BVL) as at March 2015). 
                     \\textsuperscript{b} Authorized in the European union (Source: EU Pesticides database as at March 2015).
-                    \\textsuperscript{c} Regulatory Acceptable Concentration [ug/L] (Source: German Federal Environment Agency (UBA) as at November 2015).',
+                    \\textsuperscript{c} Regulatory Acceptable Concentration [$\\mu g/L$] (Source: German Environment Agency (UBA) as at November 2015).',
                     'Overview on pesticides in the database.'),
                     align = 'lp{4cm}rlp{1.3cm}p{1.3cm}p{1.5cm}',
-                    digits = 4)
+                    digits = 5)
                     
 print(var_tab_x,
       file = file.path(prj, 'supplement/phchvar.tex'),
@@ -261,7 +262,7 @@ print(var_tab_x,
 # Compound spectra --------------------------------------------------------
 
 psm_variables[!is.na(rak_uba)]
-# 105 compunds with RAKS
+# 107 compunds with RAKS
 
 
 ### Measured Spectra
@@ -312,9 +313,9 @@ text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2
 nr <- nrow(vw[ , -1, with = FALSE])
 
 # number of clusters to check
-ks <- 2:(nr-1)
+ks <- 2:(nr - 1)
 asw <- numeric(length(ks))
-for(i in seq_along(ks)) {
+for (i in seq_along(ks)) {
   sil <- silhouette(cutree(hc, k = ks[i]), dp)
   asw[i] <- summary(sil)$avg.width
 }
@@ -389,7 +390,7 @@ ylab <- paste0('Axis 2 (', evar[2], '%)')
 p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
   mytheme +
   scale_colour_manual(guide = FALSE, values = colo) +
-  xlab(xlab)+
+  xlab(xlab) +
   ylab(ylab) +
   geom_vline(xintercept = 0, linetype = 'dotted') +
   geom_hline(yintercept = 0, linetype = 'dotted') +
@@ -439,7 +440,7 @@ ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fi
   mytheme +
   labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
   # scale_fill_gradient(low = "yellow", high = "red") +
-  scale_fill_viridis()+
+  scale_fill_viridis() +
   scale_x_continuous(breaks = c(0, 10, 25, 50, 100))
 # ezg_lu
 ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
@@ -455,10 +456,11 @@ options(stringsAsFactors = FALSE)
 
 # Intersect samples with precipitation data -------------------------------
 run_precip <- FALSE
+# if false, use precomouted data from cache 
 if (run_precip) {
   # path to regnie data
-  # regpath <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project/data/regnie/'
-  regpath <- '/home/user/Documents/projects_git/ms_est/data/regnie'
+  regpath <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Project/data/regnie/'
+  # regpath <- '/home/user/Documents/projects_git/ms_est/data/regnie'
  
    # unique samplings
   samps <- unique(psm_samples[ , list(site_id, sample_id, date)])

@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -65,7 +65,7 @@ rak_exceed
 rm(samples_raks, samples_exceed)
 # exclude NA (=sites wihtout ezg & agri info)
 rak_exceed <- rak_exceed[!(is.na(agri_fin) | is.na(ezg_fin)), ]
-# 2343 sites with ezg and agri data
+# 2270 sites with ezg and agri data
 
 
 # logn used as offset
@@ -205,8 +205,8 @@ pdat <- transform(pdat,
                   sig_value = ifelse(sig, fit, NA))
 
 mylabeller <- as_labeller(c(
-  'agri_fin'="Agriculture [%]",
-  'ezg_fin'="Catchment Size [km2]"
+  'agri_fin' = "Agriculture [%]",
+  'ezg_fin' = "Catchment Size [km2]"
 ))
 
 
@@ -214,8 +214,8 @@ mylabeller <- as_labeller(c(
 odat <- melt(rak_exceed[ , list(ezg_fin, agri_fin)])
 p <- ggplot() +
   geom_line(data = pdat, aes(x = value, y = fit, group = variable)) +
-  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty ='dashed') +
-  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty ='dashed') +
+  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty = 'dashed') +
+  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty = 'dashed') +
   geom_line(data = pdat, aes(x = value, y = sig_value, group = variable), 
             colour = 'red', lwd = 1.5) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
@@ -231,5 +231,5 @@ ggsave(file.path(prj, "figure4.pdf"),
 
 pdat
 pdat[c(1, 29), ]
-0.436 / 0.128 # = ration risk at zero / risk at no significant
-
+0.389 / 0.104 # = ration risk at zero / risk at no significant
+# 3.7 fold

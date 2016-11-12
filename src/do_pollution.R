@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -72,10 +72,12 @@ setkey(take_rac, variable_id)
 setkey(psm_variables, variable_id)
 meas <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 
-# remove variable with less then 1000 samples
-meas <- meas[variable_id %in% meas[ , list(n = length(value)), 
-                                  by = variable_id][n > 1000, variable_id]]
 
+
+# # remove variables with less then 1000 samples
+# meas <- meas[variable_id %in% meas[ , list(n = length(value)), 
+#                                   by = variable_id][n > 1000, variable_id]]
+# 
 
 
 # calculate max per variable and take only first 15 hits
@@ -93,34 +95,40 @@ take_meas[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)]
 # for each sample, take maximum RQ (from different compounds) and check exceedance
 nrow(meas[ ,list(rq_max = max(rq)) , 
            by = sample_id][rq_max > 1]) /  length(unique(meas$sample_id)) * 100
-# in 7.7\% of samples taken there was was RQ > 1 found
+# in 7.3\% of samples taken there was was RQ > 1 found
 nrow(meas[ ,list(rq_max = max(rq)) , 
            by = sample_id][rq_max > 1]) /  length(unique(meas$sample_id[meas$rq > 0])) * 100
-# in 14.6\% of samples with detecs was was RQ > 1 found
+# in 14\% of samples with detecs was was RQ > 1 found
 
 
 ## % of measurements
-mean(meas[ , rq >1])*100
-mean(meas[rq > 0 , rq >1])* 100
+mean(meas[ , rq > 1])*100 # 0.2 % of all measurements
+nrow(meas[rq > 0])
+mean(meas[rq > 0 , rq > 1]) * 100 # 5% of all detects
+
+# number of detects
+
+nrow(meas[rq > 1]) / nrow(meas[rq > 0]) * 100
 
 
 ## % number of sites
 # number of SWB wit RAC exceedances
 length(unique(meas[rq > 1, site_id]))
-# 594 sites
+# 579 sites
 length(unique(meas[, site_id]))
 # form 2270
 length(unique(meas[rq > 1, site_id])) / length(unique(meas[, site_id])) * 100
-# = 26\%
+# = 25.5\%
 
-length(unique(meas[rq > 1.12, site_id])) / length(unique(meas[, site_id]))* 100
-# 25\% exceedance that are ecologically relevant (biodiversity 
+length(unique(meas[rq > 1.12, site_id])) / length(unique(meas[, site_id])) * 100
+# 24.8\% exceedance that are ecologically relevant (biodiversity 
 #  reduciton of 30% at RQ= 1.12)
-length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id]))* 100
-# 1/10 RQ == 11% reduction
-length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id]))* 100
-# 77% of sites showed detects
-100- length(unique(meas[rq  > 0, site_id])) / length(unique(meas[, site_id]))* 100
+
+length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id])) * 100
+# 1/10 RQ == 11% reduction of biodiversity
+
+# 23% of sites without detects
+100 - length(unique(meas[rq  > 0, site_id])) / length(unique(meas[, site_id])) * 100
 
 
 #show cummulative distribution
@@ -130,7 +138,7 @@ for (i in seq_along(rqs)) {
   message(i, '\n')
   prec[i] <- length(unique(meas[rq >= rqs[i], site_id])) 
 }
-prec <- prec/ length(unique(meas[, site_id]))* 100
+prec <- prec / length(unique(meas[, site_id])) * 100
 
 pdf(file.path(prj, "supplement/prac_ex.pdf"))
   plot(rqs[3:length(rqs)], prec[3:length(prec)], 
@@ -172,8 +180,8 @@ setnames(rac_dat, c('Name', 'No. ', 'No. \\textgreater LOQ',
 
 rac_dat_x <- xtable(rac_dat, 
                label = 'tab:rac_dat',
-               caption = c('Overview on RAC exceedances of the 76 compounds with more than 1000 measurements. No. = number of measurements;  \\% RQ \\textgreater 1 = RAC exceedances; \\% RQ \\textgreater 1 | \\textgreater LOQ= RAC exceedances as fraction of detects.',
-                           'Overview on RAC exceedances of the 76 compounds with more than 1000 measurements.'),
+               caption = c('Overview on RAC exceedances of the 78 compounds with more than 1000 measurements. No. = number of measurements;  \\% RQ \\textgreater 1 = RAC exceedances; \\% RQ \\textgreater 1 | \\textgreater LOQ= RAC exceedances as fraction of detects.',
+                           'Overview on RAC exceedances of the 78 compounds with more than 1000 measurements.'),
                align = 'lp{3cm}rR{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}R{1.4cm}',
                digits = 1
 )
@@ -226,7 +234,8 @@ ggsave(file.path(prj, "figure6.pdf"), prac, width = 7, height = 6.5)
 
 
 # RQ exceedances for other compounds
-take_samples[value_fin > 0, length(value_fin), by = variable_id]
+take_samples[value_fin > 0, length(value_fin), by = variable_id][order(V1,decreasing = TRUE)]
+
 
 psm_variables[name %like% c('Nicosu') | name %like% c('Diflufe') | name %like% c('Dimox')]
 nrow(take_meas[variable_id %in% c(457) & rq > 1]) / nrow( take_meas[variable_id %in% c(457) & rq > 0]) * 100

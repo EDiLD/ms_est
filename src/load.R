@@ -4,6 +4,7 @@ rm(list = ls()[!ls() %in% 'prj'])
 ## Project Path
 # prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project' # EDiLD
 # prj <- 'C:\\Users\\Edi\\Documents\\BFG\\monitoring_ger' # EDiLD2
+# prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est'
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
        e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")

@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -94,8 +94,8 @@ take <- psm_variables[ , list(variable_id, psm_type)][take]
 
 
 # remove compounds with no risk
-props <- take[  , list(prop = sum(rq>0) / length(rq),
-              abs = sum(rq>0),
+props <- take[  , list(prop = sum(rq > 0) / length(rq),
+              abs = sum(rq > 0),
               tot = length(rq)), by = variable_id][order(prop, 
                                                          decreasing = TRUE)]
 hist(props[prop < 0.2 , prop])
@@ -104,7 +104,7 @@ hist(props[prop < 0.2 , prop])
 hist(props[tot < 1000, tot])
 
 (keep <- props[prop > 0.05 & tot > 1000])
-# 25 compounds left
+# 23 compounds left
 
 
 
@@ -151,7 +151,8 @@ rm(samples_rac, psm_sites, psm_sites_info, take_si, rac, keep_tab, keep_tab_x)
 
 # Model -------------------------------------------------------------------
 # one single compouns
-take_c <- take[variable_id == 191]
+# take_c <- take[variable_id == 191]
+take_c <- take[variable_id == 378]
 
 
 gco <- glim.control(glm.trace = TRUE, bf.trace = FALSE)
@@ -165,9 +166,9 @@ glco <- gamlss.control(c.crit = 0.01, mu.step = 0.5)
 # gamma hurdle model with precipitation as groups, season and psm_type as preds
 # state as random effect
 mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
-                    re(random=~1|state_fac/s_id_fac),
-                  nu.formula =~ 0 + precip_1 + precip0 + season + 
-                    re(random=~1|state_fac/s_id_fac),
+                    re(random = ~1|state_fac/s_id_fac),
+                  nu.formula = ~ 0 + precip_1 + precip0 + season + 
+                    re(random = ~1|state_fac/s_id_fac),
                   data = take_c,
                   family = ZAGA,
                   control = glco,
@@ -180,10 +181,10 @@ res <- residuals(mod_l_m)
 hist(res)
 
 # plot marginal data
-plot(log(rq) ~ log_precip_1 , data= take_c[take_c$rq > 0, ])
-plot(I(ifelse(rq > 0, 1, 0)) ~ log_precip_1 , data= take_c, 
+plot(log(rq) ~ log_precip_1 , data = take_c[take_c$rq > 0, ], pch = 16, col = rgb(0, 0, 0, 0.2))
+plot(I(ifelse(rq > 0, 1, 0)) ~ log_precip_1 , data = take_c, 
      col = rgb(0, 0, 0, 0.1), pch = 16)
-plot(log(rq) ~ season , data= take_c[take_c$rq > 0, ])
+plot(log(rq) ~ season , data = take_c[take_c$rq > 0, ])
 
 
 # random slope model, does not converge!
@@ -206,9 +207,9 @@ plot(log(rq) ~ season , data= take_c[take_c$rq > 0, ])
 model_foo <- function(var){
   message('Running model on compound: ', var)
   take_c <<- take[variable_id == var]
-  mod <- gamlss(rq ~ 0+log_precip_1 + log_precip0 + season +
+  mod <- gamlss(rq ~ 0 + log_precip_1 + log_precip0 + season +
                       re(random = ~1|state_fac/s_id_fac),
-                    nu.formula =~0+log_precip_1 + log_precip0 + season + 
+                    nu.formula = ~0+log_precip_1 + log_precip0 + season + 
                       re(random = ~1|state_fac/s_id_fac),
                     data = take_c,
                     family = ZAGA,
@@ -220,7 +221,8 @@ model_foo <- function(var){
 # model_foo(727)
 # run model on compounds
 run_model <- FALSE
-if (run_model){
+if (run_model) {
+  file.remove(file.path(cachedir, 'lmodels', paste0('mod_', keep$variable_id, '.rds')))
   lapply(keep$variable_id, model_foo)
 }
 
@@ -310,7 +312,7 @@ setnames(keep_tab2, c("variable_id", "Compound", "term2", "term_type", "est",
 keep_tab2_w <- keep_tab2[ , list(Compound, variable, effect, coefficient)]
 keep_tab2_w <- dcast(keep_tab2_w, Compound + effect ~ variable)
 keep_tab2_w <- keep_tab2_w[order(keep_tab2_w$effect), ]
-rownames(keep_tab2_w)<-NULL
+rownames(keep_tab2_w) <- NULL
 
 keep_tab2_x <- xtable(keep_tab2_w, 
                      label = 'tab:var_model_coef',
@@ -322,14 +324,14 @@ keep_tab2_x <- xtable(keep_tab2_w,
 
 print(keep_tab2_x, 
       file = file.path(prj, 'supplement/keeptab2.tex'),
-      tabular.environment="longtable",
+      tabular.environment = "longtable",
       floating = FALSE,
       caption.placement = 'top',
       comment = FALSE,
       booktabs = TRUE,
-      hline.after = c(-1, 0, 23, 46),
+      hline.after = c(-1, 0, 22, 44),
       sanitize.text.function = identity,
-      size="\\fontsize{8pt}{10pt}\\selectfont"
+      size = "\\fontsize{8pt}{10pt}\\selectfont"
 )
 
 
@@ -344,12 +346,12 @@ p_precip <- ggplot(data = pdata) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, 
                       fill = variable,
                       col = cisig),
-                  position=position_dodge(width = .6)) +
+                  position = position_dodge(width = .6)) +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
   facet_wrap(~term_type, labeller = label_parsed) +
   coord_flip() +
   mytheme +
-  theme(legend.position="none") +
+  theme(legend.position = "none") +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = '') +
   scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'),
@@ -365,12 +367,12 @@ p_season <- ggplot(data = pdata2) +
   geom_pointrange(aes(x = term2, y = est, ymax = upci, ymin = lowci, 
                       fill = variable,
                       col = cisig),
-                  position=position_dodge(width = .6)) +
+                  position = position_dodge(width = .6)) +
   coord_flip() +
   facet_wrap(~term_type,labeller = label_parsed) +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
   mytheme +
-  theme(legend.position="none") +
+  theme(legend.position = "none") +
   scale_color_manual(values = c('black', 'grey70')) +
   labs(x = '', y = 'Coefficient') +
   scale_x_discrete(breaks = c('seasonQ4', 'seasonQ3', 'seasonQ2', 'seasonQ1'),
@@ -414,7 +416,7 @@ ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 # test on one coef
 unique(resdf$term)
 # fixed effect meta analysis
-mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], 
+mmod <- rma(est, sei = stderr, data = resdf[term == 'nu.log_precip_1'], 
             method = 'FE')
 mmod
 plot(mmod)
@@ -432,7 +434,7 @@ sum(wi*dat$est) / sum(wi) - sqrt(1/sum(wi)) * qnorm(0.975)
 
 
 # random effect meta analysis
-mmod <- rma(est, sei=stderr, data = resdf[term == 'nu.log_precip_1'], 
+mmod <- rma(est, sei = stderr, data = resdf[term == 'nu.log_precip_1'], 
             method = 'REML')
 mmod
 plot(mmod)
@@ -443,7 +445,7 @@ plot(mmod)
 terms <- unique(resdf$term)
 # terms <- terms[!(terms == 'sigma' | grepl('Intercept', terms))]
 fit_meta <- function(tm){
-  mmod <- rma(est, sei=stderr, data = resdf[term == tm], method = 'REML')
+  mmod <- rma(est, sei = stderr, data = resdf[term == tm], method = 'REML')
   out <- data.frame(term = tm, est = mmod$b[,1], upr = mmod$ci.ub, 
                     lwr = mmod$ci.lb)
   return(out)
@@ -463,20 +465,25 @@ resmd <- rbindlist(resm)
 # log_preciü,p_1: nu 
 # intercept
 int <- resmd$est[resmd$term ==  'mu.seasonQ2']
+
+foo <- function(x) log10(x + 0.05) # transformation
+
 # int<-0
 # by hand:
 # p <- 1
 # a <- exp(int + p*resmd$est[resmd$term ==  'nu.log_precip_1'])
 # a / (1+a) # prob at 1mm)
 
-(one <- plogis(int + resmd$est[resmd$term ==  'nu.log_precip_1']))
-(ten <- plogis(int + 2*resmd$est[resmd$term ==  'nu.log_precip_1']))
-(ten-one) 
-(ten-one) / one 
-ten
-(hun <- plogis(int + 3*resmd$est[resmd$term ==  'nu.log_precip_1']))
-(hun-ten)
-(hun-ten) / ten
+# prop of exceeding loq in q2 at 0.1 mm
+(zerop1 <- plogis(int + foo(0.1)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
+# prop of exceeding loq in q2 at 10 mm
+(ten <- plogis(int + foo(10)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
+(ten - zerop1) 
+(ten - zerop1) / zerop1 * 100
+
+#!!! give also span of individual models? Use predict.gamlss?
+#!!! what about mu?
+#!!! check and refine
 
 # Q1 mu
 exp(resmd$est[resmd$term ==  'mu.seasonQ1'])
@@ -495,10 +502,14 @@ resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)
 resmd$coeftype <- ifelse(grepl('season', resmd$term), 'season', 'precip')
 # remove sigma
 resmd <- resmd[!term == 'sigma']
+resmd$type <- mapvalues(resmd$type, c('mu', 'nu'),
+                        c('mu~(RQ)', 'nu~(LOQ)'))
+
+
 p_season <- ggplot(resmd[resmd$coeftype == 'season', ]) +
   geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
   coord_flip() +
-  facet_grid(.~type , scales ='free_x', labeller = label_parsed) +
+  facet_grid(.~type , scales = 'free_x', labeller = label_parsed) +
   mytheme +
   labs(x = '', y = 'Coefficient') +
   scale_x_discrete(breaks = c('mu.seasonQ4', 'mu.seasonQ3', 
@@ -512,7 +523,7 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
   geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
   coord_flip() +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
-  facet_grid(.~type , scales ='free_x', labeller = label_parsed) +
+  facet_grid(.~type , scales = 'free_x', labeller = label_parsed) +
   mytheme +
   labs(x = '', y = '') +
   scale_x_discrete(breaks = c('mu.log_precip_1', 'mu.log_precip0'),
@@ -522,4 +533,4 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 # plot(p)
-ggsave("figure5.pdf", p, width = 7, height = 5.5)
+ggsave(file.path(prj, "figure5.pdf"), p, width = 7, height = 5.5)
