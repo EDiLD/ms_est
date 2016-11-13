@@ -80,6 +80,8 @@ meas <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 # 
 
 
+
+# Compare with Stehle & Schulz ---------------------------------------
 # restrict to insecticides compunds as Stehle & Schulz
 rsvar <- c(290, # only alpha endosulfan, rs did no differenciate
            146, 213, 257, 397, 487, 488, 192, 1216, 167, 650,
@@ -92,6 +94,7 @@ rsvar <- c(290, # only alpha endosulfan, rs did no differenciate
 com <- psm_variables[variable_id %in% rsvar & !is.na(rak_uba), list(variable_id, name, rak_uba)]
 # add rac_sw from stehle
 com$rs <- c(0.005, 0.1, 0.025, 0.3, 1.57, 2.8, 0.5)
+# differences in RAC between studies
 diff <- com$rak_uba - com$rs
 mean(diff)
 range(diff)
@@ -110,7 +113,9 @@ nrow(meas_ins[rq > 1]) / nrow(meas_ins[rq > 0]) * 100
 
 
 
-# calculate max per variable and take only first 15 hits
+
+# Maximum RQ --------------------------------------------------------------
+# calculate maxRQ per variable and take only first 15 hits
 take_var <- meas[ , list(media = max(rq)) , 
                   by = variable_id][order(media, 
                                           decreasing = TRUE)][1:15, variable_id]
@@ -121,7 +126,7 @@ take_meas[ , list(media = max(rq)) , by = name][order(media, decreasing = TRUE)]
 
 
 
-## % of samples
+## Exceedance as % of samples
 # for each sample, take maximum RQ (from different compounds) and check exceedance
 nrow(meas[ ,list(rq_max = max(rq)) , 
            by = sample_id][rq_max > 1]) /  length(unique(meas$sample_id)) * 100
@@ -131,13 +136,12 @@ nrow(meas[ ,list(rq_max = max(rq)) ,
 # in 14\% of samples with detecs was was RQ > 1 found
 
 
-## % of measurements
+## Exceedances as % of measurements
 mean(meas[ , rq > 1])*100 # 0.2 % of all measurements
 nrow(meas[rq > 0])
 mean(meas[rq > 0 , rq > 1]) * 100 # 5% of all detects
 
-# number of detects
-
+# % of detects
 nrow(meas[rq > 1]) / nrow(meas[rq > 0]) * 100
 
 
@@ -161,7 +165,10 @@ length(unique(meas[rq > 0.1, site_id])) / length(unique(meas[, site_id])) * 100
 100 - length(unique(meas[rq  > 0, site_id])) / length(unique(meas[, site_id])) * 100
 
 
-#show cummulative distribution
+
+#  ------------------------------------------------------------------------
+
+#show cummulative distribution of maxRQ
 rqs <- c(0.1, 1, 1.12, logspace(log10(0.001), log10(100), length.out = 100))
 prec <- numeric(length(rqs))
 for (i in seq_along(rqs)) {
@@ -177,7 +184,9 @@ pdf(file.path(prj, "supplement/prac_ex.pdf"))
        ylim = c(0, 100), 
        cex = 0.8,
        ylab = 'Fraction of sites',
-       xlab = 'max(RQ)') 
+       xlab = 'max(RQ)',
+       xaxt = 'n') 
+  axis(side = 1, at = c(0.001, 0.01, 0.1, 1,  10, 100))
   abline(v = 1, lty = 'dotted')
   abline(v = 0.1, lty = 'dotted')
   abline(h = prec[1], lty = 'dotted')
@@ -191,6 +200,8 @@ length(unique(meas$site_id))   # 2270 (from 2301 in total)
 length(unique(meas$sample_id)) # 24344 samples with rac (from 24743 in total)
 
 
+
+#  ------------------------------------------------------------------------
 ### table for comppunds with more the 1000 measurements
 rac_dat <- psm_variables[ , list(variable_id, psm_type, name)][  # join with variable_names
   meas[ ,list(n_meas = .N,      # number of measurements
@@ -200,7 +211,7 @@ rac_dat <- psm_variables[ , list(variable_id, psm_type, name)][  # join with var
             p_racex = round(sum(value_fin > rak_uba) / .N * 100, 1), # prop of exceedances
             p_racex_d = round(sum(value_fin > rak_uba) / sum(value_fin > 0) * 100, 1) # prop of exceedances of detects
             ) , by = variable_id]
-  ]
+  ][n_meas > 1000]
 rac_dat[ , variable_id := NULL]
 rac_dat[ , psm_type := NULL]
 rac_dat <- rac_dat[order(name)]
@@ -230,20 +241,21 @@ print(rac_dat_x,
 
 
 
+#  ------------------------------------------------------------------------
 # calculate percentage of non-detects
 loqd <- take_meas[ , list(tot = length(rq),
                 n_n0 = sum(rq > 0), # number of > LOQ
                 n_0 = sum(rq == 0), # number of < LOQ
                 p_n0 = round(sum(rq > 0) / length(rq) * 100, 1), # % 
                 p_0 = round(sum(rq == 0) / length(rq) * 100, 1)), #%
-                by = list(variable_id, name)]
+                by = list(variable_id, name)][tot > 1000]
 # same order as in plot
 levs <- levels(reorder(take_meas[rq > 0, name], take_meas[rq > 0, rq], median))
-loqd[ , name := factor(name, levels = levs)]
+loqd[ , name := factor(name, levels = levs[levs %in% loqd$name])]
 loqd
 
 prac <- ggplot() +
-  geom_violin(data = take_meas[rq > 0],
+  geom_violin(data = take_meas[rq > 0 & name %in% loqd$name],
               aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
   geom_hline(yintercept = 1, linetype = 'dotted') +
   coord_flip() +
@@ -266,7 +278,7 @@ ggsave(file.path(prj, "figure6.pdf"), prac, width = 7, height = 6.5)
 # RQ exceedances for other compounds
 take_samples[value_fin > 0, length(value_fin), by = variable_id][order(V1,decreasing = TRUE)]
 
-
+# exceedances for Nicosulfuron, Diflufenican and Dimoxystrobin
 psm_variables[name %like% c('Nicosu') | name %like% c('Diflufe') | name %like% c('Dimox')]
 nrow(take_meas[variable_id %in% c(457) & rq > 1]) / nrow( take_meas[variable_id %in% c(457) & rq > 0]) * 100
 nrow(take_meas[variable_id %in% c(272) & rq > 1]) / nrow( take_meas[variable_id %in% c(272) & rq > 0]) * 100
@@ -275,9 +287,11 @@ nrow(take_meas[variable_id %in% c(282) & rq > 1]) / nrow( take_meas[variable_id 
 
 
 # number of samples for Thiaclorpid
-take_samples[variable_id == 588]
+nrow(take_samples[variable_id == 588])
 
 
+
+#  ------------------------------------------------------------------------
 # detects
 dt <- take_samples[ , list(tot = length(value_fin),
                      n_0 = sum(value_fin == 0),
@@ -288,11 +302,9 @@ dt <- take_samples[ , list(tot = length(value_fin),
 setkey(dt, variable_id)
 pdt <- psm_variables[ , list(variable_id, psm_type, name)][dt][order(p_d, decreasing = TRUE)]
 
-
 # numbers for detection rates
 pdt[order(p_d, decreasing = TRUE)][tot > 100]
 pdt[order(p_d, decreasing = TRUE)][tot > 100 & psm_type != 'metabolite']
-
 
 
 pdetects <- ggplot(pdt[p_d > 0.15 & tot > 100], aes(x = reorder(name, p_d), y = p_d * 100, col = psm_type, 
@@ -308,6 +320,8 @@ pdetects <- ggplot(pdt[p_d > 0.15 & tot > 100], aes(x = reorder(name, p_d), y = 
   labs(x = '', y = '% detects ')
 # pdetects
 ggsave(file.path(prj, "supplement/pdetects.pdf"), pdetects, width = 8, height = 6.5)
+
+
 
 
 # Mixtures ----------------------------------------------------------------
@@ -337,3 +351,4 @@ pmix <- ggplot(mix, aes(x = no_subs)) +
   labs(y = 'No. samples', x = 'No. compounds')
 # pmix
 ggsave(file.path(prj, "supplement/pmix.pdf"), pmix, width = 7, height = 6.5)
+

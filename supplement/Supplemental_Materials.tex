@@ -45,7 +45,7 @@
 
 %% -------------------------------------------------------------------------
 \chapter{Data Cleaning}
-Before combining into a common database, more than 30 datasets have been cleaned and homogenized separately.
+Before combining into a common database, more than 30 datasets have been cleaned and homogenised separately.
 Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} gives a graphical overview):
 
 \begin{enumerate}
@@ -53,7 +53,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 	\item Coordinates: Coordinates have been transformed to a common Coordinate Reference System (DHDN / 3-Grad Gauss-Krüger Zone 3 (EPSG:31467)) and duplicates merged.
 	\item Chemicals: Chemical names and identifiers have been unified using the webchem package (https://github.com/ropensci/webchem).
 	\item  Identifiers: Unique identifiers have been assigned.
-	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification were set to zero (and can be used to identity non-detects).
+	\item Units: All concentrations have been converted to $\mu g/L$. Values below limit of quantification were set to zero (and can be used to identify non-detects).
 	\item Other meta-data: meta-data has been standardised.
 	\item Temporal resolution: The temporal resolution of the database is 1 day. Samplings below this resolution have been aggregated by the maximum daily value.
 	\item Validity Checks: Simple rules for validity checks have been implemented.
@@ -62,7 +62,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
-	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning, data has been stored in a relational spatial PostgreSQL database.}
+	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning, data have been stored in a relational spatial PostgreSQL database.}
 	\label{fig:data_cleaning}
 \end{figure}
 
@@ -91,7 +91,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{silhouette}
-	\caption[Average silhouette width for different cluster sizes.]{Average silhouette width for different cluster sizes of complete linkage clustering of jaccard similarity of analysed compound spectra between federal states. Two clusters showed maximum silhouette width.}
+	\caption[Average silhouette width for different cluster sizes.]{Average silhouette width for different cluster sizes of complete linkage clustering of jaccard similarity of analysed compound spectra between federal states. Two clusters showed the maximum silhouette width.}
 	\label{fig:silhouette}
 \end{figure}
 
@@ -119,7 +119,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{precip}
-	\caption[Distribution of precipitation at sampling occasions.]{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at day before sampling.}
+	\caption[Distribution of precipitation at sampling occasions.]{Distribution of precipitation at sampling occasions. top: at sampling date. bottom: at the day before sampling.}
 	\label{fig:precip}
 \end{figure}
 
@@ -132,7 +132,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{coefs}
-	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at day before sampling and at day of sampling. Bottom row: estimates for the four Quarters. Each dot represents one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
+	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at the day before sampling and at day of sampling. Bottom row: estimates for the four Quarters. Each dot represents one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
 	\label{fig:coefs}
 \end{figure}
 

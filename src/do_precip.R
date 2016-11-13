@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
+       e.g. prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -110,6 +110,7 @@ hist(props[tot < 1000, tot])
 
 
 
+#  ------------------------------------------------------------------------
 # export overview for supplement
 keep
 setkey(psm_variables, variable_id)
@@ -150,7 +151,7 @@ rm(samples_rac, psm_sites, psm_sites_info, take_si, rac, keep_tab, keep_tab_x)
 
 
 # Model -------------------------------------------------------------------
-# one single compouns
+# single compouds (for testing)
 # take_c <- take[variable_id == 191]
 take_c <- take[variable_id == 378]
 
@@ -179,6 +180,14 @@ term.plot(mod_l_m)
 term.plot(mod_l_m, what = 'nu')
 res <- residuals(mod_l_m)
 hist(res)
+
+foo <- function(x) log10(x + 0.05) # transformation
+newdata = data.frame(log_precip0 = foo(0.1),
+                     log_precip_1 = foo(0.1),
+                     season = 'Q2')
+predict(mod_l_m,  what = 'nu',  type = 'response')
+
+
 
 # plot marginal data
 plot(log(rq) ~ log_precip_1 , data = take_c[take_c$rq > 0, ], pch = 16, col = rgb(0, 0, 0, 0.2))
@@ -225,6 +234,8 @@ if (run_model) {
   file.remove(file.path(cachedir, 'lmodels', paste0('mod_', keep$variable_id, '.rds')))
   lapply(keep$variable_id, model_foo)
 }
+
+
 
 
 # function to extract the needed model components,
@@ -279,6 +290,8 @@ resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci),
 resdf$termind <- substr(resdf$term, 1, 2)
 
 
+
+#  ------------------------------------------------------------------------
 # export other table
 keep_tab2 <- resdf[!grepl('Intercept', term) & term_type != 'sigma', 
                    list(variable, term2, term_type, est, lowci, upci)]
@@ -337,6 +350,7 @@ print(keep_tab2_x,
 
 
 
+#  ------------------------------------------------------------------------
 # display estimates and errors
 pdata <- resdf[!term2 %chin% c('(Intercept)', 'sigma') &
                  term2 %in% c('log_precip0', 'log_precip_1')]
@@ -455,25 +469,18 @@ resm <- lapply(terms, fit_meta)
 resm
 resmd <- rbindlist(resm)
 
-# log_precip1 multiplicator for mu if precip_1 increases by 10mm
-(exp(resmd$est[resmd$term ==  'mu.log_precip_1']) - 1) * 100
-# or by hand
-# one <- exp(resmd$est[resmd$term ==  'mu.seasonQ2']) * exp(resmd$est[resmd$term ==  'mu.log_precip_1'] * 1)
-# ten <- exp(resmd$est[resmd$term ==  'mu.seasonQ2'])  * exp(resmd$est[resmd$term ==  'mu.log_precip_1'] * 2)
-# (ten-one) / one
 
-# log_preciü,p_1: nu 
-# intercept
-int <- resmd$est[resmd$term ==  'mu.seasonQ2']
 
+
+
+# Absolute effect sizes ---------------------------------------------------
+
+
+# LOQ ---------------------------------------------------------------------
 foo <- function(x) log10(x + 0.05) # transformation
-
-# int<-0
-# by hand:
-# p <- 1
-# a <- exp(int + p*resmd$est[resmd$term ==  'nu.log_precip_1'])
-# a / (1+a) # prob at 1mm)
-
+# log_precip_1: nu 
+# intercept
+int <- resmd$est[resmd$term ==  'nu.seasonQ2']
 # prop of exceeding loq in q2 at 0.1 mm
 (zerop1 <- plogis(int + foo(0.1)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
 # prop of exceeding loq in q2 at 10 mm
@@ -481,14 +488,13 @@ foo <- function(x) log10(x + 0.05) # transformation
 (ten - zerop1) 
 (ten - zerop1) / zerop1 * 100
 
-#!!! give also span of individual models? Use predict.gamlss?
-#!!! what about mu?
-#!!! check and refine
 
-# Q1 mu
-exp(resmd$est[resmd$term ==  'mu.seasonQ1'])
-# Q2 mu
-exp(resmd$est[resmd$term ==  'mu.seasonQ2'])
+# or individual models
+zerop <- 100 * plogis(resdf[termind == 'nu' & term2 == 'seasonQ2', est] + foo(0.1) * resdf[termind == 'nu' & term2 == 'log_precip_1', est])
+range(zerop)
+tena <- 100 * plogis(resdf[termind == 'nu' & term2 == 'seasonQ2', est] + foo(10) * resdf[termind == 'nu' & term2 == 'log_precip_1', est])
+range(tena)
+(tena - zerop) / zerop * 100
 
 # Q1 nu
 plogis(resmd$est[resmd$term ==  'nu.seasonQ1'])
@@ -497,6 +503,36 @@ plogis(resmd$est[resmd$term ==  'nu.seasonQ2'])
 
 
 
+
+
+# RQ ----------------------------------------------------------------------
+# Q1 mu
+exp(resmd$est[resmd$term ==  'mu.seasonQ1'])
+# Q2 mu
+exp(resmd$est[resmd$term ==  'mu.seasonQ2'])
+
+int <- resmd$est[resmd$term ==  'mu.seasonQ2']
+# prop of exceeding loq in q2 at 0.1 mm
+(zerop1 <- exp(int + foo(0.1)*resmd$est[resmd$term ==  'mu.log_precip_1']))
+# prop of exceeding loq in q2 at 10 mm
+(ten <- exp(int + foo(10)*resmd$est[resmd$term ==  'nu.log_precip_1']))
+(ten - zerop1) 
+(ten - zerop1) / zerop1 * 100 
+
+
+# or individual models
+zerop <- exp(resdf[termind == 'mu' & term2 == 'seasonQ2', est] + foo(0.1) * resdf[termind == 'mu' & term2 == 'log_precip_1', est])
+range(zerop)
+tena <- exp(resdf[termind == 'mu' & term2 == 'seasonQ2', est] + foo(10) * resdf[termind == 'mu' & term2 == 'log_precip_1', est])
+range(tena)
+(tena - zerop)
+range((tena - zerop))
+(tena - zerop) / zerop * 100
+resdf[termind == 'mu' & term2 == 'seasonQ2', variable]
+
+
+
+# Plot of meta-analysis ---------------------------------------------------
 # coefplot
 resmd$type <- gsub('^(.*)\\.(.*)$', '\\1', resmd$term)
 resmd$coeftype <- ifelse(grepl('season', resmd$term), 'season', 'precip')
