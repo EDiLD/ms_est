@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
+       e.g. prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -78,6 +78,36 @@ meas <- psm_variables[ , list(variable_id, name, psm_type)][take_rac]
 # meas <- meas[variable_id %in% meas[ , list(n = length(value)), 
 #                                   by = variable_id][n > 1000, variable_id]]
 # 
+
+
+# restrict to insecticides compunds as Stehle & Schulz
+rsvar <- c(290, # only alpha endosulfan, rs did no differenciate
+           146, 213, 257, 397, 487, 488, 192, 1216, 167, 650,
+           # beta cyfluthrin no in our datababse
+           237, 872, 648, 645,
+           # fenvalerate not in db
+           905, 1195, 728, 365, 588, 589
+           )
+# compounds in common
+com <- psm_variables[variable_id %in% rsvar & !is.na(rak_uba), list(variable_id, name, rak_uba)]
+# add rac_sw from stehle
+com$rs <- c(0.005, 0.1, 0.025, 0.3, 1.57, 2.8, 0.5)
+diff <- com$rak_uba - com$rs
+mean(diff)
+range(diff)
+
+# restrict to only insecticides
+insvar <- psm_variables[pgroup == 'organics, psm, insecticide', variable_id]
+psm_variables[variable_id %in% insvar]
+# meas_rvar <- meas[variable_id %in% rsvar]
+meas_ins <- meas[variable_id %in% insvar]
+
+# % of exceedances as proportion > loq
+# nrow(meas_rvar[rq > 1]) / nrow(meas_rvar[rq > 0])
+nrow(meas_ins[rq > 0])
+length(unique(meas_ins$variable_id))
+nrow(meas_ins[rq > 1]) / nrow(meas_ins[rq > 0]) * 100
+
 
 
 # calculate max per variable and take only first 15 hits
