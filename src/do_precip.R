@@ -398,7 +398,8 @@ p <- arrangeGrob(p_precip, p_season, ncol = 1)
 # plot(p)
 ggsave(file.path(prj, "supplement", "coefs.pdf"), p, width = 10, height = 9)
 
-
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/appendix/smallstreams/one/'
+# ggsave(file.path(phd,  "coefs.pdf"), p, width = 170, height = 170, unit = 'mm')
 
 
 # # plot for talk2
@@ -540,29 +541,30 @@ resmd$coeftype <- ifelse(grepl('season', resmd$term), 'season', 'precip')
 resmd <- resmd[!term == 'sigma']
 resmd$type <- mapvalues(resmd$type, c('mu', 'nu'),
                         c('mu~(RQ)', 'nu~(LOQ)'))
+resmd$term2 <- substr(resmd$term, nchar(resmd$term) - 1, nchar(resmd$term))
 
 
 p_season <- ggplot(resmd[resmd$coeftype == 'season', ]) +
-  geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
+  geom_pointrange(aes(x = substr(term, nchar(term) - 1, nchar(term)), y = est, ymin = lwr, ymax = upr)) + 
   coord_flip() +
-  facet_grid(.~type , scales = 'free_x', labeller = label_parsed) +
+  facet_grid(.~type , labeller = label_parsed) +
   mytheme +
   labs(x = '', y = 'Coefficient') +
-  scale_x_discrete(breaks = c('mu.seasonQ4', 'mu.seasonQ3', 
-                              'mu.seasonQ2', 'mu.seasonQ1'),
+  scale_x_discrete(breaks = c('Q4', 'Q3', 
+                              'Q2', 'Q1'),
                    labels = c(' Quarter Q4', ' Quarter Q3', 
                               ' Quarter Q2', ' Quarter Q1')) +
   theme(strip.text.x = element_blank())
 
 
 p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
-  geom_pointrange(aes(x = term, y = est, ymin = lwr, ymax = upr)) + 
+  geom_pointrange(aes(x = gsub("^.*?\\.(.*)", "\\1", term), y = est, ymin = lwr, ymax = upr)) + 
   coord_flip() +
   geom_hline(aes(yintercept = 0), linetype = 'dotted') +
-  facet_grid(.~type , scales = 'free_x', labeller = label_parsed) +
+  facet_grid(.~type , labeller = label_parsed) +
   mytheme +
   labs(x = '', y = '') +
-  scale_x_discrete(breaks = c('mu.log_precip_1', 'mu.log_precip0'),
+  scale_x_discrete(breaks = c('log_precip_1', 'log_precip0'),
                    labels = c(expression('log'~precip[-1]), 
                               expression('log'~precip[0]))) +
   theme(strip.text.x = element_text(size = 22))
@@ -570,3 +572,6 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
 p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 # plot(p)
 ggsave(file.path(prj, "figure5.pdf"), p, width = 7, height = 5.5)
+
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
+# ggsave(file.path(phd, "figure5.pdf"), p, width = 7, height = 5.5)

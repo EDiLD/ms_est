@@ -88,18 +88,21 @@ rak_exceed$logn <- log(rak_exceed$n)
 #   geom_point() +
 #   geom_smooth()
 
+library(scales)
 
-
-p_raw <- ggplot(rak_exceed, aes(y = agri_fin, x = ezg_fin, col = log(n_exceed))) +
+p_raw <- ggplot(rak_exceed, aes(y = agri_fin * 100, x = ezg_fin, col = log(n_exceed))) +
   geom_point(alpha = 0.5) +
   mytheme +
-  scale_color_gradient(low = 'blue', high = 'red') +
+  scale_color_gradient(name = 'log n(RQ>1)', low = 'blue', high = 'red') +
   ylab("Agriculture [%]") +
-  xlab("Catchment Size [km2]") +
-  ggtitle('RAC Exceedances')
+  xlab("Catchment Size [km2]") 
 # p_raw
 ggsave(file.path(prj, "supplement/ezgagrirac.pdf"),
        p_raw)
+
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/appendix/smallstreams/one/'
+# ggsave(file.path(phd, "ezgagrirac.pdf"),
+#        p_raw)
 
 # model using gam 
 rak_exceed$agri_fin <- rak_exceed$agri_fin*100
@@ -228,6 +231,11 @@ p <- ggplot() +
 ggsave(file.path(prj, "figure4.pdf"),
        p, width = 7, height = 7/1.6,
        units = 'in', dpi = 300, scale = 1)
+
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
+# ggsave(file.path(phd, "figure4.pdf"),
+#        p, width = 7, height = 7/1.6,
+#        units = 'in', dpi = 300, scale = 1)
 
 pdat
 pdat[c(1, 29), ]

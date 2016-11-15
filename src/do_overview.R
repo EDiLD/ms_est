@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
+       e.g. prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -107,9 +107,26 @@ yearlymonthly <- psm_samples[ , length(unique(sample_id)), by = list(year(date),
 p_temp <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
   geom_bar(stat = 'identity') +
   facet_grid(~year) +
-  labs(x = 'Month', y = 'No. samples')
+  labs(x = 'Month', y = 'No. samples') 
 # p
 ggsave(file.path(prj, 'supplement/temporal.pdf'), p_temp, width = 20, height = 7)
+
+# # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/appendix/smallstreams/one/'
+# p_temp <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) + 
+#   geom_bar(stat = 'identity') +
+#   facet_grid(~year) +
+#   labs(x = 'Month', y = 'No. samples') +
+#   phdtheme +
+#   theme(panel.grid.major = element_blank()) +
+#   scale_x_discrete(labels = c('2' = '',
+#                               '3' = '',
+#                               '5' = '',
+#                               '6' = '',
+#                               '8' = '',
+#                               '9' = '',
+#                               '11' = '',
+#                               '12' = ''))
+# ggsave(file.path(phd, 'temporal.pdf'), p_temp, width = 250, units = 'mm')
 
 
 
@@ -142,7 +159,9 @@ p_map <- ggplot() +
 ggsave(file.path(prj, "figure1.pdf"),
        p_map, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
 
-
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
+# ggsave(file.path(phd, "figure1.pdf"),
+#        p_map, width = 176, height = 150, units = 'mm')
 
 
 # Tabular overview --------------------------------------------------------
@@ -328,6 +347,14 @@ pdf(file = file.path(prj, 'supplement/silhouette.pdf'))
   points(ks[which.max(asw)], max(asw), pch = 16, col = 'red')
 dev.off()
 
+# pdf(file = file.path(phd, 'silhouette.pdf'))
+#   par(mar = c(5,5,4,2))
+#   plot(ks, asw, type = 'h', ylab = 'Average Silhoutte Width', 
+#        xlab = 'Number of clusters', cex.lab = 2, cex.axis = 2)
+#   segments(ks[which.max(asw)], 0, ks[which.max(asw)], max(asw), col = 'red', lwd = 2)
+#   points(ks[which.max(asw)], max(asw), pch = 16, col = 'red', cex = 1.5)
+# dev.off()
+
 sil <- silhouette(cutree(hc, k = 2), dp)
 plot(sil)
 
@@ -377,6 +404,9 @@ pdf(file = file.path(prj, 'supplement/varclus.pdf'))
   plot(clus, ylab = 'Jaccard Distance')
 dev.off()
 
+# pdf(file = file.path(phd, 'varclus.pdf'), width = 5, height = 5)
+#   plot(clus, ylab = 'Jaccard Distance', cex.lab = 1.5, cex.axis = 1.3)
+# dev.off()
 
 
 # PCO (principal coordinates)
@@ -426,6 +456,8 @@ ggsave(file.path(prj, "figure2.pdf"),
        p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
 
 
+ggsave(file.path(phd, "figure2.pdf"),
+       p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
 
 
 
@@ -438,6 +470,7 @@ ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fi
   geom_point(size = 0.5) +
   guides(alpha = FALSE, fill = FALSE) +
   mytheme +
+  # phdtheme + 
   labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
   # scale_fill_gradient(low = "yellow", high = "red") +
   scale_fill_viridis() +
@@ -449,6 +482,12 @@ ggsave(file.path(prj, 'figure3.pdf'),
        ezg_lu,
        width = 3.3, height = 3.3/1.2,
        units = 'in', dpi = 300, scale = 2.5)
+
+# ggsave(file.path(phd, 'figure3.pdf'),
+#        ezg_lu,
+#        width = 3, height = 3/1.2,
+#        units = 'in', dpi = 300, scale = 2.5)
+
 options(stringsAsFactors = FALSE)
 
 
@@ -614,5 +653,7 @@ ggsave(file.path(prj, 'supplement/precip.pdf'),
        plot = pp, height = 12, width = 7)
 
 
+# ggsave(file.path(phd, 'precip.pdf'),
+#        plot = pp, height = 200, units = 'mm')
 
 

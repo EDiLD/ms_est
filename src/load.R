@@ -52,6 +52,7 @@ library(ggmap)
 
 # plotting
 library(ggplot2)
+library(scales)
 library(gridExtra)
 library(ggExtra)
 library(cowplot)

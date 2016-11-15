@@ -193,6 +193,27 @@ pdf(file.path(prj, "supplement/prac_ex.pdf"))
   abline(h = prec[2], lty = 'dotted')
 dev.off()
 
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/appendix/smallstreams/one/'
+# pdf(file.path(phd, "prac_ex.pdf"))
+#   par(mar = c(5,5,4,2))
+#   plot(rqs[3:length(rqs)], prec[3:length(prec)],
+#        log = 'x',
+#        pch = 16,
+#        ylim = c(0, 100),
+#        cex = 1.2,
+#        ylab = 'Fraction of sites',
+#        xlab = 'max(RQ)',
+#        xaxt = 'n', cex.lab = 1.5, cex.axis = 1.5)
+#   axis(side = 1, at = c(0.001, 0.01, 0.1, 1,  10, 100),
+#        labels = c("0.001", "0.01", "0.1", "1", "10", "100"),
+#          cex.axis = 1.5)
+#   abline(v = 1, lty = 'dotted')
+#   abline(v = 0.1, lty = 'dotted')
+#   abline(h = prec[1], lty = 'dotted')
+#   abline(h = prec[2], lty = 'dotted')
+# dev.off()
+
+
 
 # number of SWB sites with RAC 
 length(unique(meas$site_id))   # 2270 (from 2301 in total)
@@ -254,6 +275,9 @@ levs <- levels(reorder(take_meas[rq > 0, name], take_meas[rq > 0, rq], median))
 loqd[ , name := factor(name, levels = levs[levs %in% loqd$name])]
 loqd
 
+
+# Violin Plot of RQ -------------------------------------------------------
+
 prac <- ggplot() +
   geom_violin(data = take_meas[rq > 0 & name %in% loqd$name],
               aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
@@ -274,6 +298,8 @@ prac <- ggplot() +
 # prac
 ggsave(file.path(prj, "figure6.pdf"), prac, width = 7, height = 6.5)
 
+# phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
+# ggsave(file.path(phd, "figure6.pdf"), prac, width = 7, height = 6.5)
 
 # RQ exceedances for other compounds
 take_samples[value_fin > 0, length(value_fin), by = variable_id][order(V1,decreasing = TRUE)]
@@ -321,7 +347,7 @@ pdetects <- ggplot(pdt[p_d > 0.15 & tot > 100], aes(x = reorder(name, p_d), y = 
 # pdetects
 ggsave(file.path(prj, "supplement/pdetects.pdf"), pdetects, width = 8, height = 6.5)
 
-
+# ggsave(file.path(phd, "pdetects.pdf"), pdetects + phdtheme, width = 180, units = 'mm')
 
 
 # Mixtures ----------------------------------------------------------------
@@ -348,7 +374,9 @@ max(mix$no_subs)
 pmix <- ggplot(mix, aes(x = no_subs)) +
   geom_histogram(fill = 'grey50') +
   mytheme +
-  labs(y = 'No. samples', x = 'No. compounds')
+  labs(y = 'No. samples', x = 'No. compounds') +
+  scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50))
 # pmix
 ggsave(file.path(prj, "supplement/pmix.pdf"), pmix, width = 7, height = 6.5)
 
+ggsave(file.path(phd, "pmix.pdf"), pmix + phdtheme, width = 150, units = 'mm')
