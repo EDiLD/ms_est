@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Paper/ms_est' or
+       e.g.prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -13,25 +13,23 @@ if (!exists("prj")) {
 
 ### ----------
 # TH has good data 
-th <- fread(file.path(cachedir, 'TH_2005-14.csv'))
-th <- th[ , c(4, 5), with = FALSE]
-setnames(th, c('ezg', 'width'))
+th <- fread(file.path(cachedir, 'ezg_width', 'thuringia.csv'))
+th <- th[ , c(5, 4), with = FALSE]
+setnames(th, c('width', 'ezg'))
 th <- th[complete.cases(th)]
 th[ , dataset := 'TH']
 
 ### ----------
 ### data from voss 2015
-voss <- fread(file.path(cachedir, 'voss_2015.csv'))
+voss <- fread(file.path(cachedir, 'ezg_width', 'voss.csv'), dec = ',')
 voss <- voss[ , c(2, 3), with = FALSE]
 setnames(voss, c('width', 'ezg'))
-voss[ , c('width', 'ezg') := list(width = as.numeric(gsub(',', '.', width)),
-           ezg = as.numeric(gsub(',', '.', ezg)))]
 voss[ , dataset := 'Voss2015']
 
 
 ### ----------
 ### data from fernandez 2015
-diego <- fread(file.path(cachedir, 'fernandez_2015.csv'))
+diego <- fread(file.path(cachedir, 'ezg_width', 'fernandez.csv'))
 diego  <- diego[ , c(3, 2), with = FALSE]
 setnames(diego, c('width', 'ezg'))
 diego[ , dataset := 'Fernandez2015']
@@ -59,8 +57,8 @@ p_ezg_width <- ggplot() +
   scale_color_manual(values = cols, name = 'Dataset',
                      labels = c("TH", "Voss 2015", "Fernandez 2015"),
                      breaks = c("TH", "Voss2015", "Fernandez2015")) +
-  geom_rect(aes(xmin = 0, xmax = 25, ymin = 0, ymax = 2.08), alpha = 0.3) +
-  scale_x_log10(breaks = c(1, 25, 100, 1000)) +
+  geom_rect(aes(xmin = 0, xmax = 6.954, ymin = 0, ymax = 1), alpha = 0.3) +
+  scale_x_log10(breaks = c(1, 7, 10, 100, 1000)) +
   scale_y_log10(breaks = c(0.5, 1, 2, 10, 50)) +
   mytheme +
   geom_point(data = ew, aes(x = ezg, y = width, col = dataset), size = 2.5) +
@@ -75,6 +73,7 @@ p_ezg_width <- ggplot() +
 # # export for presentation
 ggsave(file.path(prj, 'supplement/width_size.pdf'), p_ezg_width, width = 7, height = 5)
 
+
 # get prediction
 
 loglm <- lm(log(width) ~ log(ezg), data = ew)
@@ -84,3 +83,8 @@ coef(nlm)
 # a catchment of 25km corresponds to a width of
 coef(nlm)[1]*25^coef(nlm)[2]
 # 2.1m  
+# 
+# A width of 1m corresponds to:
+y <- 1
+(y / coef(nlm)[1])^(1 / coef(nlm)[2])
+# 6.95m
