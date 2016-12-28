@@ -1,4 +1,6 @@
-\documentclass[pdftex,a4paper]{scrreprt}
+\documentclass[pdftex,
+	a4paper,
+	titlepage=false]{scrreprt}
 \usepackage[utf8]{inputenc}       
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -18,6 +20,7 @@
 % Add 'S' before figure/table numbering
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thepage}{S\arabic{page}}
 
 \usepackage[
 	round,	%(defaultage in the main file and \input ) for round parentheses;
@@ -26,16 +29,42 @@
 ]{natbib}	
 
 
+% affiliations
+\usepackage[affil-it]{authblk}
+
+% counts
+% http://ctan.mackichan.com/macros/latex/contrib/caption/totalcount.pdf
+\usepackage[figure,table, page]{totalcount}
+
 
 
 %% -------------------------------------------------------------------------
-\title{Supplemental Materials for the paper: \\ Large scale risks from pesticides in small streams}
-\author{Eduard Szöcs, Marvin Brinke, Bilgin Karaoglan, Ralf B. Schäfer}
-\date{}
+\title{Supplemental Materials for: \\ Large scale risks from pesticides in small streams}
+\author{Eduard Szöcs%
+  \thanks{Corresponding author, Email: \texttt{szoecs@uni-landau.de}}}
+\affil[1]{Institute for Environmental Sciences, University of Koblenz-Landau, Germany}
+
+\author{Marvin Brinke}
+\affil{German Federal Institute of Hydrology (BfG), Koblenz, Germany}
+
+\author{Bilgin Karaoglan}
+\affil{German Environment Agency (UBA), Dessau-Roßlau, Germany}
+
+\author[1]{Ralf B. Schäfer}
+
 
 %% -------------------------------------------------------------------------
 \begin{document}
 \maketitle
+
+\vfill
+\begin{description}
+	\item[Number of pages: ] \totalpages
+	\item[Number of figures: ] \totalfigures
+	\item[Number of tables: ] \totaltables
+\end{description}
+% increase page counter by 1
+\setcounter{page}{2}
 
 \tableofcontents
 \listoffigures
