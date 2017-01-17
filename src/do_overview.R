@@ -152,16 +152,24 @@ p_map <- ggplot() +
   theme(legend.key = element_rect(fill = 'white')) +
   # guides(colour = FALSE) +
   labs(x = 'Lon.', y = 'Lat.') +
-  scale_color_hue(name = 'state', l = 50) +
+  scale_color_hue(name = 'State', l = 50) +
   mytheme +
-  coord_equal()
-# p_map
+  coord_map()
+p_map
 ggsave(file.path(prj, "figure1.pdf"),
        p_map, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
 
+# for thesis
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
 # ggsave(file.path(phd, "figure1.pdf"),
 #        p_map, width = 176, height = 150, units = 'mm')
+#        
+# for defense
+# def <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/'
+# p <- p_map +
+#   theme(legend.position = 'none')
+# ggsave(file.path(def, "map_phch.pdf"),
+#        p, width = 176, height = 150, units = 'mm')
 
 
 # Tabular overview --------------------------------------------------------
@@ -467,16 +475,19 @@ options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
 ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
                  aes(x = ezg_fin, y = agri_fin * 100)) +
   stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
+  scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
+                     breaks = c(0, 10, 25, 50, 100)) + 
+  scale_y_continuous(limits = c(-10, 100)) +
+  scale_fill_viridis() +
   geom_point(size = 0.5) +
   guides(alpha = FALSE, fill = FALSE) +
   mytheme +
   # phdtheme + 
-  labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
-  # scale_fill_gradient(low = "yellow", high = "red") +
-  scale_fill_viridis() +
-  scale_x_continuous(breaks = c(0, 10, 25, 50, 100))
+  labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) 
+  # scale_fill_gradient(low = "yellow", high = "red") 
 # ezg_lu
 ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
+ezg_lu
 # ezg_lu
 ggsave(file.path(prj, 'figure3.pdf'), 
        ezg_lu,

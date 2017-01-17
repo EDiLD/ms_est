@@ -482,10 +482,14 @@ foo <- function(x) log10(x + 0.05) # transformation
 # log_precip_1: nu 
 # intercept
 int <- resmd$est[resmd$term ==  'nu.seasonQ2']
+plogis(int) *100
+
 # prop of exceeding loq in q2 at 0.1 mm
 (zerop1 <- plogis(int + foo(0.1)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
+(one <- plogis(int + foo(1)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
 # prop of exceeding loq in q2 at 10 mm
-(ten <- plogis(int + foo(10)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
+(ten <- plogis(int + foo(15)*resmd$est[resmd$term ==  'nu.log_precip_1'])) * 100
+
 (ten - zerop1) 
 (ten - zerop1) / zerop1 * 100
 
@@ -501,6 +505,7 @@ range(tena)
 plogis(resmd$est[resmd$term ==  'nu.seasonQ1'])
 # Q2 nu
 plogis(resmd$est[resmd$term ==  'nu.seasonQ2'])
+
 
 
 
@@ -570,8 +575,47 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
   theme(strip.text.x = element_text(size = 22))
 
 p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
+plot(p)
 # plot(p)
 ggsave(file.path(prj, "figure5.pdf"), p, width = 7, height = 5.5)
 
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
 # ggsave(file.path(phd, "figure5.pdf"), p, width = 7, height = 5.5)
+
+
+
+# plot for defense
+# plot data
+pdata <- resmd[resmd$coeftype == 'season' & resmd$type == 'nu~(LOQ)', ]
+# calculate for high precipitation
+int <- pdata$est
+pdata$high <- plogis(int + foo(15) * resmd[resmd$term == 'nu.log_precip_1' & resmd$type == 'nu~(LOQ)', ]$est) * 100
+
+
+
+library(tikzDevice)
+p <- ggplot() +
+  geom_pointrange(data = pdata,
+                  aes(x = substr(term, nchar(term) - 1, nchar(term)),
+                      y = plogis(est)*100,
+                      ymin = plogis(lwr)*100,
+                      ymax = plogis(upr)*100),
+                  size = 1) +
+  geom_point(data = pdata,
+             aes(x = substr(term, nchar(term) - 1, nchar(term)),
+                 y = high),
+             size = 4,
+             col = rgb(0.847, 0.510, 0.106)) +
+  scale_x_discrete(breaks = c('Q4', 'Q3',
+                              'Q2', 'Q1'),
+                   labels = c('Oct-Dec', 'Jul-Sep',
+                              'Apr-Jun', 'Jan-Mar')) +
+  theme_edi(base_size = 18) +
+  labs(x = '', y = 'Percent exceeed LOQ') +
+  ggtitle('Annual pattern of detects',
+          subtitle = 'n = 23 compounds, orange: 15mm precipitation.')
+p
+ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/tikz/p_season.tikz',
+       p,
+       device = tikz,
+       width = 6)
