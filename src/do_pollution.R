@@ -300,6 +300,28 @@ ggsave(file.path(prj, "figure6.pdf"), prac, width = 7, height = 6.5)
 
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
 # ggsave(file.path(phd, "figure6.pdf"), prac, width = 7, height = 6.5)
+# 
+
+# Same, plot but for defense 
+prac <- ggplot() +
+  geom_violin(data = take_meas[rq > 0 & name %in% loqd$name],
+              aes(x = reorder(name, rq, FUN = median), y = rq, fill = psm_type)) +
+    geom_hline(yintercept = 1, linetype = 'dotted') +
+    coord_flip() +
+    scale_y_log10(breaks = c(0.001, 0.01, 0.1, 1, 10, 100),
+                  labels = c(0.001, 0.01, 0.1, 1, 10, 100),
+                  expand = c(0.05, 0.1)) +
+    labs(x = '', y = 'Risk Quotient (only > LOQ)') +
+    scale_fill_manual(name = 'Group',
+                      values = c('#7570b3', '#1b9e77', '#d95f02'),
+                      labels = c('Fungicide', 'Herbicide', 'Insecticide')) +
+    theme_edi() +
+    theme(legend.position = 'right',
+          axis.text.y =  element_text(vjust = 0.5))
+prac
+ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/compounds.pdf', prac,
+width = 10, height = 6.5)
+
 
 # RQ exceedances for other compounds
 take_samples[value_fin > 0, length(value_fin), by = variable_id][order(V1,decreasing = TRUE)]

@@ -143,6 +143,10 @@ print(keep_tab_x,
 
 
 
+
+
+
+# subset
 take <- take[variable_id %in% keep$variable_id]
 psm_variables[variable_id %in% keep$variable_id, list(variable_id, name, 
                                                       psm_type)]
@@ -164,36 +168,36 @@ glco <- gamlss.control(c.crit = 0.01, mu.step = 0.5)
 
 
 
-# gamma hurdle model with precipitation as groups, season and psm_type as preds
-# state as random effect
-mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
-                    re(random = ~1|state_fac/s_id_fac),
-                  nu.formula = ~ 0 + precip_1 + precip0 + season + 
-                    re(random = ~1|state_fac/s_id_fac),
-                  data = take_c,
-                  family = ZAGA,
-                  control = glco,
-                  i.control = gco)
-plot(mod_l_m)
-summary(mod_l_m)
-term.plot(mod_l_m)
-term.plot(mod_l_m, what = 'nu')
-res <- residuals(mod_l_m)
-hist(res)
-
-foo <- function(x) log10(x + 0.05) # transformation
-newdata = data.frame(log_precip0 = foo(0.1),
-                     log_precip_1 = foo(0.1),
-                     season = 'Q2')
-predict(mod_l_m,  what = 'nu',  type = 'response')
-
-
-
-# plot marginal data
-plot(log(rq) ~ log_precip_1 , data = take_c[take_c$rq > 0, ], pch = 16, col = rgb(0, 0, 0, 0.2))
-plot(I(ifelse(rq > 0, 1, 0)) ~ log_precip_1 , data = take_c, 
-     col = rgb(0, 0, 0, 0.1), pch = 16)
-plot(log(rq) ~ season , data = take_c[take_c$rq > 0, ])
+# # gamma hurdle model with precipitation as groups, season and psm_type as preds
+# # state as random effect
+# mod_l_m <- gamlss(rq ~ 0  + log_precip_1 + log_precip0 + season +
+#                     re(random = ~1|state_fac/s_id_fac),
+#                   nu.formula = ~ 0 + precip_1 + precip0 + season + 
+#                     re(random = ~1|state_fac/s_id_fac),
+#                   data = take_c,
+#                   family = ZAGA,
+#                   control = glco,
+#                   i.control = gco)
+# plot(mod_l_m)
+# summary(mod_l_m)
+# term.plot(mod_l_m)
+# term.plot(mod_l_m, what = 'nu')
+# res <- residuals(mod_l_m)
+# hist(res)
+# 
+# foo <- function(x) log10(x + 0.05) # transformation
+# newdata = data.frame(log_precip0 = foo(0.1),
+#                      log_precip_1 = foo(0.1),
+#                      season = 'Q2')
+# predict(mod_l_m,  what = 'nu',  type = 'response')
+# 
+# 
+# 
+# # plot marginal data
+# plot(log(rq) ~ log_precip_1 , data = take_c[take_c$rq > 0, ], pch = 16, col = rgb(0, 0, 0, 0.2))
+# plot(I(ifelse(rq > 0, 1, 0)) ~ log_precip_1 , data = take_c, 
+#      col = rgb(0, 0, 0, 0.1), pch = 16)
+# plot(log(rq) ~ season , data = take_c[take_c$rq > 0, ])
 
 
 # random slope model, does not converge!
@@ -224,12 +228,22 @@ model_foo <- function(var){
                     family = ZAGA,
                     control = glco,
                     i.control = gco)
-  saveRDS(mod, file.path(cachedir, 'lmodels', paste0('mod_', var, '.rds')))
+  # reduced models 
+  mod_rmu <- update(mod, ~1, what = 'mu')
+  mod_rnu <- update(mod, ~1, what = 'nu')
+  mod_rfull <- update(mod, ~1, what = 'All')
+  out <- list(mod = mod,
+              mod_rmu = mod_rmu,
+              mod_rnu = mod_rnu,
+              mod_rfull = mod_rfull)
+  
+  saveRDS(out, file.path(cachedir, 'lmodels', paste0('mod_', var, '.rds')))
 }
 
 # model_foo(727)
 # run model on compounds
 run_model <- FALSE
+# run_model <- TRUE
 if (run_model) {
   file.remove(file.path(cachedir, 'lmodels', paste0('mod_', keep$variable_id, '.rds')))
   lapply(keep$variable_id, model_foo)
@@ -240,7 +254,8 @@ if (run_model) {
 
 # function to extract the needed model components,
 model_extr <- function(file){
-  mod <- readRDS(file)
+  cont <- readRDS(file)
+  mod <- cont[['mod']]
   ss <- summary(mod)
   smod <- data.frame(ss)
   # remove NA coefficients
@@ -263,7 +278,18 @@ model_extr <- function(file){
   smod$Estimate[grepl('nu\\.', smod$terms)] <- -smod$Estimate[grepl('nu\\.', smod$terms)]
   smod$upci <- smod$Estimate + smod$Std..Error * mult
   smod$lowci <- smod$Estimate - smod$Std..Error * mult
-  return(smod)
+  
+  # compare wih reduce models
+  mod_rmu <- cont[['mod_rmu']]
+  mod_rnu <- cont[['mod_rnu']]
+  mod_rfull <- cont[['mod_rfull']]
+  lliks <- c(mod = logLik(mod),
+             mod_rmu = logLik(mod_rmu),
+             mod_rnu = logLik(mod_rnu),
+             mod_rfull = logLik(mod_rfull))
+  
+  out <- list(smod = smod, lliks = lliks)
+  return(out)
 }
 
 # extract coefs from each model
@@ -272,7 +298,8 @@ res <- lapply(file.path(cachedir, 'lmodels',
               model_extr)
 
 
-resdf <- rbindlist(res)
+smods <- lapply(res, '[[', 'smod')
+resdf <- rbindlist(smods)
 # nice formatting
 names(resdf) <- c('est', 'stderr', 'tval', 'pval', 'term', 'variable', 
                   'upci', 'lowci')
@@ -289,6 +316,76 @@ resdf$cisig <- ifelse(sign(resdf$upci)  == sign(resdf$lowci),
 # parameter indictor
 resdf$termind <- substr(resdf$term, 1, 2)
 
+
+
+
+
+# Check deviances.
+# ND = Sat - Null
+# RD = Sat - Mod
+# Explained deviance = 1 - ND / RD = (Mod - Null) / (Sat - Null)
+# 
+# But saturated model not available (computationally very intensive)
+#  But difference from NUll gives indication (assuming that SAT - Null only scales)
+
+lliks <- lapply(res, '[[', 'lliks')
+lliks <- lapply(lliks, function(y) data.frame(t(y)))
+lliks <- rbindlist(lliks)
+lliks[ , variable_id := keep$variable_id]
+# add names
+lliks <- psm_variables[ , list(variable_id, name)][lliks, on = "variable_id"]
+lliks
+# # calculate proportional (to Null) increase
+# lliks[ , c("dmod","dmu", "dnu") := list(dmod = (mod - mod_rfull),
+#               dmu = (mod_rmu - mod_rfull),
+#               dnu = (mod_rnu - mod_rfull)
+#               )]
+lliks
+require(tidyr)
+# to long format
+lliks <- gather(lliks, key = model, value = value, -c(1:2))
+lliks$value <- lliks$value - lliks$value[lliks$model == 'mod']
+p_loglik <- ggplot(lliks, aes(y = value - 0.001, x = name, col = model, group = model)) +
+  geom_line() +
+  geom_point() +
+  labs(y = 'log-Likelihood', x = '') +
+  scale_color_brewer('Model',
+                     palette = 'Dark2', 
+                     breaks = c('mod', 'mod_rmu', 'mod_rnu', 'mod_rfull'),
+                     labels = c('Full', 'Reduce mu', 'Reduce nu', 'Reduce all')) +
+  coord_flip() +
+  # scale_y_continuous(breaks = NULL) +
+  labs(y = 'Likelihood') 
+p_loglik
+ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/logliks.pdf',
+       p_loglik,
+       width = 7, height = 8)
+
+# example model verification:
+# for glyphosate
+takevar = 349
+cont <- readRDS(file.path(cachedir, 'lmodels', 
+                          paste0('mod_', takevar, '.rds')))
+mod <- cont[['mod']]
+plot(fitted(mod)[take[variable_id == takevar, rq] > 0], take[variable_id == takevar & rq > 0, rq], log = 'xy')
+abline(0, 1)
+
+pdat <- take[variable_id == takevar & rq > 0, ]
+pdat$ftd <- fitted(mod)[take[variable_id == takevar, rq] > 0]
+p_ftd_vs_obs <- ggplot(pdat, aes(x = rq, y = ftd)) +
+  theme_edi() +
+  geom_hex(binwidth = 0.1, alpha = 0.8) +
+  # geom_point(alpha = 0.3) +
+  geom_abline() +
+  scale_x_log10(breaks = c(0.001, 0.01, 0.1, 1)) +
+  scale_y_log10(breaks = c(0.001, 0.01, 0.1, 1)) +
+  scale_fill_viridis('n') +
+  labs(x = 'Observed RQ', y = 'Estimated RQ') +
+  ggtitle(label = 'Observed vs. Fitted', subtitle = 'Glyphosate, only RQ > 0 shown, n = 1389')
+# 
+ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/pftdvsobs.pdf',
+       p_ftd_vs_obs,
+       width = 8, height = 7)
 
 
 #  ------------------------------------------------------------------------
@@ -589,7 +686,7 @@ ggsave(file.path(prj, "figure5.pdf"), p, width = 7, height = 5.5)
 pdata <- resmd[resmd$coeftype == 'season' & resmd$type == 'nu~(LOQ)', ]
 # calculate for high precipitation
 int <- pdata$est
-pdata$high <- plogis(int + foo(15) * resmd[resmd$term == 'nu.log_precip_1' & resmd$type == 'nu~(LOQ)', ]$est) * 100
+pdata$high <- plogis(int + foo(15) * resmd[resmd$term == 'nu.log_precip_1' & resmd$type == 'nu~(LOQ)', ]$est) 
 
 
 
@@ -597,9 +694,9 @@ library(tikzDevice)
 p <- ggplot() +
   geom_pointrange(data = pdata,
                   aes(x = substr(term, nchar(term) - 1, nchar(term)),
-                      y = plogis(est)*100,
-                      ymin = plogis(lwr)*100,
-                      ymax = plogis(upr)*100),
+                      y = plogis(est),
+                      ymin = plogis(lwr),
+                      ymax = plogis(upr)),
                   size = 1) +
   geom_point(data = pdata,
              aes(x = substr(term, nchar(term) - 1, nchar(term)),
@@ -611,9 +708,9 @@ p <- ggplot() +
                    labels = c('Oct-Dec', 'Jul-Sep',
                               'Apr-Jun', 'Jan-Mar')) +
   theme_edi(base_size = 18) +
-  labs(x = '', y = 'Percent exceeed LOQ') +
-  ggtitle('Annual pattern of detects',
-          subtitle = 'n = 23 compounds, orange: 15mm precipitation.')
+  labs(x = '', y = 'p(x > LOQ)') +
+  ggtitle('Model predictions',
+          subtitle = 'n = 23 compounds, orange: 15 mm precipitation.')
 p
 ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/tikz/p_season.tikz',
        p,

@@ -475,22 +475,24 @@ options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
 ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
                  aes(x = ezg_fin, y = agri_fin * 100)) +
   stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
-  scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
-                     breaks = c(0, 10, 25, 50, 100)) + 
-  scale_y_continuous(limits = c(-10, 100)) +
-  scale_fill_viridis() +
   geom_point(size = 0.5) +
+  scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
+                     breaks = c(0, 10, 25, 50, 100)) +
+  scale_fill_viridis() +
+  scale_alpha_continuous(limits = c(0.00015, 0.0004), na.value = 0, range = c(0.3, 1)) +
   guides(alpha = FALSE, fill = FALSE) +
   mytheme +
-  # phdtheme + 
-  labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) 
-  # scale_fill_gradient(low = "yellow", high = "red") 
-# ezg_lu
-ezg_lu <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
+  labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
+  coord_cartesian(ylim = c(0, 100), xlim = c(0, 100))
 ezg_lu
+
+# add marginal distr
+ezg_p <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
+ezg_p
+
 # ezg_lu
 ggsave(file.path(prj, 'figure3.pdf'), 
-       ezg_lu,
+       ezg_p,
        width = 3.3, height = 3.3/1.2,
        units = 'in', dpi = 300, scale = 2.5)
 
@@ -502,6 +504,15 @@ ggsave(file.path(prj, 'figure3.pdf'),
 options(stringsAsFactors = FALSE)
 
 
+
+# # for defense
+# def <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/'
+# p <- ezg_lu + 
+#   theme_edi(base_size = 16)
+# p <- ggMarginal(p, type = 'histogram', binwidth = 5)
+# p
+# ggsave(file.path(def, "distribution.pdf"),
+#        p, width = 176, height = 150, units = 'mm')
 
 
 # Intersect samples with precipitation data -------------------------------
