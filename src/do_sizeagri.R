@@ -1,6 +1,6 @@
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- 'prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
+       e.g. prj <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Paper/ms_est' or
        prj <- '/home/user/Documents/projects_git/ms_est'!")
 } else {
   source(file.path(prj, "src", "load.R"))
@@ -96,7 +96,7 @@ p_raw <- ggplot(rak_exceed, aes(y = agri_fin * 100, x = ezg_fin, col = log(n_exc
   scale_color_gradient(name = 'log n(RQ>1)', low = 'blue', high = 'red') +
   ylab("Agriculture [%]") +
   xlab("Catchment Size [km2]") 
-# p_raw
+p_raw
 ggsave(file.path(prj, "supplement/ezgagrirac.pdf"),
        p_raw)
 
@@ -225,9 +225,9 @@ p <- ggplot() +
   geom_rug(data = odat, aes(x = value), alpha = 0.05) +
   mytheme +
   xlab('') +
-  ylab('No. RAC exceedances') +
+  ylab('Mean no. RAC exceedances') +
   ylim(c(0, 1.3))
-# p
+p
 ggsave(file.path(prj, "figure4.pdf"),
        p, width = 7, height = 7/1.6,
        units = 'in', dpi = 300, scale = 1)

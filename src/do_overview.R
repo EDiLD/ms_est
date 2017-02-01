@@ -108,7 +108,7 @@ p_temp <-  ggplot(yearlymonthly, aes(x = factor(month), y = V1)) +
   geom_bar(stat = 'identity') +
   facet_grid(~year) +
   labs(x = 'Month', y = 'No. samples') 
-# p
+p_temp
 ggsave(file.path(prj, 'supplement/temporal.pdf'), p_temp, width = 20, height = 7)
 
 # # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/appendix/smallstreams/one/'
@@ -157,7 +157,7 @@ p_map <- ggplot() +
   coord_map()
 p_map
 ggsave(file.path(prj, "figure1.pdf"),
-       p_map, width = 3.5, height = 3, units = 'in', dpi = 300, scale = 2)
+       p_map, width = 4, height = 5, units = 'in', dpi = 300, scale = 1.5)
 
 # for thesis
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
@@ -323,37 +323,40 @@ makeone <-  function(DT) {
 }
 makeone(vw)
 
+
 # calculte jaccard distance between BL
 rownames(vw) <- vw[ ,site_id]
-dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
+# dp <- vegdist(vw[ , -1, with = FALSE], method = 'jaccard')
 
-# hierarchical clustering
-hc <- hclust(dp, method = 'complete')
-plot(hc, labels = vw$site_id)
 
-# # fusion level plot
-plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
-text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
-# not easy to spot
 
-#  #average silhoutte with to choose be number of clusters
-nr <- nrow(vw[ , -1, with = FALSE])
-
-# number of clusters to check
-ks <- 2:(nr - 1)
-asw <- numeric(length(ks))
-for (i in seq_along(ks)) {
-  sil <- silhouette(cutree(hc, k = ks[i]), dp)
-  asw[i] <- summary(sil)$avg.width
-}
-ks[which.max(asw)]
-
-pdf(file = file.path(prj, 'supplement/silhouette.pdf'))
-  plot(ks, asw, type = 'h', ylab = 'Average Silhoutte Width', 
-       xlab = 'Number of clusters')
-  segments(ks[which.max(asw)], 0, ks[which.max(asw)], max(asw), col = 'red')
-  points(ks[which.max(asw)], max(asw), pch = 16, col = 'red')
-dev.off()
+# # hierarchical clustering
+# hc <- hclust(dp, method = 'complete')
+# plot(hc, labels = vw$site_id)
+# 
+# # # fusion level plot
+# plot(hc$height, nrow(vw[ , -1, with = FALSE]):2, type = 'S')
+# text(hc$height, nrow(vw[ , -1, with = FALSE]):2, nrow(vw[ , -1, with = FALSE]):2, col = 'red')
+# # not easy to spot
+# 
+# #  #average silhoutte with to choose be number of clusters
+# nr <- nrow(vw[ , -1, with = FALSE])
+# 
+# # number of clusters to check
+# ks <- 2:(nr - 1)
+# asw <- numeric(length(ks))
+# for (i in seq_along(ks)) {
+#   sil <- silhouette(cutree(hc, k = ks[i]), dp)
+#   asw[i] <- summary(sil)$avg.width
+# }
+# ks[which.max(asw)]
+# 
+# pdf(file = file.path(prj, 'supplement/silhouette.pdf'))
+#   plot(ks, asw, type = 'h', ylab = 'Average Silhoutte Width', 
+#        xlab = 'Number of clusters')
+#   segments(ks[which.max(asw)], 0, ks[which.max(asw)], max(asw), col = 'red')
+#   points(ks[which.max(asw)], max(asw), pch = 16, col = 'red')
+# dev.off()
 
 # pdf(file = file.path(phd, 'silhouette.pdf'))
 #   par(mar = c(5,5,4,2))
@@ -363,8 +366,8 @@ dev.off()
 #   points(ks[which.max(asw)], max(asw), pch = 16, col = 'red', cex = 1.5)
 # dev.off()
 
-sil <- silhouette(cutree(hc, k = 2), dp)
-plot(sil)
+# sil <- silhouette(cutree(hc, k = 2), dp)
+# plot(sil)
 
 
 # two groups best
@@ -386,60 +389,60 @@ plot(sil)
 
 
 # 3 distinct groups: NI+RP; ST+SL+TH+BW; Rest
-bl_groups <- cutree(hc, k = 2)
+# bl_groups <- cutree(hc, k = 2)
 
 ## nicer plot
 # colors (red, blue or green)
 # colo <- c("#E41A1C", "#4DAF4A", "#377EB8")
-colo <- c("#E41A1C", "#377EB8")
-hcd <- as.dendrogram(hc)
+# colo <- c("#E41A1C", "#377EB8")
+# hcd <- as.dendrogram(hc)
 
-# function to get color labels
-color_label <- function(n) {
-  if (is.leaf(n)) {
-    a <- attributes(n)
-    col <- colo[bl_groups[a$label]]
-    attr(n, "label") <- vw$site_id[a$label]
-    attr(n, "nodePar") <- c(a$nodePar, lab.col = col)
-  }
-  n
-}
-# using dendrapply
-clus = dendrapply(as.dendrogram(hc), color_label)
+# # function to get color labels
+# color_label <- function(n) {
+#   if (is.leaf(n)) {
+#     a <- attributes(n)
+#     col <- colo[bl_groups[a$label]]
+#     attr(n, "label") <- vw$site_id[a$label]
+#     attr(n, "nodePar") <- c(a$nodePar, lab.col = col)
+#   }
+#   n
+# }
+# # using dendrapply
+# clus = dendrapply(as.dendrogram(hc), color_label)
 
-# make plot
-pdf(file = file.path(prj, 'supplement/varclus.pdf'))
-  plot(clus, ylab = 'Jaccard Distance')
-dev.off()
+# # make plot
+# pdf(file = file.path(prj, 'supplement/varclus.pdf'))
+#   plot(clus, ylab = 'Jaccard Distance')
+# dev.off()
 
 # pdf(file = file.path(phd, 'varclus.pdf'), width = 5, height = 5)
 #   plot(clus, ylab = 'Jaccard Distance', cex.lab = 1.5, cex.axis = 1.3)
 # dev.off()
 
-
-# PCO (principal coordinates)
-pco1 <- wcmdscale(dp, k = 2, eig = TRUE)
-rownames(pco1$points) <- unlist(vw[ , 1, with = FALSE])
-pco_dat <- data.frame(scores(pco1), state = rownames(scores(pco1)), group = bl_groups)
-evar <- round(pco1$eig / sum(pco1$eig), 2) * 100
-xlab <- paste0('Axis 1 (', evar[1], '%)')
-ylab <- paste0('Axis 2 (', evar[2], '%)')
-
-p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
-  mytheme +
-  scale_colour_manual(guide = FALSE, values = colo) +
-  xlab(xlab) +
-  ylab(ylab) +
-  geom_vline(xintercept = 0, linetype = 'dotted') +
-  geom_hline(yintercept = 0, linetype = 'dotted') +
-  geom_text(aes(label = state, col = as.factor(group)), size = 6) 
+# 
+# # PCO (principal coordinates)
+# pco1 <- wcmdscale(dp, k = 2, eig = TRUE)
+# rownames(pco1$points) <- unlist(vw[ , 1, with = FALSE])
+# pco_dat <- data.frame(scores(pco1), state = rownames(scores(pco1)), group = bl_groups)
+# evar <- round(pco1$eig / sum(pco1$eig), 2) * 100
+# xlab <- paste0('Axis 1 (', evar[1], '%)')
+# ylab <- paste0('Axis 2 (', evar[2], '%)')
+# 
+# p_mds <- ggplot(pco_dat, aes(x = Dim1, y = Dim2)) +
+#   mytheme +
+#   # scale_colour_manual(guide = FALSE, values = colo) +
+#   xlab(xlab) +
+#   ylab(ylab) +
+#   geom_vline(xintercept = 0, linetype = 'dotted') +
+#   geom_hline(yintercept = 0, linetype = 'dotted') +
+#   geom_text(aes(label = state), size = 6) 
 # p_mds
 
 
 # tile plot / barcode
 # bring binary data.frame to long format
 # add 12 white colors
-cols <- c(colo[bl_groups], rep('white', 12))
+cols <- c(rep('black', 12), rep('white', 12))
 vwm <- melt(vw, id.vars = 'site_id')
 # chaneg for colors
 vwm$value <- ifelse(vwm$value == 1, 'ja', 'nein')
@@ -456,16 +459,17 @@ p_bar <- ggplot(vwm, aes(x = variable, y = site_id, fill = cols)) +
         axis.ticks.x = element_blank()) +
   labs(x = 'Compound', y = 'State') +
   guides(fill = FALSE) 
-# p_bar
-p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
+p_bar
+# p <- plot_grid(p_bar, p_mds, rel_heights = c(3, 1))
 # plot(p)
 
 ggsave(file.path(prj, "figure2.pdf"),
-       p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
+       p_bar, 
+       width = 3, height = 3, units = 'in', dpi = 300, scale = 1.5)
 
 
-ggsave(file.path(phd, "figure2.pdf"),
-       p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
+# ggsave(file.path(phd, "figure2.pdf"),
+#        p, width = 7, height = 3.5, units = 'in', dpi = 300, scale = 1.5)
 
 
 
@@ -474,7 +478,7 @@ ggsave(file.path(phd, "figure2.pdf"),
 options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
 ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
                  aes(x = ezg_fin, y = agri_fin * 100)) +
-  stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
+  # stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
   geom_point(size = 0.5) +
   scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
                      breaks = c(0, 10, 25, 50, 100)) +
@@ -490,11 +494,19 @@ ezg_lu
 ezg_p <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
 ezg_p
 
+
+ezg_p <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
+      aes(x = ezg_fin)) +
+  geom_histogram(breaks = seq(0, 100, 5), fill = 'grey80', col = 'grey25') +
+  mytheme +
+  labs(x = 'Catchment area [km2]', y = 'No. sites') +
+  scale_x_continuous(breaks = c(0, 10, 25, 50, 100)) 
+
+
 # ezg_lu
 ggsave(file.path(prj, 'figure3.pdf'), 
        ezg_p,
-       width = 3.3, height = 3.3/1.2,
-       units = 'in', dpi = 300, scale = 2.5)
+       width = 3.3, height = 3.3/1.2, units = 'in', dpi = 300, scale = 1.5)
 
 # ggsave(file.path(phd, 'figure3.pdf'),
 #        ezg_lu,
