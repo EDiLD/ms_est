@@ -113,6 +113,10 @@ plot(mod_p, pages = 1)
 plot(mod_p, pages = 1, residuals = TRUE) 
 gam.check(mod_p)
 
+# ggplot(rak_exceed, aes(x = agri_fin, y = n_exceed+1)) +
+#   geom_point(alpha = 0.1) +
+#   scale_y_log10()
+
 # overdispersion
 r <- resid(mod_p, type = "pearson")
 sum(r^2) / (mod_p$df.res)
@@ -120,11 +124,49 @@ sum(r^2) / (mod_p$df.res)
 
 # try negative binomial model
 # with offset, automatic theta search and REML
-mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') + offset(logn), 
+# increase number of knots from 9/18 to 27/54 (make no differnce)
+mod_nb <- gam(n_exceed ~ s(agri_fin, bs = 'cr', k = 18) + s(ezg_fin, bs = 'cr', k = 18) + offset(logn), 
               data = rak_exceed,
               family = nb(),
               method = 'REML')
+summary(mod_nb)
 plot(mod_nb, pages = 1)
+gam.check(mod_nb) #OK
+
+
+# linear fit for comparison
+mod_nb_lin <- gam(n_exceed ~ agri_fin + ezg_fin + offset(logn), 
+              data = rak_exceed,
+              family = nb(),
+              method = 'REML')
+mod_nb_lin
+plot(mod_nb_lin, pages = 1)
+gam.check(mod_nb_lin) 
+
+
+# check / show mean variance relationship
+cp <- rak_exceed
+# bin predictors
+cp$bins <- with(rak_exceed, 
+     paste('a_',
+     cut(agri_fin, breaks = seq(min(agri_fin) - 0.1, max(agri_fin) + 0.1, length.out = 12)),
+     ' - e_',
+     cut(ezg_fin, breaks = seq(min(ezg_fin) - 0.1, max(ezg_fin) + 0.1, length.out = 12))
+     ))
+setDT(cp)
+mv <- cp[  ,list(m = mean(n_exceed),
+           v = var(n_exceed)) , by = bins]
+length(unique(cp$bins))
+pdf(file.path(prj, "revision1/response/figs/mv.pdf"))
+  plot(v ~ m, data = mv, xlab = 'mean', ylab = 'variance'
+       )
+  # add estimate quadrativ relationship
+  curve(from = 0, to = max(mv$m), expr = x + x^2 /  exp(mod_nb$family$getTheta()), add = TRUE)
+  abline(lm(v ~ 0 + m, data = mv), lty = 'dotted')
+dev.off()
+
+
+
 
 # model with interaction
 mod_nb_ti <- gam(n_exceed ~ s(agri_fin, bs = 'cr') + s(ezg_fin, bs = 'cr') +  
@@ -216,9 +258,10 @@ mylabeller <- as_labeller(c(
 # plot
 odat <- melt(rak_exceed[ , list(ezg_fin, agri_fin)])
 p <- ggplot() +
+  geom_ribbon(data = pdat, aes(x = value, ymax = up, ymin = low), fill = 'gray80') +
   geom_line(data = pdat, aes(x = value, y = fit, group = variable)) +
-  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty = 'dashed') +
-  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty = 'dashed') +
+  geom_line(data = pdat, aes(x = value, y = up, group = variable), lty = 'dotted') +
+  geom_line(data = pdat, aes(x = value, y = low, group = variable), lty = 'dotted') +
   geom_line(data = pdat, aes(x = value, y = sig_value, group = variable), 
             colour = 'red', lwd = 1.5) +
   facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
@@ -226,7 +269,7 @@ p <- ggplot() +
   mytheme +
   xlab('') +
   ylab('Mean no. RAC exceedances') +
-  ylim(c(0, 1.3))
+  coord_cartesian(ylim = c(0, 1.3))
 p
 ggsave(file.path(prj, "figure4.pdf"),
        p, width = 7, height = 7/1.6,
@@ -241,3 +284,76 @@ pdat
 pdat[c(1, 29), ]
 0.389 / 0.104 # = ration risk at zero / risk at no significant
 # 3.7 fold
+# 
+
+
+
+
+#  ------------------------------------------------------------------------
+# plot smooth vs linear fit
+pdat_agri <- with(rak_exceed,
+                  data.frame(agri_fin = c(seq(min(agri_fin), max(agri_fin), length.out = 100)),
+                             ezg_fin = rep(mean(ezg_fin), 100),
+                             logn = rep(mean(logn), 100)))
+pred_agri <- predict(mod_nb, newdata = pdat_agri, type = 'response', se.fit = TRUE)
+pdat_agri <- transform(pdat_agri, 
+                       fit_agri = pred_agri$fit)
+pdat_agri <- transform(pdat_agri, 
+                       up_agri = fit_agri + (1.96 * pred_agri$se.fit),
+                       low_agri = fit_agri - (1.96 * pred_agri$se.fit))
+# linear fit
+pred_agri_lin <- predict(mod_nb_lin, newdata = pdat_agri, type = 'response', se.fit = TRUE)
+pdat_agri <- transform(pdat_agri, 
+                       fit_agri_lin = pred_agri_lin$fit)
+pdat_agri <- transform(pdat_agri, 
+                       up_agri_lin = fit_agri_lin + (1.96 * pred_agri_lin$se.fit),
+                       low_agri_lin = fit_agri_lin - (1.96 * pred_agri_lin$se.fit))
+pdat_agri$logn <- NULL
+pdat_agri$ezg_fin <- NULL
+
+# ezg
+pdat_ezg <- with(rak_exceed,
+                 data.frame(ezg_fin = c(seq(min(ezg_fin), max(ezg_fin), length.out = 100)),
+                            agri_fin = rep(mean(agri_fin), 100),
+                            logn = rep(mean(logn), 100)))
+pred_ezg <- predict(mod_nb, newdata = pdat_ezg, type = 'response', se.fit = TRUE)
+pdat_ezg <- transform(pdat_ezg, 
+                      fit_ezg = pred_ezg$fit)
+pdat_ezg <- transform(pdat_ezg, 
+                      up_ezg = fit_ezg + (1.96 * pred_ezg$se.fit),
+                      low_ezg = fit_ezg - (1.96 * pred_ezg$se.fit))
+# linear fit
+pred_ezg_lin <- predict(mod_nb_lin, newdata = pdat_ezg, type = 'response', se.fit = TRUE)
+pdat_ezg <- transform(pdat_ezg, 
+                      fit_ezg_lin = pred_ezg_lin$fit)
+pdat_ezg <- transform(pdat_ezg, 
+                      up_ezg_lin = fit_ezg_lin + (1.96 * pred_ezg_lin$se.fit),
+                      low_ezg_lin = fit_ezg_lin - (1.96 * pred_ezg_lin$se.fit))
+pdat_ezg$logn <- NULL
+pdat_ezg$agri_fin <- NULL
+
+
+# prepare data.frame for plotting
+pdat_agri <- melt(pdat_agri, measure.vars = 'agri_fin')
+names(pdat_agri) <- c('fit', 'up', 'low', 'fit_lin', 'up_lin', 'low_lin', 'variable', 'value')
+pdat_agri$variable <- as.character(pdat_agri$variable)
+
+pdat_ezg <- melt(pdat_ezg, measure.vars = 'ezg_fin')
+names(pdat_ezg) <- c('fit', 'up', 'low', 'fit_lin', 'up_lin', 'low_lin', 'variable', 'value')
+pdat_ezg$variable <- as.character(pdat_ezg$variable)
+pdat <- rbind(pdat_agri, pdat_ezg)
+
+
+
+p <- ggplot() +
+  geom_ribbon(data = pdat, aes(x = value, ymax = up, ymin = low), alpha = 0.2) +
+  geom_ribbon(data = pdat, aes(x = value, ymax = up_lin, ymin = low_lin), alpha = 0.2, fill = 'red') +
+  geom_line(data = pdat, aes(x = value, y = fit, group = variable)) +
+  geom_line(data = pdat, aes(x = value, y = fit_lin, group = variable), col = 'red') +
+  facet_wrap(~variable, scales = 'free_x', labeller = mylabeller) +
+  geom_rug(data = odat, aes(x = value), alpha = 0.05) +
+  mytheme +
+  xlab('') +
+  ylab('Mean no. RAC exceedances') +
+  ylim(c(0, 1.3))
+p
