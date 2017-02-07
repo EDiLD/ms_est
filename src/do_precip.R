@@ -357,9 +357,9 @@ p_loglik <- ggplot(lliks, aes(y = value - 0.001, x = name, col = model, group = 
   # scale_y_continuous(breaks = NULL) +
   labs(y = 'Likelihood') 
 p_loglik
-ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/logliks.pdf',
-       p_loglik,
-       width = 7, height = 8)
+# ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/logliks.pdf',
+#        p_loglik,
+#        width = 7, height = 8)
 
 # example model verification:
 # for glyphosate
@@ -382,10 +382,11 @@ p_ftd_vs_obs <- ggplot(pdat, aes(x = rq, y = ftd)) +
   scale_fill_viridis('n') +
   labs(x = 'Observed RQ', y = 'Estimated RQ') +
   ggtitle(label = 'Observed vs. Fitted', subtitle = 'Glyphosate, only RQ > 0 shown, n = 1389')
+p_ftd_vs_obs
 # 
-ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/pftdvsobs.pdf',
-       p_ftd_vs_obs,
-       width = 8, height = 7)
+# ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/pftdvsobs.pdf',
+#        p_ftd_vs_obs,
+#        width = 8, height = 7)
 
 
 #  ------------------------------------------------------------------------
@@ -615,10 +616,10 @@ exp(resmd$est[resmd$term ==  'mu.seasonQ1'])
 exp(resmd$est[resmd$term ==  'mu.seasonQ2'])
 
 int <- resmd$est[resmd$term ==  'mu.seasonQ2']
-# prop of exceeding loq in q2 at 0.1 mm
+# predictions in q2 at 0.1 mm
 (zerop1 <- exp(int + foo(0.1)*resmd$est[resmd$term ==  'mu.log_precip_1']))
-# prop of exceeding loq in q2 at 10 mm
-(ten <- exp(int + foo(10)*resmd$est[resmd$term ==  'nu.log_precip_1']))
+# predictions in q2 at 15 mm
+(ten <- exp(int + foo(15)*resmd$est[resmd$term ==  'nu.log_precip_1']))
 (ten - zerop1) 
 (ten - zerop1) / zerop1 * 100 
 
@@ -674,23 +675,70 @@ p_precip <- ggplot(resmd[resmd$coeftype == 'precip', ]) +
 p <- arrangeGrob(p_precip, p_season, ncol = 1, heights = c(1, 1.25))
 plot(p)
 # plot(p)
-ggsave(file.path(prj, "figure5.pdf"), p, width = 7, height = 5.5)
+ggsave(file.path(prj, "supplement/mean_coef.pdf"), p, width = 7, height = 5.5)
 
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
 # ggsave(file.path(phd, "figure5.pdf"), p, width = 7, height = 5.5)
 
 
 
-# plot for defense
-# plot data
+
+# plot model predictions.
 pdata <- resmd[resmd$coeftype == 'season' & resmd$type == 'nu~(LOQ)', ]
 # calculate for high precipitation
 int <- pdata$est
 pdata$high <- plogis(int + foo(15) * resmd[resmd$term == 'nu.log_precip_1' & resmd$type == 'nu~(LOQ)', ]$est) 
 
+p <- ggplot() +
+  geom_pointrange(data = pdata,
+                  aes(x = substr(term, nchar(term) - 1, nchar(term)),
+                      y = plogis(est),
+                      ymin = plogis(lwr),
+                      ymax = plogis(upr)),
+                  size = 0.5) +
+  geom_point(data = pdata,
+             aes(x = substr(term, nchar(term) - 1, nchar(term)),
+                 y = high),
+             size = 3,
+             col = rgb(0.847, 0.510, 0.106)) +
+  scale_x_discrete(breaks = c('Q4', 'Q3',
+                              'Q2', 'Q1'),
+                   labels = c('Oct-Dec', 'Jul-Sep',
+                              'Apr-Jun', 'Jan-Mar')) +
+  mytheme + 
+  labs(x = '', y = 'p(x > LOQ)') 
+p
+ggsave(file.path(prj, "figure5.pdf"), p, width = 4, height = 3.5)
+
+# # plot for defense
+# library(tikzDevice)
+# p <- ggplot() +
+#   geom_pointrange(data = pdata,
+#                   aes(x = substr(term, nchar(term) - 1, nchar(term)),
+#                       y = plogis(est),
+#                       ymin = plogis(lwr),
+#                       ymax = plogis(upr)),
+#                   size = 1) +
+#   geom_point(data = pdata,
+#              aes(x = substr(term, nchar(term) - 1, nchar(term)),
+#                  y = high),
+#              size = 4,
+#              col = rgb(0.847, 0.510, 0.106)) +
+#   scale_x_discrete(breaks = c('Q4', 'Q3',
+#                               'Q2', 'Q1'),
+#                    labels = c('Oct-Dec', 'Jul-Sep',
+#                               'Apr-Jun', 'Jan-Mar')) +
+#   theme_edi(base_size = 18) +
+#   labs(x = '', y = 'p(x > LOQ)') +
+#   ggtitle('Model predictions',
+#           subtitle = 'n = 23 compounds, orange: 15 mm precipitation.')
+# p
+# ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/tikz/p_season.tikz',
+#        p,
+#        device = tikz,
+#        width = 6)
 
 
-library(tikzDevice)
 p <- ggplot() +
   geom_pointrange(data = pdata,
                   aes(x = substr(term, nchar(term) - 1, nchar(term)),
@@ -707,12 +755,8 @@ p <- ggplot() +
                               'Q2', 'Q1'),
                    labels = c('Oct-Dec', 'Jul-Sep',
                               'Apr-Jun', 'Jan-Mar')) +
-  theme_edi(base_size = 18) +
-  labs(x = '', y = 'p(x > LOQ)') +
-  ggtitle('Model predictions',
-          subtitle = 'n = 23 compounds, orange: 15 mm precipitation.')
+  mytheme + 
+  labs(x = '', y = 'p(x > LOQ)') 
+  # ggtitle('Model predictions',
+  #         subtitle = 'n = 23 compounds, orange: 15 mm precipitation.')
 p
-ggsave('/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/tikz/p_season.tikz',
-       p,
-       device = tikz,
-       width = 6)

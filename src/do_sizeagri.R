@@ -355,5 +355,8 @@ p <- ggplot() +
   mytheme +
   xlab('') +
   ylab('Mean no. RAC exceedances') +
-  ylim(c(0, 1.3))
+  coord_cartesian(ylim = c(0, 1.3))
 p
+ggsave(file.path(prj, "supplement/smooth_lin.pdf"),
+       p, width = 7, height = 7/1.6,
+       units = 'in', dpi = 300, scale = 1)

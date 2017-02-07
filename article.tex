@@ -73,14 +73,15 @@ However, most related studies have been limited to a few streams on the regional
 We quantified risks as exceedances of regulatory acceptable concentrations (RACs) and used German monitoring data to quantify the drivers thereof and to assess current risks in small streams on a large scale. 
 The data set comprised of 1,766,104 measurements of 478 pesticides (including metabolites) related to 24,743 samples from 2,301 sampling sites. 
 We investigated the influence of agricultural land use, catchment size, as well as precipitation and seasonal dynamics on pesticide risk taking also concentrations below the limit of quantification into account. 
-Agricultural land use lead to a 3.7-fold increase in exceedance of risk thresholds when the proportion of agricultural land use in a catchment exceeded 28 percent. 
-Precipitation increased pesticide risk by 36\% and risk was the highest during summer months. 
+The exceedances of risk thresholds dropped 3.7-fold at sites with no agriculture, indicating that agricultural land use is a major contributor of pesticides in streams.
+Precipitation increased detection probability by 43\% and concentrations were the highest during summer months. 
 RACs were exceeded in 26\% of streams.
 We found the highest exceedances for neonicotinoid insecticides. 
 We conclude that pesticides from agricultural land use are a major threat to small streams and their biodiversity. 
 To reflect peak concentrations, current pesticide monitoring needs to be refined.
 
-% Total words: 197
+\todo{überarbeiten}
+% Total words: 199
 \end{abstract}
 
 
@@ -122,12 +123,13 @@ Despite their ecological relevance and potentially higher pesticide exposure, a 
 Consequently, knowledge on the pesticide pollution of small streams on larger scales is scant. 
 In European law, the Directive 2009/128/EC \citep{European_Union_2009} places an obligation on the EU Member States to adopt National Action Plans (NAP) for the Sustainable Use of Plant Protection Products and the German NAP also addresses the knowledge gap concerning pesticide impact on small streams, specifically including those with catchment size \textless 10km\textsuperscript{2}.
 
-In this study, we compiled and analysed large-scale pesticide monitoring data from small streams in Germany in order to identify drivers and dynamics of pesticide concentrations.
+The aim of this study is to identify drivers and dynamics of pesticide concentrations in streams.
+To achieve this, we compiled and analysed large-scale pesticide monitoring data from small streams in Germany in order to identify drivers and dynamics of pesticide concentrations. 
 We expect that the landscape is a determinant of measured pesticide concentrations.
 Because a major fraction of pesticides is applied to agricultural fields, we hypothesised highest concentrations and possible exceedances of RACs in streams with high proportion of agriculture. 
-Moreover, if agriculture is a main source for pesticides in streams, we expect that concentrations drop to zero if there is not agriculture in the catchment. 
-Moreover, these relationships may show thresholds that could be to define reference streams without pollution.
-Given their low dilution potential we expected that small streams show highest concentrations. 
+Moreover, if agricultural land use is a main source for pesticides in streams, we expect that exceedances drop to zero if there is not agricultural land use in the catchment. 
+Moreover, these relationships may show thresholds that could be to define reference streams without pollution for a future monitoring. 
+Given their low dilution potential and direct adjacency to agricultural fields we expected that small streams show highest pesticide concentrations. 
 However, also the timing of sampling may influence measured concentrations:
 A sampling directly after a precipitation might show higher concentrations because of run-off.
 Furthermore, pesticides are not applied throughout the whole year and we expected highest concentrations during the main growing season.
@@ -178,7 +180,8 @@ where $C_i$ is the concentration of a compound $i$ in a sample and $RAC_i$ the r
 
 
 \subsection{Statistical analyses}
-We expected non-linear responses to agriculture and catchment size and therefore, used generalised additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
+As outlined in the introduction, we expected non-linear responses to agricultural land use and catchment size and search for potential thresholds.
+Therefore, we used generalised additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
 We modelled the number of RAC exceedances (RQ \textgreater 1) at a site as:
 
 \begin{align}
@@ -189,10 +192,9 @@ We modelled the number of RAC exceedances (RQ \textgreater 1) at a site as:
 \end{align}
 
 where $No(RQ > 1)_i$ is the observed number of RAC exceedances at site $i$. 
-Because of overdispersion, we modelled $No(RQ > 1)_i$ as resulting from a negative binomial distribution ($NB$) with mean $\mu_i$ and a quadratic mean-variance-relationship ($Var(No(RQ > 1)_i) = \mu_i + \frac{\mu_i^2}{\kappa}$).
-The proportion of agriculture within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors of the number of RAC exceedances. 
-$\beta_0$ is the intercept and $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006}. 
-The degree of smoothness was estimated using restricted maximum likelihood (REML) during the model fitting process \citep{wood_fast_2011}.
+Because of overdispersion, we modelled $No(RQ > 1)_i$ as resulting from a negative binomial distribution ($NB$) with mean $\mu_i$ and a quadratic mean-variance-relationship ($Var(No(RQ > 1)_i) = \mu_i + \frac{\mu_i^2}{\kappa}$). 
+The proportion of agricultural land use within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors of the number of RAC exceedances. 
+$\beta_0$ is the intercept and $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006, wood_fast_2011}. 
 The number of measurements per site ($n_i$) was used as an offset to account for differences in sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modelling the rate of exceedances. 
 We used point-wise 95\% Confidence Intervals (CI) of the first derivative of the fitted smooth to identify regions of statistically significant changes.
 All data-processing and analyses were performed using R \citep{r_core_team_r:_2016}.
@@ -246,7 +248,7 @@ The number of small stream sampling sites per state ranged from 1 (Lower Saxonia
 No data were available from Brandenburg. 
 
 \begin{figure}[ht]
-  \includegraphics[width=0.6\textwidth]{figure1.pdf}
+  \includegraphics[width=3.33in]{figure1.pdf}
   \caption{Spatial distribution of the 2,301 small stream sampling sites. Colour codes different federal states (see Supplemental Table~S1 for abbreviations).}
   \label{fig:fig1}
 \end{figure}
@@ -259,7 +261,7 @@ The number of analysed pesticides per state ranged from 57 (SL) to 236 (RP) (Sup
 4\% (=71,113) of all measurements were concentrations above LOQ.
 
 \begin{figure}[ht]
-  \includegraphics[width=0.6\textwidth]{figure2.pdf}
+  \includegraphics[width=3.33in]{figure2.pdf}
   \caption{Barcode plot of compound spectra of the federal states. Each vertical line is an analysed compound.}
   \label{fig:fig2}
 \end{figure}
@@ -269,22 +271,20 @@ most sampling sites having catchment sizes between 10 and 25~$km^2$ (Figure~\ref
 
 
 \begin{figure}[ht]
-  \includegraphics[width=.8\textwidth]{figure3.pdf}
+  \includegraphics[width=3.33in]{figure3.pdf}
   \caption{Distribution of catchment area across the sampling sites.}
   \label{fig:fig3}
 \end{figure}
 
 
 \subsection{Influence of agricultural land use and catchment size}
-The number of RAC exceedances increased strongly and statistically significant up to 28\% agriculture within the catchment.
-The mean number of RAC exceedances per site increased 3.7-fold from 0.10 (no agriculture) to 0.39 (28\% agriculture within the catchment). 
-Above this threshold the exceedances levelled.
-Above 75\% agriculture within the catchment the number of exceedances further increased, but the increase was not statistically significant (Figure~\ref{fig:fig4}, left). 
+We found a positive relationship between agricultural land use and the number of RAC exceedances. 
+The non-linear model showed, that below 28\% agriculture the mean number of RAC exceedances dropped statistically significant 3.7-fold from 0.39 (28\% agriculture within the catchment) to 0.10 (no agriculture) (Figure~\ref{fig:fig4}, left). \todo{discussion anpassen}.
 Catchment size had no statistically significant effect on the number of RAC exceedances (Figure~\ref{fig:fig4}, right).
 We also could not detect a statistically significant interaction between catchment size and agriculture. 
 
 \begin{figure}[ht]
-  \includegraphics[width=0.95\textwidth]{figure4.pdf}
+  \includegraphics[width=6.5in]{figure4.pdf}
   \caption{Effect of percent agriculture within the catchment (left) and catchment size (right) on the mean number of RAC exceedances per site. Red line marks statistically significant changes. Dashed lines denote 95\% point-wise Confidence Intervals.
   }
   \label{fig:fig4}
@@ -296,24 +296,25 @@ The spatio-temporal intersection revealed that most samples were taken during pe
 For example, only 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day that may lead to run-off (Supplemental Figure~S6). 
 
 $prec_{0}$ and $prec_{-1}$ increased the probability of exceeding LOQ and RQ.
-In $Q2$ an increase from 0.1~mm to 10~mm of precipitation before sampling ($prec_{-1}$) lead on average to a 36\% higher mean RQ of 0.05.
-The probability to exceed LOQ increases 1.6-fold from 8.7\% to 13.5\% (Figure~\ref{fig:fig5}, top). % do_precip.R
-Effects differed between individual compounds and are provided in the Supplemental Table~S4. 
+In $Q2$ an increase from 0.1~mm to 15~mm of precipitation before sampling ($prec_{-1}$) lead on average to a 43\% higher mean RQ of 0.05 (Supplemental Figure~S7).
+The probability to exceed LOQ increases in $Q2$ 1.6-fold from 8.7\% to 13.5\% (Figure~\ref{fig:fig5}). % do_precip.R
 Precipitation before sampling ($prec_{-1}$) had a stronger effect than precipitation during sampling ($prec_{0}$) on the probability of exceeding LOQ. 
-This difference was less pronounced for the mean value of RQ (Figure~\ref{fig:fig5}, top). 
+This difference was less pronounced for the mean value of RQ (Supplemental Figure~S7). 
+Moreover, effects differed between individual compounds and are provided in the Supplemental Table~S4. 
 
 The first quarter showed the lowest RQ and probability of exceeding LOQ.
 Both increased during summer months and decreased towards the end of the year.
-There was a 2.5-fold higher probability of exceeding LOQ in $Q2$ (10.6\%) than in $Q1$ (4.6\%).
-The differences were less pronounced for the mean value of RQ and with less precision (Figure~\ref{fig:fig5}, bottom). 
+There was a 2.5-fold higher probability of exceeding LOQ in $Q2$ (10.6\%) than in $Q1$ (4.6\%) (Figure~\ref{fig:fig5}).
+The differences were less pronounced for the mean value of RQ and with less precision  (see Supplemental Figure~S7, left).
 Individual compounds showed different temporal patterns (see Supplemental Table~S4). 
 
 
 \begin{figure}[ht]
-  \includegraphics[width=0.8\textwidth]{figure5.pdf}
-  \caption{Summarised coefficients (and their 95\% CI) for precipitation (top row) and quarter (bottom row) from a meta-analysis of the 22 modelled compounds. Left: coefficients for mean RQ ($\mu$), right: coefficients for probability of exceeding LOQ ($\nu$). 
-  Coefficients are shown on the link scale (see Eq.~\ref{eqn:eqn4}).
-  Single compound coefficients are provided in Supplemental Table~S4 and Figure~S7).
+  \includegraphics[width=3.33in]{figure5.pdf}
+  \caption{Summarised model predictions for the probability to exceed LOQ throughout the year. Black points indicate the probabilities at 0.1 mm precipitation (and their 95\% CI). 
+  Orange points indicated the probabilities at 15 mm precipitation.
+  Probabilities have been summaries from a meta-analysis of the 22 modelled compounds.
+  Single compound coefficients are provided in Supplemental Table~S4 and Figure~S7.
   }
   \label{fig:fig5}
 \end{figure}
@@ -335,8 +336,8 @@ However, only the latter showed RAC exceedances (Figure~\ref{fig:fig6}).
 In 45.9\% of samples more than one compound was quantified, with a maximum of 54 different compounds in one sample (Supplemental Figure~S10). 
 
 \begin{figure}[ht]
-  \includegraphics[width=0.6\textwidth]{figure6.pdf}
-  \caption{15 compounds with the highest risk quotients in small streams. Non-detects are not shown due to the logarithmic axis. Numbers on the right give the percentage of values \textgreater LOQ and the total number of samples were the compound was analysed.
+  \includegraphics[width=3.33in]{figure6.pdf}
+  \caption{15 compounds with the highest observed risk quotients in small streams. Non-detects are not shown due to the logarithmic axis. Numbers on the right give the percentage of values \textgreater LOQ and the total number of samples were the compound was analysed.
   }
   \label{fig:fig6}
 \end{figure}
@@ -356,7 +357,7 @@ A nationwide assessment of pesticide pollution is hampered by inhomogeneous data
 Beside large differences in the spatial distribution and quantity of sampling sites (Figure~\ref{fig:fig1}), the spectrum of analysed compounds (Figure~\ref{fig:fig2}) and the quality of chemical analyses differed between states. 
 Despite the outlined differences between states, all ecoregions occurring in Germany \citep{illies1978limnofauna,abell2008freshwater} were covered by the presented dataset and thus it might nonetheless represent a sample covering all types of small streams in Germany. 
 For Thiacloprid and Chlorpyrifos the LOQs were above the RAC, which means that exceedances are likely underestimated.
-For these compounds a lowering of LOQ through an improvement of chemical analysis is essential for reliable assessment.
+For compounds with low RACs a lowering of LOQ through an improvement of chemical analysis is essential for reliable assessment.
 Moreover, a nationwide assessment would benefit from a harmonised spectrum of analysed compounds between federal states. 
 
 Given their high abundance in the landscape \citep{nadeau_hydrological_2007} small streams below 10~km\textsuperscript{2} are disproportionally less sampled in current monitoring (Figure~\ref{fig:fig3}), which may be attributed to the missing categorisation in the WFD. 
@@ -446,12 +447,12 @@ We thank Alexandra Müller, Wolfram König and Volker Mohaupt (German Environmen
 
 
 %%% Word count
-% abstract    :  197
-% 4 big(600)  : 2400
-% 2 small(300):  600
-% acknowledg  :   79
+% abstract    :  200
+% 1 big(600)  :  600
+% 5 small(300): 1500
+% acknowledg  :   80
 %              =====
-% subtotal      3276
+% subtotal      2380
 % text body   : 3846
 % ======================================
 % subtotal    : 7122
