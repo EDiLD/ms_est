@@ -180,7 +180,7 @@ where $C_i$ is the concentration of a compound $i$ in a sample and $RAC_i$ the r
 
 
 \subsection{Statistical analyses}
-As outlined in the introduction, we expected non-linear responses to agricultural land use and catchment size and search for potential thresholds.
+As outlined in the introduction, we expected non-linear responses to agricultural land use and catchment size and searched for potential thresholds (defined as abrupt changes).
 Therefore, we used generalised additive models (GAM) to establish relationships \citep{fewster_analysis_2000}.
 We modelled the number of RAC exceedances (RQ \textgreater 1) at a site as:
 
@@ -195,7 +195,7 @@ where $No(RQ > 1)_i$ is the observed number of RAC exceedances at site $i$.
 Because of overdispersion, we modelled $No(RQ > 1)_i$ as resulting from a negative binomial distribution ($NB$) with mean $\mu_i$ and a quadratic mean-variance-relationship ($Var(No(RQ > 1)_i) = \mu_i + \frac{\mu_i^2}{\kappa}$). 
 The proportion of agricultural land use within the catchment ($agri_i$) and the catchment size of the site ($size_i$) were used as predictors of the number of RAC exceedances. 
 $\beta_0$ is the intercept and $f_1$ and $f_2$ are smoothing functions using penalized cubic regression splines \citep{wood_generalized_2006, wood_fast_2011}. 
-The number of measurements per site ($n_i$) was used as an offset to account for differences in sampling efforts (sampling interval and analysed compound spectrum) at a site and is equivalent to modelling the rate of exceedances. 
+The number of measurements per site ($n_i$) was used as an offset to account for differences in sampling efforts  at a site (in terms of number of samples and analysed compounds) and is equivalent to modelling the rate of exceedances. 
 We used point-wise 95\% Confidence Intervals (CI) of the first derivative of the fitted smooth to identify regions of statistically significant changes.
 All data-processing and analyses were performed using R \citep{r_core_team_r:_2016}.
 GAMs were fitted using the mgcv package \citep{wood_fast_2011}.
@@ -227,7 +227,7 @@ logit(\nu_{i}) = log~prec_{0 i} + log~prec_{-1 i} + Q1_{i} + Q2_{i}+Q3_{i}+Q4_{i
 \label{eqn:eqn4}
 \end{align}
 
-To account for temporal autocorrelation and differences between federal states we used $site$ nested within $state$ as random intercepts.
+To account for differences between federal states we used $site$ nested within $state$ as random intercepts.
 We implemented this model using the gamlss package \cite{stasinopoulos_generalized_2007}. 
 
 We fitted this model separately to each compound with a RAC, measured in at least 1000 samples and with more than 5\% of values above LOQ (n = 22 compounds, see Supplemental Table~S3 for a list of compounds). 
@@ -292,15 +292,12 @@ We also could not detect a statistically significant interaction between catchme
 
 
 \subsection{Effect of precipitation on pesticide risk}
-The spatio-temporal intersection revealed that most samples were taken during periods of low precipitation.
-For example, only 5\% of the samples were taken at or after days with rainfall events greater than 10mm / day that may lead to run-off (Supplemental Figure~S6). 
-
 $prec_{0}$ and $prec_{-1}$ increased the probability of exceeding LOQ and RQ.
 In $Q2$ an increase from 0.1~mm to 15~mm of precipitation before sampling ($prec_{-1}$) lead on average to a 43\% higher mean RQ of 0.05 (Supplemental Figure~S7).
 The probability to exceed LOQ increases in $Q2$ 1.6-fold from 8.7\% to 13.5\% (Figure~\ref{fig:fig5}). % do_precip.R
 Precipitation before sampling ($prec_{-1}$) had a stronger effect than precipitation during sampling ($prec_{0}$) on the probability of exceeding LOQ. 
-This difference was less pronounced for the mean value of RQ (Supplemental Figure~S7). 
-Moreover, effects differed between individual compounds and are provided in the Supplemental Table~S4. 
+This difference was less pronounced for the mean value of RQ (Supplemental Figure~S7, topleft). 
+Moreover, effects differed between individual compounds (see Supplemental Table~S4). 
 
 The first quarter showed the lowest RQ and probability of exceeding LOQ.
 Both increased during summer months and decreased towards the end of the year.
@@ -321,7 +318,7 @@ Individual compounds showed different temporal patterns (see Supplemental Table~
 
 
 
-\subsection{Pesticide risk in small streams}
+\subsection{Current pesticide risks in small streams}
 We found RAC exceedances in 25.5\% of sampling sites and RQ > 0.1 in 54\% of sites. 
 In 23\% of sites none of the chemicals, for which RACs were available, were detected (see also Supplemental Figure~S8).
 Neonicotinoid insecticides and Chlorpyrifos showed the highest RQ (Figure~\ref{fig:fig6}). %do_pollution.R

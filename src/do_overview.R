@@ -691,3 +691,15 @@ ggsave(file.path(prj, 'supplement/precip.pdf'),
 #        plot = pp, height = 200, units = 'mm')
 
 
+
+# precip_dates1
+# sum0 <- precip_dates[ , list(g01 = sum(val > 0.1),
+#                      p01 = sum(val > 0.1) / length(val),
+#                      tot = length(val)),
+#                      , by = site_id]
+# sum1 <- precip_dates1[ , list(g01 = sum(val > 0.1),
+#                              p01 = sum(val > 0.1) / length(val),
+#                              tot = length(val)),
+#                       , by = site_id]
+# 
+# hist(sum0$p01)
