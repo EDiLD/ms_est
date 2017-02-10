@@ -135,6 +135,7 @@ ggsave(file.path(prj, 'supplement/temporal.pdf'), p_temp, width = 20, height = 7
 psm_sites_p <- as.data.frame(psm_sites)
 coordinates(psm_sites_p) <- ~easting + northing
 proj4string(psm_sites_p) <- CRS("+init=epsg:31467")
+bb <- psm_sites_p@bbox
 psm_sites_p <- spTransform(psm_sites_p, CRS('+init=epsg:4326'))
 psm_sites_bb <- psm_sites_p@bbox
 psm_sites_p <- cbind(coordinates(psm_sites_p), psm_sites_p@data)
@@ -142,7 +143,7 @@ psm_sites_p$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites_p$site_id)
 setDT(psm_sites_p)
 
 # get administrative borders
-adm1 <- raster::getData('GADM', country = 'DE', level = 1)
+adm1_r <- adm1 <- raster::getData('GADM', country = 'DE', level = 1)
 adm1 <- fortify(adm1)
 p_map <- ggplot() +
   geom_polygon(data = adm1, aes(x = long, y = lat, group = group), fill = "grey90") +
@@ -163,13 +164,79 @@ ggsave(file.path(prj, "figure1.pdf"),
 # phd <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_thesis/chapters/smallstreams/'
 # ggsave(file.path(phd, "figure1.pdf"),
 #        p_map, width = 176, height = 150, units = 'mm')
-#        
+#
 # for defense
 # def <- '/home/edisz/Documents/work/research/projects/2016/1PHD/phd_defense/figs/'
 # p <- p_map +
 #   theme(legend.position = 'none')
 # ggsave(file.path(def, "map_phch.pdf"),
 #        p, width = 176, height = 150, units = 'mm')
+#
+
+
+# with ecoregions
+eco_reg <- readShapePoly('/home/edisz/Documents/work/research/projects/2016/4BFG/Project/data/spatial/wfd_ecoregions/Ecoregions_31467.shp')
+proj4string(eco_reg) <- CRS("+init=epsg:31467")
+
+psm_sites_b <- as.data.frame(psm_sites)
+coordinates(psm_sites_b) <- ~easting + northing
+proj4string(psm_sites_b) <- CRS("+init=epsg:31467")
+
+
+# spatial join points
+spj <- over(psm_sites_b, eco_reg)
+psm_sites_b$AREA_ID <- spj$AREA_ID
+
+# spatial join area_d
+adm_t <- spTransform(adm1_r, CRS("+init=epsg:31467"))
+int <- intersection(adm_t, eco_reg)
+
+int_df <- data.frame(int)
+int_df$area_reg <- gArea(int, byid = TRUE)
+setDT(int_df)
+
+# areal proportion of ecoregions in D and in samples
+props_eco #<-
+  int_df[ , sum(area_reg), by = AREA_ID]
+  setDT(aggregate(area_reg ~ AREA_ID, data = int_df, function(y) sum(y) / sum(int_df$area_reg)))
+
+props_samples <- setDT(data.frame(psm_sites_b))
+props_samples <- props_samples[ , list(pp = length(site_id) / nrow(props_samples)),
+                                by = AREA_ID]
+
+res <- props_eco[props_samples,  on = "AREA_ID"]
+plot(area_reg ~ pp, data = res)
+abline(0, 1)
+# table
+names(res) <- c('Ecoregion', 'Proportion D', 'Proportion Samples')
+res$`Proportion D` <- res$`Proportion D` * 100
+res$`Proportion Samples` <- res$`Proportion Samples` * 100
+
+# plot
+psm_sites_bd <- cbind(coordinates(psm_sites_b), psm_sites_b@data)
+psm_sites_bd$state_ab <- gsub('(.*?)_.*', '\\1', psm_sites_bd$site_id)
+setDT(psm_sites_bd)
+
+eco_reg <- fortify(eco_reg)
+p_map2 <- ggplot() +
+  geom_polygon(data = fortify(adm_t), aes(x = long, y = lat, group = group), fill = "grey70") +
+  geom_point(data = psm_sites_bd, aes(x = easting, y = northing, col = state_ab),
+             size = 0.5) +
+  geom_path(data = eco_reg, aes(x = long, y = lat, group = group)) +
+  theme(legend.key = element_rect(fill = 'white')) +
+  # guides(colour = FALSE) +
+  labs(x = 'Lon.', y = 'Lat.') +
+  scale_color_hue(name = 'State', l = 50) +
+  mytheme +
+  coord_cartesian(xlim = psm_sites_b@bbox[1, ],
+                 ylim = psm_sites_b@bbox[2, ]) +
+  annotate('text', x = 3600000, y = 5850000, label = 'ER14') +
+  annotate('text', x = 3600000, y = 5550000, label = 'ER9') +
+  annotate('text', x = 3300000, y = 5700000, label = 'ER13') +
+  annotate('text', x = 3300000, y = 5550000, label = 'ER8')
+ggsave(file.path(prj, "supplement/fig_map.pdf"),
+       p_map2, width = 4, height = 4, units = 'in', dpi = 300, scale = 1.5)
+
 
 
 # Tabular overview --------------------------------------------------------
@@ -194,7 +261,7 @@ psm_samples_tab$name <- c('Baden-Württemberg', 'Bavaria', 'Hesse',
                           'North Rhine-Westphalia', 'Rhineland-Palatinate',
                           'Schleswig-Holstein', 'Saarland', 'Saxony', 
                           'Saxony-Anhalt', 'Thuringia', ''
-                          )
+)
 setcolorder(psm_samples_tab, c(7, 1:6))
 setnames(psm_samples_tab, c('name', 'abbrv.\\textsuperscript{a}',
                             'Begin', 'End', 'No. sites', 'No.samples',
@@ -202,12 +269,12 @@ setnames(psm_samples_tab, c('name', 'abbrv.\\textsuperscript{a}',
 
 
 xtab <- xtable(psm_samples_tab, 
-       label = 'tab:phch_overview',
-      caption = c('Overview on chemical samples. Only data from running waters and grab
-sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
-      \\textsuperscript{b}: Including metabolites',
-                  'Overview on chemical samples.'),
-      align = 'lp{2.7cm}lllR{2cm}R{2cm}R{2cm}'
+               label = 'tab:phch_overview',
+               caption = c('Overview on chemical samples. Only data from running waters and grab
+                           sampling is shown. \\textsuperscript{a}: Abbreviations according to ISO 3166-2:DE. 
+                           \\textsuperscript{b}: Including metabolites',
+                           'Overview on chemical samples.'),
+               align = 'lp{2.7cm}lllR{2cm}R{2cm}R{2cm}'
 )
 print(xtab,
       file = file.path(prj, 'supplement/phchoverview.tex'),
@@ -217,7 +284,7 @@ print(xtab,
       booktabs = TRUE,
       hline.after = c(-1, 0, 12, 13),
       sanitize.text.function = identity
-      )
+)
 
 
 # Tabular overview --------------------------------------------------------
@@ -250,7 +317,7 @@ names(var_tab) <- c('Name', 'CAS', 'Group',
                     'Auth. GER\\textsuperscript{a}', 
                     'Auth. EU\\textsuperscript{b}',
                     'RAC \\textsuperscript{c}'
-                    )
+)
 var_tab$Group <- gsub('organics, psm, ', '', var_tab$Group)
 
 # fix bug with encoding (extra space or so....)
@@ -265,13 +332,13 @@ var_tab <- var_tab[order(Name)]
 var_tab_x <- xtable(var_tab, 
                     label = 'tab:phch_var',
                     caption = c('Overview on pesticides (and metabolites) in the database. \\
-                    \\textsuperscript{a} Authorized in Germany (Source: German Federal Office of Consumer Protection and Food Safety (BVL) as at March 2015). 
-                    \\textsuperscript{b} Authorized in the European union (Source: EU Pesticides database as at March 2015).
-                    \\textsuperscript{c} Regulatory Acceptable Concentration [$\\mu g/L$] (Source: German Environment Agency (UBA) as at November 2015).',
-                    'Overview on pesticides in the database.'),
+                                \\textsuperscript{a} Authorized in Germany (Source: German Federal Office of Consumer Protection and Food Safety (BVL) as at March 2015). 
+                                \\textsuperscript{b} Authorized in the European union (Source: EU Pesticides database as at March 2015).
+                                \\textsuperscript{c} Regulatory Acceptable Concentration [$\\mu g/L$] (Source: German Environment Agency (UBA) as at November 2015).',
+                                'Overview on pesticides in the database.'),
                     align = 'lp{4cm}rlp{1.3cm}p{1.3cm}p{1.5cm}',
                     digits = 5)
-                    
+
 print(var_tab_x,
       file = file.path(prj, 'supplement/phchvar.tex'),
       tabular.environment = "longtable",
@@ -496,7 +563,7 @@ ezg_p
 
 
 ezg_p <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
-      aes(x = ezg_fin)) +
+                aes(x = ezg_fin)) +
   geom_histogram(breaks = seq(0, 100, 5), fill = 'grey80', col = 'grey25') +
   mytheme +
   labs(x = 'Catchment area [km2]', y = 'No. sites') +
@@ -534,8 +601,8 @@ if (run_precip) {
   # path to regnie data
   regpath <- '/home/edisz/Documents/work/research/projects/2016/4BFG/Project/data/regnie/'
   # regpath <- '/home/user/Documents/projects_git/ms_est/data/regnie'
- 
-   # unique samplings
+  
+  # unique samplings
   samps <- unique(psm_samples[ , list(site_id, sample_id, date)])
   # join samps with coordinates
   setkey(samps, "site_id")
@@ -650,13 +717,13 @@ precp <- ggplot() +
            label =  paste0(nrow(precip_dates[val < 10]), ' - ', 
                            round(nrow(precip_dates[val < 10]) / 
                                    nrow(precip_dates) * 100, 2), '%'
-                           ), 
+           ), 
            hjust = 0.1, size = 5) +
   annotate('text', x = 20, y = 1000,
            label = paste0(nrow(precip_dates[val >= 10]), ' - ', 
                           round(nrow(precip_dates[val >= 10]) / 
                                   nrow(precip_dates) * 100, 2), '%'
-                          ),
+           ),
            hjust = 0, size = 5, col = 'grey30')
 # precp
 
