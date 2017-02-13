@@ -196,9 +196,7 @@ int_df$area_reg <- gArea(int, byid = TRUE)
 setDT(int_df)
 
 # areal proportion of ecoregions in D and in samples
-props_eco #<-
-  int_df[ , sum(area_reg), by = AREA_ID]
-  setDT(aggregate(area_reg ~ AREA_ID, data = int_df, function(y) sum(y) / sum(int_df$area_reg)))
+props_eco <- setDT(aggregate(area_reg ~ AREA_ID, data = int_df, function(y) sum(y) / sum(int_df$area_reg)))
 
 props_samples <- setDT(data.frame(psm_sites_b))
 props_samples <- props_samples[ , list(pp = length(site_id) / nrow(props_samples)),
