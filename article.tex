@@ -121,17 +121,19 @@ Despite their ecological relevance and potentially higher pesticide exposure, a 
 Consequently, knowledge on the pesticide pollution of small streams on larger scales is scant. 
 In European law, the Directive 2009/128/EC \citep{European_Union_2009} places an obligation on the EU Member States to adopt National Action Plans (NAP) for the Sustainable Use of Plant Protection Products and the German NAP also addresses the knowledge gap concerning pesticide impact on small streams, specifically including those with catchment size \textless 10km\textsuperscript{2}.
 
-The aim of this study is to identify drivers and dynamics of pesticide concentrations in streams.
+The aim of this study is to identify drivers and dynamics of pesticide concentrations in streams on large spatial scales.
 To achieve this, we compiled and analysed large-scale pesticide monitoring data from small streams in Germany and examined four hypotheses:
 1) A major fraction of pesticides is applied to agricultural fields.
-Therefore, the highest concentrations and possible exceedances of RACs should be found in streams with a high proportion of agricultural land use in a catchment. 
-Moreover, if agricultural land use was indeed the main source for pesticides in streams, we expect that RAC exceedances drop to negligible levels if there is no agricultural land use in the catchment. 
-Additionally, these relationships may unravel thresholds because of non-linearity which may guide the definition of reference streams without pesticide pollution in future monitoring. 
-2) Given a higher dilution potential, larger streams should show lower concentrations.
+Therefore, we hypothesised that the most frequent exceedances of RACs occur in streams with a high proportion of agricultural land use in the catchment. 
+If agricultural land use was indeed the main source for pesticides in streams, the RAC exceedances should drop to negligible levels in the absence of agricultural land use in the catchment. 
+Given this drop we expected a non-linear relationship between exceedances and agricultural land use.
+In case of a non-linear relationship, our analyses might guide the definition of reference streams without pesticide pollution in future monitoring. 
+
+2) We hypothesised that an increase in stream size is associated with an decrease in RAC exceedances, given a higher dilution potential. 
 3) However, also the timing of sampling may influence measured concentrations,
 as local and regional studies reported higher pesticide concentrations after precipitation events \citep{liess_determination_1999,Xing_Chow_Rees_Meng_Li_Ernst_Benoy_Zha_Hewitt_2013}. 
-Therefore, highest concentrations should be found after precipitation. 
-4) Furthermore, pesticides are not applied throughout the whole year and highest concentrations should be found during the main growing season.
+Therefore, we hypothesised the highest RAC exceedances to be found after precipitation events. 
+4) Pesticides are not applied throughout the whole year and highest RAC exceedances should be found during the main growing season.
 Finally, we quantified the current risks from pesticides in small streams in Germany and the compounds accountable for the risk. 
 
 
@@ -344,7 +346,7 @@ In 45.9\% of samples more than one compound was quantified, with a maximum of 54
 %% -------------------------------------------------------------------------
 \section{Discussion}
 \subsection{Overview on the compiled dataset}
-The compiled dataset of governmental monitoring data, with a particular focus on small streams, represents currently the most comprehensive available for Germany.
+The compiled dataset of governmental monitoring data, with a particular focus on small streams, represents currently the most comprehensive for Germany.
 Similar nationwide datasets have been compiled for the Netherlands \citep{vijver_spatial_2008}, Switzerland \citep{munz_pestizidmessungen_2011} and the United States \citep{stone2014pesticides}.
 While the compilations from Europe are of similar quantity and quality to the  data compiled and analysed here, the compilation used in \citet{stone2014pesticides} is much smaller, though these data may be complemented by more data in future analyses. 
 
@@ -352,12 +354,12 @@ While the compilations from Europe are of similar quantity and quality to the  d
 A nationwide assessment of pesticide pollution is hampered by inhomogeneous data across federal states:
 Beside large differences in the spatial distribution and quantity of sampling sites (Figure~\ref{fig:fig1}), the spectrum of analysed compounds (Figure~\ref{fig:fig2}) and the quality of chemical analyses differed between states. 
 Despite the outlined differences between states, all ecoregions occurring in Germany \citep{illies1978limnofauna,abell2008freshwater} and all major stream types were covered by the data set.
-The unequal distribution of sampling sites and in sampling strategies hamper inference on the total population of small streams in Germany.
+The unequal distribution of sampling sites and the different sampling strategies hamper inference on the total population of small streams in Germany.
 We accounted for differences in sampling efforts per site by including the total number of measurement into the statistical models. 
-However, we acknowledge that additional differences such as sampling frequency and temporal distribution of the sampling might incur bias between states  \citep{stehle_probabilistic_2013,Xing_Chow_Rees_Meng_Li_Ernst_Benoy_Zha_Hewitt_2013}. 
+However, we acknowledge that additional differences such as sampling frequency and temporal distribution of the samplings might incur bias between states  \citep{stehle_probabilistic_2013,Xing_Chow_Rees_Meng_Li_Ernst_Benoy_Zha_Hewitt_2013}. 
 Consequently, we did not compare the results between states.
 Moreover, it is known that differences in analytical quality can influence estimated effects \citep{Martin_Eberle_Nakagaki, Schreiner_Szocs_Bhowmik_Vijver_Schafer_2016}.
-However, the used model (Equation~\ref{eqn:eqn3}) explicitly accounts for LOQs and differences therein. 
+However, the used model (Equation~\ref{eqn:eqn3}) explicitly accounted for LOQs and differences therein. 
 
 For Thiacloprid and Chlorpyrifos the LOQs were above the RAC, which means that exceedances are likely underestimated.
 For compounds with low RACs a lowering of LOQ through an improvement of chemical analysis is essential for reliable assessment.
@@ -372,12 +374,12 @@ We analysed only data from small streams, however, for lentic small water bodies
 % agriculture
 As hypothesised, we found a positive relationship between agricultural land use and the number of RAC exceedances.
 Especially, we found a statistically significant drop below 28\% of agricultural land use (Figure~\ref{fig:fig4}, left).
-This drop indicates that agricultural land use might be a major contributor to the observed RAC exceedances.
-The absence of such a drop would have indicated that other inputs such as from urban gardening are relevant contributors to RAC exceedances.  
-This drop would have been missed by linear modeling (Supplemental Figure~S5). 
+This drop indicates that agricultural land use is a major contributor to the observed RAC exceedances.
+We note that this drop would have been missed by linear modeling (Supplemental Figure~S5). 
+The absence of such a drop would have suggested that other inputs such as from urban gardening are relevant contributors to RAC exceedances.  
 
 % size
-We did not find a statistically significant relationship between pesticide pollution and catchment size. 
+We did not find a statistically significant relationship between pesticide pollution and catchment size (Hypothesis 2). 
 However, previous studies showed that small streams are more polluted than bigger streams \citep{schulz_field_2004,stehle_pesticide_2015,knauer_pesticides_2016}.
 This can be explained by the relatively short gradient of catchment sizes in our dataset, with most of the streams with catchments above $10~km^2$ and below $100~km^2$ (Figure~\ref{fig:fig3}, top).
 For example, the gradient of \citet{schulz_field_2004} covered 6 orders of magnitude.
@@ -396,7 +398,7 @@ Automatic event-driven samplers \citep{stehle_probabilistic_2013} and passive sa
 Our results demonstrate that future monitoring of small water bodies should also capture precipitation events, which is in agreement with other studies \citet{lorenz_specifics_2016}. 
 
 We found the highest the probability of exceeding LOQ from April to June (10\% for Q2) and lowest in the first quarter of the year (4\%, Figure~\ref{fig:fig5}, bottom right).
-This annual pattern coincides, as expected, with the main application season for pesticides in Central Europe.
+This annual pattern coincides, as hypothesised, with the main application season for pesticides in Central Europe.
 Nevertheless, there are compound-specific differences in the annual pattern, which explains the wide CI for the absolute RQ (Figure~\ref{fig:fig5}, bottom left). 
 For example, the herbicide Diflufenican showed the highest RQ and the highest probability of exceeding LOQ during the winter quarters Q1 and Q4 (Supplemental Table~S4), which coincides with the application period it is registered for in Germany \citep{bvl_online_2016}.
 Moreover, compound properties, like half-life or water solubility, might influence compound dynamics. 
