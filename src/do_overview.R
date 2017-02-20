@@ -540,33 +540,33 @@ ggsave(file.path(prj, "figure2.pdf"),
 
 
 # Catchment size and landuse distribution ---------------------------------
-options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
-ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
-                 aes(x = ezg_fin, y = agri_fin * 100)) +
-  # stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
-  geom_point(size = 0.5) +
-  scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
-                     breaks = c(0, 10, 25, 50, 100)) +
-  scale_fill_viridis() +
-  scale_alpha_continuous(limits = c(0.00015, 0.0004), na.value = 0, range = c(0.3, 1)) +
-  guides(alpha = FALSE, fill = FALSE) +
-  mytheme +
-  labs(x = expression('Catchment area ['~km^2~']'), y = expression('Agriculture [%]')) +
-  coord_cartesian(ylim = c(0, 100), xlim = c(0, 100))
-ezg_lu
-
-# add marginal distr
-ezg_p <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
-ezg_p
+# options(stringsAsFactors = TRUE) # to fix bug in stat_density2d with polygons
+# ezg_lu <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
+#                  aes(x = ezg_fin, y = agri_fin * 100)) +
+#   # stat_density2d(aes(alpha = ..level.., fill = ..level..), geom = "polygon") +
+#   geom_point(size = 0.5) +
+#   scale_x_continuous(limits = c(-0, 100), # extend to plot full polygons
+#                      breaks = c(0, 10, 25, 50, 100)) +
+#   scale_fill_viridis() +
+#   scale_alpha_continuous(limits = c(0.00015, 0.0004), na.value = 0, range = c(0.3, 1)) +
+#   guides(alpha = FALSE, fill = FALSE) +
+#   mytheme +
+#   labs(x = expression('Catchment size ['~km^2~']'), y = expression('Agriculture [%]')) +
+#   coord_cartesian(ylim = c(0, 100), xlim = c(0, 100))
+# ezg_lu
+# 
+# # add marginal distr
+# ezg_p <- ggMarginal(ezg_lu, type = 'histogram', binwidth = 5)
+# ezg_p
 
 
 ezg_p <- ggplot(psm_sites_info[ezg_fin < 150 & !is.na(agri_fin) & !is.na(ezg_fin)], 
                 aes(x = ezg_fin)) +
   geom_histogram(breaks = seq(0, 100, 5), fill = 'grey80', col = 'grey25') +
   mytheme +
-  labs(x = 'Catchment area [km2]', y = 'No. sites') +
+  labs(x = 'Catchment size [km2]', y = 'No. sites') +
   scale_x_continuous(breaks = c(0, 10, 25, 50, 100)) 
-
+ezg_p
 
 # ezg_lu
 ggsave(file.path(prj, 'figure3.pdf'), 
