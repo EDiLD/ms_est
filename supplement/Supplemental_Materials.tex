@@ -64,7 +64,7 @@
 	\item[Number of tables: ] \totaltables
 \end{description}
 % increase page counter by 1
-\setcounter{page}{2}
+\setcounter{page}{1}
 
 \tableofcontents
 \listoffigures
@@ -113,7 +113,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{fig_map}
-	\caption{Spatial distribution of the 2,301 small stream sampling sites. Colour codes different federal states (see Supplemental Table S1 for abbreviations). Overlayed are ecoregions. ER4: Alps (no label), ER8: Western highlands,
+	\caption[Spatial distribution of the 2,301 small stream sampling sites.]{Spatial distribution of the 2,301 small stream sampling sites. Colour codes different federal states (see Supplemental Table S1 for abbreviations). Overlayed are ecoregions. ER4: Alps (no label), ER8: Western highlands,
 	ER9: Central highlands, ER 13: Western plains , ER14: Central plains. }
 	\label{fig:ecoreg}
 \end{figure}
@@ -143,10 +143,11 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 
 %% -------------------------------------------------------------------------
 \chapter{Influence of agricultural land use and catchment size}
+
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{ezgagrirac}
-	\caption[Raw data used for the model in equation 2 and Figure 3 of the main article.]{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
+	\caption[Raw data used for the model in Eqn. 2 and Fig. 3 of the main article.]{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
 	\label{fig:ezgagrirac}
 \end{figure}
 
@@ -184,7 +185,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 \centering
   \includegraphics[width=0.8\textwidth]{mean_coef.pdf}
-  \caption{Summarised coefficients (and their 95\% CI) for precipitation (top row) and quarter of the year (bottom row) from a meta-analysis of the 22 modelled compounds (see Figure S6). Left: coefficients for mean RQ ($\mu$), right: coefficients for probability of exceeding LOQ ($\nu$). 
+  \caption[Summarised coefficients (and their 95\% CI) for precipitation and quarter of the year]{Summarised coefficients (and their 95\% CI) for precipitation (top row) and quarter of the year (bottom row) from a meta-analysis of the 22 modelled compounds (see Figure S6). Left: coefficients for mean RQ ($\mu$), right: coefficients for probability of exceeding LOQ ($\nu$). 
   Coefficients are shown on the link scale.
   Single compound coefficients are provided in Supplemental Table~S4 and Figure~S7.
   }
@@ -220,7 +221,18 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \end{figure}
 
 
-% \bibliographystyle{apalike}      % basic style, author-year citations
-% \bibliography{references}
+%% -------------------------------------------------------------------------
+\chapter{Additional material}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{width_size}
+	\caption[Relationship between catchment size and stream width.]{Relationship between catchment size and stream width. A power function has been fitted to each dataset separately (colored dashed lines) and the combined dataset (black line and equation). The gray rectangle marks the estimated catchment size for a width of 1 m (=7 km\textsuperscript{2}). Data has been compiled from three different sources (\citet{Fern2015}, \citet{Voss2015} and the federal state of Thuringia)}
+	\label{fig:size_width}
+\end{figure}
+
+
+\bibliographystyle{apalike}      % basic style, author-year citations
+\bibliography{references}
 
 \end{document}
