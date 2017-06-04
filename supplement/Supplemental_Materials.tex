@@ -39,9 +39,8 @@
 
 
 %% -------------------------------------------------------------------------
-\title{Supplemental Materials for: \\ Large scale risks from pesticides in small streams}
-\author{Eduard Szöcs%
-  \thanks{Corresponding author, Email: \texttt{szoecs@uni-landau.de}}}
+\title{Supporting Information for: \\ Large scale risks from agricultural pesticides in small streams}
+\author{Eduard Szöcs}
 \affil[1]{Institute for Environmental Sciences, University of Koblenz-Landau, Germany}
 
 \author{Marvin Brinke}
@@ -50,7 +49,10 @@
 \author{Bilgin Karaoglan}
 \affil{German Environment Agency (UBA), Dessau-Roßlau, Germany}
 
-\author[1]{Ralf B. Schäfer}
+\author[1]{Ralf B. Schäfer   
+\thanks{Corresponding author, Email: \texttt{schaefer-ralf@uni-landau.de}}}
+
+\date{}
 
 
 %% -------------------------------------------------------------------------
@@ -91,14 +93,14 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{data_cleaning}
-	\caption[Overview on data cleaning steps.]{Overview on data cleaning steps. After cleaning, data have been stored in a relational spatial PostgreSQL database.}
+	\caption[Overview of data cleaning steps.]{Overview of data cleaning steps. After cleaning, data have been stored in a relational spatial PostgreSQL database.}
 	\label{fig:data_cleaning}
 \end{figure}
 
 
 
 %% -------------------------------------------------------------------------
-\chapter{Overview on compiled data}
+\chapter{Overview of compiled data}
 % Overview samples
 % table generated in do_overview.R
 \input{phchoverview}
@@ -147,7 +149,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{ezgagrirac}
-	\caption[Raw data used for the model in Eqn. 2 and Fig. 3 of the main article.]{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey points denote sites without any exceedance.}
+	\caption[Raw data used for the model in Eqn. 2 and Fig. 3 of the main article.]{Raw data used for the model in equation 2 and Figure 3 of the main article. Color codes the number of RAC exceedances (on a log-scale). Grey dots denote sites without any exceedance.}
 	\label{fig:ezgagrirac}
 \end{figure}
 
@@ -177,7 +179,7 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{coefs}
-	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at the day before sampling and at day of sampling. Bottom row: estimates for the four quarters of the year. Each dot represents one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in gray colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
+	\caption[Graphical representation of coefficients from table \ref{tab:var_model_coef}.]{Graphical representation of coefficients from table \ref{tab:var_model_coef}. Top row: Effect of precipitation at the day before sampling and at day of sampling. Bottom row: estimates for the four quarters of the year. Each dot represents one compound (in the order described in table \ref{tab:var_model}). Coefficients where the CI encompasses zero are shown in grey colour. Coefficients are shown on the link scale (log for $\mu$ and logit for $\nu$).}
 	\label{fig:coefs}
 \end{figure}
 
@@ -227,12 +229,12 @@ Cleaning steps comprised the following steps (Figure~\ref{fig:data_cleaning} giv
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{width_size}
-	\caption[Relationship between catchment size and stream width.]{Relationship between catchment size and stream width. A power function has been fitted to each dataset separately (colored dashed lines) and the combined dataset (black line and equation). The gray rectangle marks the estimated catchment size for a width of 1 m (=7 km\textsuperscript{2}). Data has been compiled from three different sources: \citet{Fern2015}, \citet{Voss2015} and the federal state of Thuringia}
+	\caption[Relationship between catchment size and stream width.]{Relationship between catchment size and stream width. A power function was fitted to each dataset separately (colored dashed lines) and the combined dataset (black line and equation). The grey rectangle marks the estimated catchment size for a width of 1 m (=7 km\textsuperscript{2}). Data was compiled from three different sources: \citet{Fern2015}, \citet{Voss2015} and the federal state of Thuringia.}
 	\label{fig:size_width}
 \end{figure}
 
 
-\bibliographystyle{apalike}      % basic style, author-year citations
+\bibliographystyle{spbasic}      % basic style, author-year citations
 \bibliography{references}
 
 \end{document}
